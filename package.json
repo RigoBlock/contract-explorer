@@ -1,0 +1,31 @@
+{
+  "name": "create-react-app",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "ajv": "^6.4.0",
+    "eth-lib": "^0.2.8",
+    "ethjs-unit": "^0.1.6",
+    "immutable": "^3.8.2",
+    "json-formatter-js": "^2.2.0",
+    "material-ui": "^1.0.0-beta.39",
+    "prop-types": "latest",
+    "randomhex": "^0.1.5",
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0",
+    "react-json-view": "^1.16.1",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "latest",
+    "swarm-js": "^0.1.37",
+    "ts-react-json-table": "^0.1.1",
+    "underscore": "^1.8.3",
+    "utf8": "^3.0.0",
+    "web3": "^1.0.0-beta.33"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
