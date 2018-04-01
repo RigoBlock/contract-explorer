@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 import { Route, Switch } from 'react-router-dom'
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
-import VaultEventfulPage from './vaultEventful';
+import ContractPage from './contract';
+import EventsPage from './events';
 import HomePage from './home';
 import Web3 from 'web3';
+import TopBar from '../elements/topBar'
+import Grid from 'material-ui/Grid';
 
 const styles = theme => ({
   root: {
@@ -41,15 +44,18 @@ class Index extends React.Component {
 
   render() {
     return (
-      <div>
-        <Switch>
-          <Route exact path='/' component={HomePage} />
-          <Route path='/vault-eventful' component={VaultEventfulPage} />
-          {/* <Route path='/contact' component={Contact} /> */}
-          {/* when none of the above match, <NoMatch> will be rendered */}
-          {/* <Route component={NoMatch} /> */}
-        </Switch>
-      </div>
+      <Grid container spacing={0} >
+        <Grid item xs={12}>
+          <TopBar></TopBar>
+        </Grid>
+        <Grid item xs={12}>
+          <Switch>
+            <Route exact path='/' component={HomePage} />
+            <Route exact path='/contract' component={ContractPage} />
+            <Route exact path='/events' component={EventsPage} />
+          </Switch>
+        </Grid>
+      </Grid>
     );
   }
 }

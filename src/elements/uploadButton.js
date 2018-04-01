@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import _ from 'underscore'
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import Grid from 'material-ui/Grid';
-import Typography from 'material-ui/Typography';
 
 class UploadButton extends Component {
 
@@ -40,7 +39,6 @@ class UploadButton extends Component {
   handleFile (event) {
     _.keys(event.target.files).map((index) => {
       const file = event.target.files[index]
-      console.log(file)
       if (!this.validate_fileupload(file.name)) {
         this.setState({
           error: true,
@@ -62,7 +60,9 @@ class UploadButton extends Component {
       } else {
         this.props.onUpload(file)
       }
+      return true
     })
+    return true
   }
 
   validate_fileupload = (fileName) => {
@@ -71,7 +71,7 @@ class UploadButton extends Component {
 
     for(var i = 0; i <= allowed_extensions.length; i++)
     {
-        if(allowed_extensions[i]==file_extension)
+        if(allowed_extensions[i] === file_extension)
         {
             return true; // valid file extension
         }

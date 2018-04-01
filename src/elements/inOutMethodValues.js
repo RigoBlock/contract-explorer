@@ -5,7 +5,7 @@ import ReactJson from 'react-json-view'
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 
-class InOutValues extends Component {
+class InOutMethodValues extends Component {
 
   static propTypes = {
     methodSelected: PropTypes.object.isRequired,
@@ -58,4 +58,4 @@ class InOutValues extends Component {
   }
 }
 
-export default InOutValues;
+export default InOutMethodValues;

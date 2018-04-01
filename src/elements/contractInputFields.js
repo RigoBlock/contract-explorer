@@ -29,12 +29,11 @@ class ContractInputFields extends Component {
     const { methodSelected } = this.props
     const { inputs } = this.state
     var newInputs = [...inputs]
-    console.log(event.target.id)
     if (event.target.id === 'value' ){
       this.setState({
         value: event.target.value
       })
-      return
+      return true
     }
     methodSelected.inputs.map((element, index) => {
       if (element.name === event.target.id) {
@@ -43,8 +42,10 @@ class ContractInputFields extends Component {
           inputs: newInputs
         })
       }
+      return true
     }
     )
+    return true
   };
   
   renderInputFields = () => {

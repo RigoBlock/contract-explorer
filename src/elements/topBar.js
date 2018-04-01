@@ -27,18 +27,16 @@ class TopBar extends React.Component {
 
   render() {
     return (
-      <div>
-        <AppBar position="static">
-          <Tabs
-            value={this.state.tabSelected}
-            onChange={this.handleChange}
-          >
-            <Tab label="Home" value="/" />
-            {/* <Tab label="Drago Events" value="/drago-eventful" /> */}
-            <Tab label="Vault Events" value="/vault-eventful" />
-          </Tabs>
-        </AppBar>
-      </div>
+      <AppBar position="sticky">
+        <Tabs
+          value={this.state.tabSelected}
+          onChange={this.handleChange}
+        >
+          <Tab label="Home" value="/" />
+          <Tab label="Contracts" value="/contract" />
+          <Tab label="Events" value="/events" />
+        </Tabs>
+      </AppBar>
     );
   }
 }
