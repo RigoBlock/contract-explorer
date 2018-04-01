@@ -12,6 +12,7 @@ import UploadButton from '../elements/uploadButton'
 import ContractInputAddress from '../elements/contractInputAddress'
 import Button from 'material-ui/Button';
 import EventsValues from '../elements/eventsValues'
+import Web3 from 'web3';
 
 
 class EventsPage extends Component {
@@ -32,28 +33,82 @@ class EventsPage extends Component {
       enableEventTopicField: true,
       topicsValues: ['','','',''],
       errorMsg: false, 
-      errorMsgSubscribe: ''
+      errorMsgSubscribe: '',
+      contractSubscription: null
     };
   }
   
   
   static contextTypes = {web3: PropTypes.object.isRequired};
 
+  componentWillUnmount() {
+    this.unsubscribeFromEvent()
+  }
+
+  unsubscribeFromEvent = () => {
+    const { contractSubscription } = this.state
+    // unsubscribes the subscription
+    if (contractSubscription) {
+      contractSubscription.unsubscribe(function (error, success) {
+        if (success)
+          console.log('Successfully unsubscribed!');
+      });
+    }
+  }
+
   onSubscribeEvents = () => {
     const { contractAddress } = this.state
-    const { web3 } = this.context
+
+    // Clear existing subscription
+    this.unsubscribeFromEvent()
+
+    // Web3 subscriptions are available only on WebSocket
+    const web3 = new Web3('wss://srv03.endpoint.network:8546')
+    //var subscription = web3.eth.subscribe('newBlockHeaders', this.onNewBlockNumber)
     const contract = new web3.eth.Contract(dragoeventful, contractAddress)
     contract.getPastEvents('BuyDrago', {
       fromBlock: 0,
       toBlock: 'latest'
     })
     .then(events => {
-      console.log(events) // same results as the optional callback above
+      const eventsList = events.reverse()
       this.setState({
-        json_object: events
+        json_object: eventsList
       })
-    });
+    })
+    .then(() =>{
+      // For more info please refer to the docs: https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#events-allevents
+      const subscription = contract.events.allEvents({
+        fromBlock: "latest"
+      }, this.onNewEvent)
+      // ************************************
+      //
+      // Alternativelly we can do as follows
+      //
+      // ************************************
+      // .on('data', event => {
+      //   console.log(event); 
+      // })
+      // .on('changed', event => {
+      //   console.log(event) 
+      // })
+      // .on('error', error =>{
+      //   console.log(error)
+      // });
+      this.setState({
+        contractSubscription: subscription
+      })
+      })
+  }
 
+  onNewEvent = (error, events) =>{
+    // Adding the new event to the event list.
+    const { json_object } = this.state
+    var newEventsList = [...json_object]
+    newEventsList.unshift(events) 
+    this.setState({
+      json_object: newEventsList
+    })
   }
 
   onUpload = (file, text) =>{
@@ -100,7 +155,6 @@ class EventsPage extends Component {
         <Grid item xs={12}>
           <Grid container spacing={8} style={containerGroupWrapperStyle}>
             <Grid item xs={4}>
-
               <Grid container spacing={8} style={containerGroupWrapperStyle}>
                 <Grid item xs={12}>
                   <Typography variant="headline" >
@@ -132,7 +186,6 @@ class EventsPage extends Component {
                   </Paper>
                 </Grid>
               </Grid>
-
               <Grid container spacing={8} style={containerGroupWrapperStyle}>
                 <Grid item xs={12}>
                   <Typography variant="headline" >
@@ -140,9 +193,9 @@ class EventsPage extends Component {
                 </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <EventsValues
+                  {/* <EventsValues
                     abi={this.state.abi}
-                  />
+                  /> */}
                 </Grid>
               </Grid>
             </Grid>
@@ -179,12 +232,12 @@ class EventsPage extends Component {
                       style={{ padding: "5px" }}
                       theme="codeschool"
                       indentWidth="2"
-                      collapsed="2"
+                      collapsed="1"
                     />
                   </Paper>
                 </Grid>
 
-                
+
 
               </Grid>
             </Grid>
