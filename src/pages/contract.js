@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
-
 import ReactJson from 'react-json-view'
-import { drago } from '../abi'
 import MethodSelect from '../elements/methodSelect'
 import InOutMethodValues from '../elements/inOutMethodValues'
 import ContractInputFields from '../elements/contractInputFields'
@@ -12,6 +10,8 @@ import { List } from 'immutable';
 import Paper from 'material-ui/Paper';
 import UploadButton from '../elements/uploadButton'
 import ContractInputAddress from '../elements/contractInputAddress'
+import Loading from '../elements/loading';
+import Sticky from 'react-stickynode';
 // import Web3 from 'web3';
 
 
@@ -21,16 +21,16 @@ class ContractPage extends Component {
     super(props)
 
     this.state = {
-      abi: List(drago).sortBy(method => method.name).filter(method => method.type === 'function' ),
+      abi: {},
+      methodList: List([]),
       methodSelected: {},
-      txHash: '0x1a42f43c8f46e99faeb4a3c9e6d155d101da2106ef7dcc49ef2f874b058e3c5f',
       txError: '',
       json_object: {},
-      contractAddress: '0x36c3057Ce3de417677cFDFE918F77Bf075cDBe22',
+      contractAddress: '0xE3B53367ab7F9a3A1F82A3dAAb20f78121d1BB12',
       gas: 0,
-      uploadedAbi: {},
       enableContractAddressField: false,
       enableContractMethodsSelector: false,
+      loading: false
     };
   }
   
@@ -38,28 +38,38 @@ class ContractPage extends Component {
   static contextTypes = {web3: PropTypes.object.isRequired};
 
   onSend = (inputs, value) => {
-    const { contractAddress, methodSelected } = this.state
+    const { contractAddress, methodSelected, abi } = this.state
     const { web3 } = this.context
     const methodName = methodSelected.name
+    const constantMethod = methodSelected.constant ? 'call' : 'send'
     var accountAddress
+    this.setState({
+      loading: true
+    })
 
+    console.log(inputs)
+    console.log(value)
     // Getting the account address from MetaMask. [0] is the currently selected account in MetaMask.
     // Everything is async.
 
+    this.setState({
+      loading: true
+    })
     web3.eth.getAccounts()
       .then((accounts) => {
         accountAddress = accounts[0]
       })
       .then(() => {
         // Initializing a contract instance.
-        const contract = new web3.eth.Contract(drago, contractAddress)
+        const contract = new web3.eth.Contract(abi, contractAddress)
 
         // Setting options.
         var options = {
           from: accountAddress,
-          value: "100000000000000000"
+          value: value
         }
         if (inputs.length === 0) {
+          console.log('Without paramenters')
           // Calling estimateGas to calculate required gas for the transaction.
           contract.methods[methodName]().estimateGas(options)
             .then(gasEstimate => {
@@ -70,30 +80,42 @@ class ContractPage extends Component {
             }
             )
             .then(() => {
-              // Sending the transaction
-              contract.methods[methodName]()
-                .send(options)
+              // ******************************************************************
+              //
+              // Sending the transaction with:
+              //
+              // contract.myMethod.call(options) or contract.myMethod.send(options)
+              //
+              // ******************************************************************
+              contract.methods[methodName]()[constantMethod](options)
+              // .send(options)
                 .then(result => {
                   this.setState({
-                    json_object: result
+                    json_object: typeof result === 'object' ? result : {result},
+                    loading: false
                   })
                 })
                 .catch(error => {
                   console.log(error)
                   this.setState({
-                    json_object: { error: String(error) }
+                    json_object: { error: String(error) },
+                    loading: false
                   })
                 })
             })
             .catch(error => {
               console.log(error)
               this.setState({
-                json_object: { error: String(error) }
+                json_object: { error: String(error) },
+                loading: false
               })
             })
         } else {
           // Calling estimateGas to calculate required gas for the transaction.
-          contract.methods[methodName](inputs).estimateGas(options)
+          console.log('With paramenters')
+          console.log(...inputs)
+          contract.methods[methodName](...inputs)
+            .estimateGas(options)
             .then(gasEstimate => {
               console.log(gasEstimate)
               options.gas = gasEstimate
@@ -103,25 +125,34 @@ class ContractPage extends Component {
             }
             )
             .then(() => {
-              // Sending the transacation
-              contract.methods[methodName](inputs)
-                .send(options)
+              // ******************************************************************
+              //
+              // Sending the transaction with:
+              //
+              // contract.myMethod.call(options) or contract.myMethod.send(options)
+              //
+              // ******************************************************************
+              contract.methods[methodName](...inputs)[constantMethod](options)
+                // .send(options)
                 .then(result => {
                   this.setState({
-                    json_object: result
+                    json_object: typeof result === 'object' ? result : {result},
+                    loading: false
                   })
                 })
                 .catch(error => {
                   console.log(error)
                   this.setState({
-                    json_object: { error: String(error) }
+                    json_object: { error: String(error) },
+                    loading: false
                   })
                 })
             })
             .catch(error => {
               console.log(error)
               this.setState({
-                json_object: { error: String(error) }
+                json_object: { error: String(error) },
+                loading: false
               })
             })
         }
@@ -129,11 +160,9 @@ class ContractPage extends Component {
   }
 
   onMethodSelect = event => {
-    console.log(event.target.value)
     const methodSelected = this.state.abi.find(method => {
       return method.name === event.target.value
     })
-    console.log(methodSelected)
     this.setState({
       methodSelected: methodSelected
     });
@@ -142,7 +171,8 @@ class ContractPage extends Component {
   onUpload = (file, text) =>{
     const uploadedAbi = JSON.parse(text)
     this.setState({
-      uploadedAbi,
+      abi: uploadedAbi,
+      methodList: List(uploadedAbi).sortBy(method => method.name).filter(method => method.type === 'function' ),
       enableContractAddressField: true,
       enableContractMethodsSelector: true,
     })
@@ -196,7 +226,7 @@ class ContractPage extends Component {
                 </Grid>
                 <Grid item xs={12}>
                   <MethodSelect
-                    abi={this.state.abi}
+                    methodList={this.state.methodList}
                     onMethodSelect={this.onMethodSelect}
                     disabled={!this.state.enableContractMethodsSelector}
                   />
@@ -231,30 +261,36 @@ class ContractPage extends Component {
           </Grid>
         </Grid>
         <Grid item xs={8}>
-          <Grid container spacing={8} style={containerGroupWrapperStyle}>
-            <Grid item xs={12}>
-              <Typography variant="headline">
-                LOG
+          <Sticky>
+            <Grid container spacing={8} style={containerGroupWrapperStyle}>
+              <Grid item xs={12}>
+                <Typography variant="headline">
+                  LOG
                 </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper style={paperStyle} elevation={2}>
-                <Typography variant="subheading">
-                  Gas used: {this.state.gas}
-                </Typography>
-                <Typography variant="subheading">
-                  Transaction receipt:
+              </Grid>
+              <Grid item xs={12}>
+                <Paper style={paperStyle} elevation={2}>
+                  <Typography variant="subheading">
+                    Gas used: {this.state.gas}
                   </Typography>
-                <ReactJson
-                  src={this.state.json_object}
-                  style={{ padding: "5px" }}
-                  theme="codeschool"
-                  indentWidth="2"
-                  collapsed="2"
-                />
-              </Paper>
+                  <Typography variant="subheading">
+                    Transaction receipt:
+                </Typography>
+                  {this.state.loading
+                    ? <Loading />
+                    : <ReactJson
+                      src={this.state.json_object}
+                      style={{ padding: "5px" }}
+                      theme="codeschool"
+                      indentWidth="2"
+                      collapsed="2"
+                    />
+                  }
+
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
+          </Sticky>
         </Grid>
       </Grid>
     );

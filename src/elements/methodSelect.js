@@ -12,21 +12,20 @@ class MethodSelect extends Component {
   };
 
   static propTypes = {
-    abi: PropTypes.object.isRequired,
+    methodList: PropTypes.object.isRequired,
     onMethodSelect: PropTypes.func.isRequired,
     disabled: PropTypes.bool.isRequired,
   };
 
   onMethodSelect = event => {
-    console.log(event.target.value)
     this.props.onMethodSelect(event)
     this.setState({ methodSelected: event.target.value });
   };
   
 
   renderMenuItems = () => {
-    const { abi } = this.props
-    return abi.map((element, index) => {
+    const { methodList } = this.props
+    return methodList.map((element, index) => {
         return <MenuItem key={element.name + index} value={element.name}>{element.name}</MenuItem>
     }
     )

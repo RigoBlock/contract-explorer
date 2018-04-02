@@ -8,12 +8,12 @@ import Typography from 'material-ui/Typography';
 class EventsValues extends Component {
 
   static propTypes = {
-    abi: PropTypes.object.isRequired,
+    eventsList: PropTypes.object.isRequired,
   };
 
   renderEvents = () => {
-    const { abi } = this.props
-    return abi.map((element, index) => {
+    const { eventsList } = this.props
+    return eventsList.map((element, index) => {
       return (
         <Grid item xs={12} key={element.name + index}>
           <Typography variant="body2" gutterBottom>
@@ -37,7 +37,6 @@ class EventsValues extends Component {
     const paperStyle = {
       padding: 10,
     }
-    console.log(this.props.abi)
     return (
       <Paper style={paperStyle} elevation={2}>
         <Grid container spacing={8} >

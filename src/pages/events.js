@@ -4,8 +4,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import ReactJson from 'react-json-view'
-import { dragoeventful } from '../abi'
-import EventsInputTopics from '../elements/eventsInputTopics'
+import EventsFilters from '../elements/eventsFilters'
 import { List } from 'immutable';
 import Paper from 'material-ui/Paper';
 import UploadButton from '../elements/uploadButton'
@@ -13,6 +12,10 @@ import ContractInputAddress from '../elements/contractInputAddress'
 import Button from 'material-ui/Button';
 import EventsValues from '../elements/eventsValues'
 import Web3 from 'web3';
+import { EP_RIGOBLOCK_KV_DEV_WS } from '../_utils/const'
+import Sticky from 'react-stickynode';
+import Loading from '../elements/loading';
+import { dragoeventful } from '../abi'
 
 
 class EventsPage extends Component {
@@ -20,21 +23,24 @@ class EventsPage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      abi: List(dragoeventful).sortBy(method => method.name).filter(method => method.type === 'event' ),
+      abi: dragoeventful,
       methodSelected: {},
-      txHash: '0x1a42f43c8f46e99faeb4a3c9e6d155d101da2106ef7dcc49ef2f874b058e3c5f',
+      eventsList: List([]),
       txError: '',
       json_object: {},
       contractAddress: "0xd5310e611b332febd046fff87f0e86428b758a93",
       gas: 0,
-      uploadedAbi: {},
       enableContractAddressField: false,
       enableContractMethodsSelector: false,
       enableEventTopicField: true,
-      topicsValues: ['','','',''],
+      topicsValues: ['AllEvents',
+        '{ "from" : "0xec4ee1bcf8107480815b08b530e0ead75b9f804f" }',
+        '{ "to" : "0xec4ee1bcf8107480815b08b530e0ead75b9f804f" }',
+        '{ "drago" : "0xec4ee1bcf8107480815b08b530e0ead75b9f804f" }'],
       errorMsg: false, 
       errorMsgSubscribe: '',
-      contractSubscription: null
+      contractSubscription: null,
+      loading: false
     };
   }
   
@@ -57,22 +63,48 @@ class EventsPage extends Component {
   }
 
   onSubscribeEvents = () => {
-    const { contractAddress } = this.state
-
+    const { contractAddress, abi, topicsValues } = this.state
+    this.setState({
+      loading: true
+    })
     // Clear existing subscription
     this.unsubscribeFromEvent()
+    
 
     // Web3 subscriptions are available only on WebSocket
-    const web3 = new Web3('wss://srv03.endpoint.network:8546')
+    const web3 = new Web3(EP_RIGOBLOCK_KV_DEV_WS)
+
+    var dragoPadded = web3.utils.padLeft("0x36c3057Ce3de417677cFDFE918F77Bf075cDBe22", 64)
+    console.log(dragoPadded)
     //var subscription = web3.eth.subscribe('newBlockHeaders', this.onNewBlockNumber)
-    const contract = new web3.eth.Contract(dragoeventful, contractAddress)
-    contract.getPastEvents('BuyDrago', {
+    const contract = new web3.eth.Contract(abi, contractAddress)
+    console.log(abi)
+    var event = abi.find(function(element) {
+      return (element.name === "DragoCreated" && element.type === "event");
+    });
+    console.log(event.signature)
+    var filters = {}
+    var topics = [...topicsValues]
+    const eventsName = topics.shift()
+    console.log(eventsName)
+    console.log(topics)
+    topics.map(element =>{
+      console.log(element)
+      var json = JSON.parse(element)
+      filters = {...filters, ...json}
+      console.log(filters)
+    })
+    contract.getPastEvents('AllEvents', {
+      // filter: filters,
       fromBlock: 0,
-      toBlock: 'latest'
+      toBlock: 'latest',
+      topics: [event.signature, null, null, null]
     })
     .then(events => {
       const eventsList = events.reverse()
+      console.log(events)
       this.setState({
+        loading: false,
         json_object: eventsList
       })
     })
@@ -98,6 +130,14 @@ class EventsPage extends Component {
       this.setState({
         contractSubscription: subscription
       })
+      return true
+      })
+      .catch(error => {
+        console.log(error)
+        this.setState({
+          json_object: { error: String(error) },
+          loading: false
+        })
       })
   }
 
@@ -114,9 +154,10 @@ class EventsPage extends Component {
   onUpload = (file, text) =>{
     const uploadedAbi = JSON.parse(text)
     this.setState({
-      uploadedAbi,
+      abi: uploadedAbi,
+      eventsList: List(uploadedAbi).sortBy(method => method.name).filter(method => method.type === 'event' ),
       enableContractAddressField: true,
-      enableEventTopicField: true,
+      enableContractMethodsSelector: true,
     })
   }
   
@@ -130,6 +171,7 @@ class EventsPage extends Component {
     console.log(event.target.id)
     var topicsValues = [...this.state.topicsValues]
     topicsValues[event.target.id] = event.target.value
+    console.log(topicsValues)
     this.setState({
       topicsValues: topicsValues,
     });
@@ -174,10 +216,12 @@ class EventsPage extends Component {
                       />
                     </Grid>
                     <Grid item xs={12}>
-                      <FormControl fullWidth={true} error={this.state.errorSubscribe}>
+                      <FormControl fullWidth={true} error={this.state.errorSubscribe} >
                         <Button
                           variant="raised" component="span" color="primary"
-                          onClick={this.onSubscribeEvents}>
+                          onClick={this.onSubscribeEvents}
+                          disabled={Object.keys(this.state.abi).length === 0 && this.state.abi.constructor === Object}
+                          >
                           Subscribe
                       </Button>
                         <FormHelperText>{this.state.errorMsgSubscribe}</FormHelperText>
@@ -193,53 +237,57 @@ class EventsPage extends Component {
                 </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  {/* <EventsValues
-                    abi={this.state.abi}
-                  /> */}
+                  {Object.keys(this.state.abi).length === 0 && this.state.abi.constructor === Object
+                    ? null
+                    : <EventsValues
+                      eventsList={this.state.eventsList}
+                    />
+                  }
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={8}>
-              <Grid container spacing={8} style={containerGroupWrapperStyle}>
-                <Grid item xs={12}>
-                  <Typography variant="headline" >
-                    TOPICS
-                </Typography>
+              <Sticky>
+                <Grid container spacing={8} style={containerGroupWrapperStyle}>
+                  <Grid item xs={12}>
+                    <Typography variant="headline" >
+                      FILTERS
+                      </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Paper style={paperStyle} elevation={2}>
+                      <Grid item xs={12}>
+                        <EventsFilters
+                          onChangeTopic={this.onChangeTopic}
+                          topicsValues={this.state.topicsValues}
+                          enableEventTopicField={this.state.enableEventTopicField}
+                        />
+                      </Grid>
+                    </Paper>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <Paper style={paperStyle} elevation={2}>
-                    <Grid item xs={12}>
-                      <EventsInputTopics
-                        onChangeTopic={this.onChangeTopic}
-                        topicsValues={this.state.topicsValues}
-                        enableEventTopicField={this.state.enableEventTopicField}
-                      />
-                    </Grid>
-                  </Paper>
-                </Grid>
-
-              </Grid>
-              <Grid container spacing={8} style={containerGroupWrapperStyle}>
-                <Grid item xs={12}>
-                  <Typography variant="headline" >
-                    EVENTS
+                <Grid container spacing={8} style={containerGroupWrapperStyle}>
+                  <Grid item xs={12}>
+                    <Typography variant="headline" >
+                      EVENTS
                   </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Paper style={paperStyle} elevation={2}>
+                      {this.state.loading
+                        ? <Loading />
+                        : <ReactJson
+                          src={this.state.json_object}
+                          style={{ padding: "5px" }}
+                          theme="codeschool"
+                          indentWidth="2"
+                          collapsed="1"
+                        />
+                      }
+                    </Paper>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <Paper style={paperStyle} elevation={2}>
-                    <ReactJson
-                      src={this.state.json_object}
-                      style={{ padding: "5px" }}
-                      theme="codeschool"
-                      indentWidth="2"
-                      collapsed="1"
-                    />
-                  </Paper>
-                </Grid>
-
-
-
-              </Grid>
+              </Sticky>
             </Grid>
           </Grid>
         </Grid>
