@@ -2,14 +2,24 @@ import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import ReactJson from 'react-json-view'
 import Typography from 'material-ui/Typography';
+import JsonView from '../elements/jsonView'
+import utils from '../_utils/utils'
 
 class EventsValues extends Component {
 
   static propTypes = {
     eventsList: PropTypes.object.isRequired,
   };
+
+  shouldComponentUpdate(nextProps, nextState){    
+    var stateUpdate = true
+    var propsUpdate = true
+    // shouldComponentUpdate returns false if no need to update children, true if needed.
+    propsUpdate = (!utils.shallowEqual(this.props, nextProps))
+    stateUpdate = (!utils.shallowEqual(this.state, nextState))
+    return stateUpdate || propsUpdate 
+  }
 
   renderEvents = () => {
     const { eventsList } = this.props
@@ -19,13 +29,9 @@ class EventsValues extends Component {
           <Typography variant="body2" gutterBottom>
             {element.name}
           </Typography>
-          <ReactJson
+          <JsonView
             key={index}
-            src={element.inputs}
-            style={{ padding: "5px" }}
-            theme="codeschool"
-            indentWidth="2"
-            collapsed="2"
+            json_object={element.inputs}
           />
         </Grid>
       )

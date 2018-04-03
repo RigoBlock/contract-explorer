@@ -60,7 +60,6 @@ class ContractInputFields extends Component {
         } else {
           newInputs.splice(index, 1);
         }
-        console.log(newInputs)
         this.setState({
           inputs: newInputs
         })
@@ -122,7 +121,6 @@ class ContractInputFields extends Component {
     if (typeof this.props.methodSelected.inputs === 'undefined') {
       return null
     }
-    console.log(this.state.inputs)
     return (
       <Paper style={paperStyle} elevation={2} >
         <FormControl fullWidth={true} error={this.error}>

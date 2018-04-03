@@ -19,17 +19,10 @@ const styles = theme => ({
 
 class Index extends React.Component {
 
-  static childContextTypes = {
-    web3: PropTypes.object
-  };
-
-  getChildContext() {
-    return {web3: this.state.web3};
-  }
-
-  componentWillMount () {
-    
+  constructor(props) {
+    super(props)
     var web3
+
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof window.web3 !== 'undefined') {
 
@@ -39,21 +32,58 @@ class Index extends React.Component {
     } else {
       console.log('No web3? You should consider trying MetaMask!')
     }
-    this.setState({web3});
+    this.state = {
+      web3,
+      newBlock: {
+        number: 0
+      },
+      accountsError: true
+
+    }
   }
+
+  static childContextTypes = {
+    web3: PropTypes.object
+  };
+
+  getChildContext() {
+    return {web3: this.state.web3};
+  }
+
+  componentWillMount() {
+    const { web3 } = this.state
+    web3.eth.getAccounts()
+    .then((accounts) => {
+      if (typeof accounts[0] === 'undefined'){
+        this.setState({ 
+          accountsError: true
+        });
+      } else {
+        this.setState({ 
+          accountsError: false
+        });
+      }
+    })
+  }
+
 
   render() {
     return (
       <Grid container spacing={0} >
         <Grid item xs={12}>
-          <TopBar></TopBar>
+          <TopBar accountsError={this.state.accountsError} ></TopBar>
         </Grid>
         <Grid item xs={12}>
-          <Switch>
-            <Route exact path='/' component={HomePage} />
-            <Route exact path='/contract' component={ContractPage} />
-            <Route exact path='/events' component={EventsPage} />
-          </Switch>
+          {!this.state.accountsError
+            ? <Switch>
+              <Route exact path='/' component={HomePage} />
+              <Route exact path='/contract' component={ContractPage} />
+              <Route exact path='/events' component={EventsPage} />
+            </Switch>
+            : <Switch>
+              <Route path='/' component={HomePage} />
+            </Switch>
+          }
         </Grid>
       </Grid>
     );

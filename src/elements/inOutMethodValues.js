@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Grid from 'material-ui/Grid';
-import ReactJson from 'react-json-view'
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
+import JsonView from '../elements/jsonView'
 
 class InOutMethodValues extends Component {
 
@@ -26,12 +26,8 @@ class InOutMethodValues extends Component {
             </Typography>
             </Grid>
             <Grid item xs={12}>
-              <ReactJson
-                src={methodSelected.inputs}
-                style={{padding: "5px"}}
-                theme="codeschool"
-                indentWidth="2"
-                collapsed="2"
+              <JsonView 
+                json_object={methodSelected.inputs}
               />
             </Grid>
             <Grid item xs={12}>
@@ -40,12 +36,8 @@ class InOutMethodValues extends Component {
             </Typography>
             </Grid>
             <Grid item xs={12}>
-              <ReactJson
-                src={methodSelected.outputs}
-                style={{padding: "5px"}}
-                theme="codeschool"
-                indentWidth="2"
-                collapsed="2"
+              <JsonView 
+                json_object={methodSelected.outputs}
               />
             </Grid>
           </Grid>

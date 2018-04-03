@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
-import ReactJson from 'react-json-view'
 import MethodSelect from '../elements/methodSelect'
 import InOutMethodValues from '../elements/inOutMethodValues'
 import ContractInputFields from '../elements/contractInputFields'
@@ -12,6 +11,7 @@ import UploadButton from '../elements/uploadButton'
 import ContractInputAddress from '../elements/contractInputAddress'
 import Loading from '../elements/loading';
 import Sticky from 'react-stickynode';
+import JsonView from '../elements/jsonView'
 // import Web3 from 'web3';
 
 
@@ -26,7 +26,8 @@ class ContractPage extends Component {
       methodSelected: {},
       txError: '',
       json_object: {},
-      contractAddress: '0xE3B53367ab7F9a3A1F82A3dAAb20f78121d1BB12',
+      // contractAddress: '0xE3B53367ab7F9a3A1F82A3dAAb20f78121d1BB12',
+      contractAddress: '',
       gas: 0,
       enableContractAddressField: false,
       enableContractMethodsSelector: false,
@@ -47,8 +48,6 @@ class ContractPage extends Component {
       loading: true
     })
 
-    console.log(inputs)
-    console.log(value)
     // Getting the account address from MetaMask. [0] is the currently selected account in MetaMask.
     // Everything is async.
 
@@ -278,15 +277,10 @@ class ContractPage extends Component {
                 </Typography>
                   {this.state.loading
                     ? <Loading />
-                    : <ReactJson
-                      src={this.state.json_object}
-                      style={{ padding: "5px" }}
-                      theme="codeschool"
-                      indentWidth="2"
-                      collapsed="2"
+                    : <JsonView
+                      json_object={[this.state.json_object]}
                     />
                   }
-
                 </Paper>
               </Grid>
             </Grid>

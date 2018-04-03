@@ -2,41 +2,35 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import ReactJson from 'react-json-view'
 import EventsFilters from '../elements/eventsFilters'
 import { List } from 'immutable';
 import Paper from 'material-ui/Paper';
 import UploadButton from '../elements/uploadButton'
 import ContractInputAddress from '../elements/contractInputAddress'
-import Button from 'material-ui/Button';
 import EventsValues from '../elements/eventsValues'
 import Web3 from 'web3';
 import { EP_RIGOBLOCK_KV_DEV_WS } from '../_utils/const'
 import Sticky from 'react-stickynode';
 import Loading from '../elements/loading';
-import { dragoeventful } from '../abi'
-
+import JsonView from '../elements/jsonView'
+// import { dragoeventful } from '../abi'
 
 class EventsPage extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      abi: dragoeventful,
+      abi: {},
       methodSelected: {},
       eventsList: List([]),
       txError: '',
       json_object: {},
-      contractAddress: "0xd5310e611b332febd046fff87f0e86428b758a93",
+      // contractAddress: "0xd5310e611b332febd046fff87f0e86428b758a93",
+      contractAddress: "",
       gas: 0,
       enableContractAddressField: false,
       enableContractMethodsSelector: false,
-      enableEventTopicField: true,
-      topicsValues: ['AllEvents',
-        '{ "from" : "0xec4ee1bcf8107480815b08b530e0ead75b9f804f" }',
-        '{ "to" : "0xec4ee1bcf8107480815b08b530e0ead75b9f804f" }',
-        '{ "drago" : "0xec4ee1bcf8107480815b08b530e0ead75b9f804f" }'],
+      enableEventTopicField: false,
       errorMsg: false, 
       errorMsgSubscribe: '',
       contractSubscription: null,
@@ -62,47 +56,72 @@ class EventsPage extends Component {
     }
   }
 
-  onSubscribeEvents = () => {
-    const { contractAddress, abi, topicsValues } = this.state
+  onSubscribeEvents = (blockFrom, blockTo, filters, topics) => {
+    const { contractAddress, abi } = this.state
     this.setState({
       loading: true
     })
     // Clear existing subscription
     this.unsubscribeFromEvent()
     
-
     // Web3 subscriptions are available only on WebSocket
     const web3 = new Web3(EP_RIGOBLOCK_KV_DEV_WS)
-
-    var dragoPadded = web3.utils.padLeft("0x36c3057Ce3de417677cFDFE918F77Bf075cDBe22", 64)
-    console.log(dragoPadded)
-    //var subscription = web3.eth.subscribe('newBlockHeaders', this.onNewBlockNumber)
-    const contract = new web3.eth.Contract(abi, contractAddress)
-    console.log(abi)
-    var event = abi.find(function(element) {
-      return (element.name === "DragoCreated" && element.type === "event");
-    });
-    console.log(event.signature)
-    var filters = {}
-    var topics = [...topicsValues]
-    const eventsName = topics.shift()
-    console.log(eventsName)
-    console.log(topics)
-    topics.map(element =>{
-      console.log(element)
-      var json = JSON.parse(element)
-      filters = {...filters, ...json}
-      console.log(filters)
+    var contract
+    try {
+      contract = new web3.eth.Contract(abi, contractAddress)
+    }
+    catch(error) {
+      console.log(error);
+      this.setState({
+        json_object: { error: String(error) },
+        loading: false
+      })
+      return
+    }
+    
+    // Parsing topic[0]. topic[0] must contain the event singature. 
+    var eventsSingatures = []
+    topics[0].map((event, index) =>{
+      abi.map(function(element) {
+        if (element.name === event && element.type === "event") {
+          return eventsSingatures[index] = element.signature
+        }
+        return true
+      });
+      return true
     })
-    contract.getPastEvents('AllEvents', {
-      // filter: filters,
-      fromBlock: 0,
-      toBlock: 'latest',
-      topics: [event.signature, null, null, null]
+
+    // Padding the other topics. Element in topics are expeted to be a 0x-prefixed, padded, hex-encoded hash with length 64.
+    var topicsPadded = []
+    topics.map((topic, index) => {
+      topicsPadded[index] = topic.map((element) => {
+        if (element !== "") {
+          return web3.utils.padLeft(element, 64)
+        } else {
+          return null
+        }
+      }
+      )
+      return true
+    })
+    // Getting the past logs. topics must by an array of arrays. 
+    // An item must be se to null if the topic is empty. Don't pass an array such as array = null.
+    //
+    // ATTENTION: filsters parameter seems to be buggy in the current wersion of Web3. Events are not filtered.
+
+    contract.getPastEvents('allEvents', {
+      filter: filters,
+      fromBlock: blockFrom,
+      toBlock: blockTo,
+      topics: [
+        eventsSingatures.length === 0 ? null: eventsSingatures,
+        topicsPadded[1][0] === null ? null : topicsPadded[1],
+        topicsPadded[2][0] === null ? null : topicsPadded[2],
+        topicsPadded[3][0] === null ? null : topicsPadded[3]
+      ]
     })
     .then(events => {
       const eventsList = events.reverse()
-      console.log(events)
       this.setState({
         loading: false,
         json_object: eventsList
@@ -111,7 +130,14 @@ class EventsPage extends Component {
     .then(() =>{
       // For more info please refer to the docs: https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#events-allevents
       const subscription = contract.events.allEvents({
-        fromBlock: "latest"
+        filter: filters,
+        fromBlock:'latest',
+        topics: [
+          eventsSingatures.length === 0 ? null: eventsSingatures,
+          topicsPadded[1][0] === null ? null : topicsPadded[1],
+          topicsPadded[2][0] === null ? null : topicsPadded[2],
+          topicsPadded[3][0] === null ? null : topicsPadded[3]
+        ]
       }, this.onNewEvent)
       // ************************************
       //
@@ -157,23 +183,13 @@ class EventsPage extends Component {
       abi: uploadedAbi,
       eventsList: List(uploadedAbi).sortBy(method => method.name).filter(method => method.type === 'event' ),
       enableContractAddressField: true,
-      enableContractMethodsSelector: true,
+      enableEventTopicField: true,
     })
   }
   
   onChangeContractAddress = event => {
     this.setState({
       contractAddress: event.target.value,
-    });
-  };
-
-  onChangeTopic = event => {
-    console.log(event.target.id)
-    var topicsValues = [...this.state.topicsValues]
-    topicsValues[event.target.id] = event.target.value
-    console.log(topicsValues)
-    this.setState({
-      topicsValues: topicsValues,
     });
   };
 
@@ -191,7 +207,6 @@ class EventsPage extends Component {
       padding: 10,
       width: "100%"
     }
-
     return (
       <Grid container spacing={8} style={containerWrapperStyle}>
         <Grid item xs={12}>
@@ -213,9 +228,10 @@ class EventsPage extends Component {
                         onChangeContractAddress={this.onChangeContractAddress}
                         contractAddress={this.state.contractAddress}
                         enableContractAddressField={this.state.enableContractAddressField}
+                        
                       />
                     </Grid>
-                    <Grid item xs={12}>
+                    {/* <Grid item xs={12}>
                       <FormControl fullWidth={true} error={this.state.errorSubscribe} >
                         <Button
                           variant="raised" component="span" color="primary"
@@ -226,7 +242,7 @@ class EventsPage extends Component {
                       </Button>
                         <FormHelperText>{this.state.errorMsgSubscribe}</FormHelperText>
                       </FormControl>
-                    </Grid>
+                    </Grid> */}
                   </Paper>
                 </Grid>
               </Grid>
@@ -258,9 +274,9 @@ class EventsPage extends Component {
                     <Paper style={paperStyle} elevation={2}>
                       <Grid item xs={12}>
                         <EventsFilters
-                          onChangeTopic={this.onChangeTopic}
-                          topicsValues={this.state.topicsValues}
+                          onSubscribeEvents={this.onSubscribeEvents}
                           enableEventTopicField={this.state.enableEventTopicField}
+                          disabled={Object.keys(this.state.abi).length === 0 && this.state.abi.constructor === Object}
                         />
                       </Grid>
                     </Paper>
@@ -276,12 +292,8 @@ class EventsPage extends Component {
                     <Paper style={paperStyle} elevation={2}>
                       {this.state.loading
                         ? <Loading />
-                        : <ReactJson
-                          src={this.state.json_object}
-                          style={{ padding: "5px" }}
-                          theme="codeschool"
-                          indentWidth="2"
-                          collapsed="1"
+                        : <JsonView
+                          json_object={[...this.state.json_object]}
                         />
                       }
                     </Paper>
