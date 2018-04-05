@@ -210,6 +210,9 @@ class RigoblockApi extends React.Component {
                     //
                     console.log(data)
                     poolApi.contract.drago.balanceOf(accountAddress)
+                    .then (balance => {
+                      console.log(balance)
+                    })
                   })
               })
               .then(() => {
@@ -243,7 +246,7 @@ class RigoblockApi extends React.Component {
         <Grid item xs={12}>
           <br />
           <FormControl fullWidth={true}>
-            <Button variant="raised" color="primary" onClick={this.buyDrago}>
+            <Button variant="raised" onClick={this.buyDrago}>
               Buy Drago
           </Button>
           </FormControl>
@@ -252,7 +255,7 @@ class RigoblockApi extends React.Component {
         <Grid item xs={12}>
         <br />
           <FormControl fullWidth={true}>
-            <Button variant="raised" color="primary" onClick={this.sellDrago}>
+            <Button variant="raised" onClick={this.sellDrago}>
               Sell Drago
           </Button>
           </FormControl>
@@ -260,7 +263,7 @@ class RigoblockApi extends React.Component {
         <Grid item xs={12}>
         <br />
           <FormControl fullWidth={true}>
-            <Button variant="raised" color="primary" onClick={this.getDragoDetails}>
+            <Button variant="raised" onClick={this.getDragoDetails}>
               Get Drago Data
           </Button>
           </FormControl>
