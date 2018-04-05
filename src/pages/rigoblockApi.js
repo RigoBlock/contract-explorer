@@ -9,6 +9,7 @@ import PoolApi from '../PoolsApi/src'
 import Api from '@parity/api'
 import Web3 from 'web3'
 import BigNumber from 'bignumber.js';
+import { drago } from '../abi'
 
 
 class RigoblockApi extends React.Component {
@@ -96,6 +97,28 @@ class RigoblockApi extends React.Component {
           .catch((error) => {
             console.log(error)
           })
+      })
+      .then (() =>{
+        const web3Parity = new Web3('https://srv03.endpoint.network:8545')
+        const contract = new web3Parity.eth.Contract(drago, dragoAddress)
+        var options = {
+          from: '0x00791547B03F5541971B199a2d347446eB8Dc9bE',
+          value: web3.utils.toWei(ethAmount).toString()
+        }
+        web3Parity.eth.getAccounts()
+        .then((accounts)=>{
+          console.log(accounts)
+        })
+        contract.methods.buyDrago().estimateGas(options)
+        .then(gasEstimate => {
+          options.gas = gasEstimate
+          contract.methods.buyDrago().send(options)
+          .then(result => {
+            console.log(result)
+          })
+        }
+        
+        )
       })
   }
 
@@ -250,7 +273,6 @@ class RigoblockApi extends React.Component {
               Buy Drago
           </Button>
           </FormControl>
-
         </Grid>
         <Grid item xs={12}>
         <br />
