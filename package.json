@@ -3,10 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@parity/api": "^2.1.20",
     "ajv": "^6.4.0",
+    "babel-jest": "^22.4.3",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "bignumber.js": "^6.0.0",
     "eth-lib": "^0.2.8",
     "ethjs-unit": "^0.1.6",
     "immutable": "^3.8.2",
+    "jest": "^22.4.3",
     "json-formatter-js": "^2.2.0",
     "material-ui": "^1.0.0-beta.39",
     "prop-types": "latest",
@@ -17,6 +23,7 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "latest",
     "react-stickynode": "^1.4.1",
+    "react-test-renderer": "^16.3.0",
     "swarm-js": "^0.1.37",
     "ts-react-json-table": "^0.1.1",
     "underscore": "^1.8.3",
@@ -28,5 +35,9 @@
     "build": "GENERATE_SOURCEMAP=false PUBLIC_URL=./ react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1"
   }
 }

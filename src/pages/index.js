@@ -5,6 +5,7 @@ import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
 import ContractPage from './contract';
 import EventsPage from './events';
+import RigoblockApi from './rigoblockApi';
 import HomePage from './home';
 import Web3 from 'web3';
 import TopBar from '../elements/topBar'
@@ -79,6 +80,7 @@ class Index extends React.Component {
               <Route exact path='/' component={HomePage} />
               <Route exact path='/contract' component={ContractPage} />
               <Route exact path='/events' component={EventsPage} />
+              <Route exact path='/rigoblock-api' component={RigoblockApi} />
             </Switch>
             : <Switch>
               <Route path='/' component={HomePage} />
