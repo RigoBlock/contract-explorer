@@ -87,7 +87,7 @@ class TopBar extends React.Component {
               <Tab label="Contracts" value="/contract" />
               <Tab label="Events" value="/events" />
               <Tab label="RigoBlock API" value="/rigoblock-api" />
-
+              <Tab label="Exchange" value="/exchange" />
             </Tabs>
           </Grid>
           <Grid item xs={4} style={{ margin: 'auto' }}>

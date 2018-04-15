@@ -10,6 +10,7 @@ import HomePage from './home';
 import Web3 from 'web3';
 import TopBar from '../elements/topBar'
 import Grid from 'material-ui/Grid';
+import Exchange from './exchange'
 
 const styles = theme => ({
   root: {
@@ -81,6 +82,7 @@ class Index extends React.Component {
               <Route exact path='/contract' component={ContractPage} />
               <Route exact path='/events' component={EventsPage} />
               <Route exact path='/rigoblock-api' component={RigoblockApi} />
+              <Route exact path='/exchange' component={Exchange} />
             </Switch>
             : <Switch>
               <Route path='/' component={HomePage} />
