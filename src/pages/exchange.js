@@ -58,6 +58,7 @@ class Exchange extends React.Component {
             </Drawer>
             <main className={this.props.classes.content}>
             <Switch>
+              <Route exact path='/zeroex' component={ExchangeOrderCreator} />
               <Route exact path='/zeroex/orders-creator' component={ExchangeOrderCreator} />
               <Route exact path='/zeroex/orders-validator' component={ExchangeOrderValidator} />
             </Switch>

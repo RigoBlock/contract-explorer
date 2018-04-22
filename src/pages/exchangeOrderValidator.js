@@ -16,6 +16,7 @@ import red from 'material-ui/colors/red';
 import green from 'material-ui/colors/green';
 import {SchemaValidator, ValidatorResult, schemas} from '@0xproject/json-schemas';
 import ReactJson from 'react-json-view'
+import serializeError  from 'serialize-error';
 
 
 class ExchangeOrderValidator extends React.Component {
@@ -47,26 +48,49 @@ class ExchangeOrderValidator extends React.Component {
           error: {}
         }
       },
-      order: 
-        `{
-          "maker": "0xc8dcd42e846466f2d2b89f3c54eba37bf738019b",
-          "taker": "0x0000000000000000000000000000000000000000",
-          "feeRecipient": "0x0000000000000000000000000000000000000000",
-          "makerTokenAddress": "0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570",
-          "takerTokenAddress": "0x653e49e301e508a13237c0ddc98ae7d4cd2667a1",
-          "exchangeContractAddress": "0x90fe2af704b34e0224bf2299c838e04d4dcf1364",
-          "salt": "56565891822800224983939090003039772469175867842717407358037642829940228233709",
-          "makerFee": "0",
-          "takerFee": "0",
-          "makerTokenAmount": "0",
-          "takerTokenAmount": "0",
-          "expirationUnixTimestampSec": "1524401337851",
-          "ecSignature": {
-            "v": 27,
-            "r": "0x2e20c911d0afe910a3ead88c8bbabe4e7000b21c870d2e6c47a1d5268d13ff8e",
-            "s": "0x4030aa8626addd1e619d3109c7eed30e3ccfa3e5408173d701e66a7cc109d9e0"
-          }
-        }`
+      // order: 
+      //   `{
+      //     "maker": "0xc8dcd42e846466f2d2b89f3c54eba37bf738019b",
+      //     "taker": "0x0000000000000000000000000000000000000000",
+      //     "feeRecipient": "0x0000000000000000000000000000000000000000",
+      //     "makerTokenAddress": "0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570",
+      //     "takerTokenAddress": "0x653e49e301e508a13237c0ddc98ae7d4cd2667a1",
+      //     "exchangeContractAddress": "0x90fe2af704b34e0224bf2299c838e04d4dcf1364",
+      //     "salt": "56565891822800224983939090003039772469175867842717407358037642829940228233709",
+      //     "makerFee": "0",
+      //     "takerFee": "0",
+      //     "makerTokenAmount": "0",
+      //     "takerTokenAmount": "0",
+      //     "expirationUnixTimestampSec": "1524401337851",
+      //     "ecSignature": {
+      //       "v": 27,
+      //       "r": "0x2e20c911d0afe910a3ead88c8bbabe4e7000b21c870d2e6c47a1d5268d13ff8e",
+      //       "s": "0x4030aa8626addd1e619d3109c7eed30e3ccfa3e5408173d701e66a7cc109d9e0"
+      //     }
+      //   }`
+      // order: 
+      // `
+      // {
+      //   "maker": "0x65d5994ab851c5c0f31be953060394cfc171e7c7",
+      //   "taker": "0x0000000000000000000000000000000000000000",
+      //   "feeRecipient": "0x0000000000000000000000000000000000000000",
+      //   "makerTokenAddress": "0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570",
+      //   "takerTokenAddress": "0x653e49e301e508a13237c0ddc98ae7d4cd2667a1",
+      //   "exchangeContractAddress": "0x90fe2af704b34e0224bf2299c838e04d4dcf1364",
+      //   "salt": "48356371335730049766120964308515640518073031323479806394559131209349802548215",
+      //   "makerFee": "0",
+      //   "takerFee": "0",
+      //   "makerTokenAmount": "0",
+      //   "takerTokenAmount": "0",
+      //   "expirationUnixTimestampSec": "1524424722806",
+      //   "ecSignature": {
+      //     "v": 27,
+      //     "r": "0x25765d00fce19598fe4afcc9452ae0aed41c9f39fd59993cdde91112fde2ce50",
+      //     "s": "0x6014e7200d8a55d4fd1b0f54ffb159c0d03d0e5ebc2b6f0988ab8cf113ce3878"
+      //   }
+      // }
+      // `,
+      order: ''
       
     };
   }
@@ -109,9 +133,9 @@ class ExchangeOrderValidator extends React.Component {
       try {
         return ZeroEx.isValidOrderHash(orderHash)
       }
-      catch (err) {
-        console.log(err)
-        validation.hashError = JSON.parse(`{"error" : "${err}" }`)
+      catch (error) {
+        console.log(error)
+        validation.hashError = serializeError(error)
         return false
       }
     }
@@ -124,9 +148,9 @@ class ExchangeOrderValidator extends React.Component {
           orderObject.maker
         )
       }
-      catch (err) {
-        console.log(err)
-        validation.signatureError = JSON.parse(`{"error" : "${err}" }`)
+      catch (error) {
+        console.log(error)
+        validation.signatureError = serializeError(error)
         return false
       }
     }

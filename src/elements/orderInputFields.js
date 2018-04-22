@@ -56,8 +56,14 @@ class OrderInputFields extends Component {
     var fieldValue
     for (var key in order) {
       fieldValue = order[key]
+
+      if ( typeof order[key] === 'string') {
+        fieldValue = order[key].toLowerCase()
+      } else {
+        fieldValue = order[key]
+      }
       if ( order[key] instanceof BigNumber) {
-        fieldValue = order[key].toString()
+        fieldValue = order[key].toString().toLowerCase()
       } else {
         fieldValue = order[key]
       }

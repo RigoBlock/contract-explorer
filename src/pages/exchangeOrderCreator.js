@@ -11,6 +11,7 @@ import * as Web3ProviderEngine from 'web3-provider-engine';
 import * as RPCSubprovider from 'web3-provider-engine/subproviders/rpc';
 import { InjectedWeb3Subprovider } from '@0xproject/subproviders';
 import {ZeroEx} from '0x.js';
+import serializeError  from 'serialize-error';
 
 import OrderInputFields from "../elements/orderInputFields"
 
@@ -53,6 +54,7 @@ class ExchangeOrderCreator extends React.Component {
       json_object: {},
       order: order,
       orderHash: '',
+      signedOrderStatus: 'succeed'
     };
   }
 
@@ -76,23 +78,51 @@ class ExchangeOrderCreator extends React.Component {
 
   async signOrder() {
     const { order, zeroEx } = this.state
-    const orderHash = ZeroEx.getOrderHashHex(order);
+    var ecSignatureError = false
+    var hashError = false
 
-    const signerAddress = await zeroEx.getAvailableAddressesAsync()
+    const getHash = () => {
+      try {
+        const hash = ZeroEx.getOrderHashHex(order)
+        return hash
+      }
+      catch (error) {
+        console.log(error)
+        hashError = serializeError(error)
+        return ''
+      }
+    }
+    
+    const orderHash = getHash()
+    console.log(hashError)
 
-    // Signing orderHash -> ecSignature
-    const shouldAddPersonalMessagePrefix = true;
-    const ecSignature = await zeroEx.signOrderHashAsync(orderHash, signerAddress[0], shouldAddPersonalMessagePrefix);
+    if ( orderHash !== '') {
+      const signerAddress = await zeroEx.getAvailableAddressesAsync()
 
-    // Append signature to order
-    const signedOrder = {
-      ...order,
-      ecSignature,
-    };
-    this.setState({
-      signedOrder: signedOrder,
-      orderHash: orderHash
-    })
+      // Signing orderHash -> ecSignature
+      const shouldAddPersonalMessagePrefix = true;
+      const ecSignature = await zeroEx.signOrderHashAsync(orderHash, signerAddress[0], shouldAddPersonalMessagePrefix)
+                                .catch((error)=>{
+                                  console.log(error)
+                                }
+    )
+      // Append signature to order
+      const signedOrder = {
+        ...order,
+        ecSignature,
+      };
+      this.setState({
+        signedOrder: signedOrder,
+        orderHash: orderHash,
+        signedOrderStatus: 'succeed', 
+        hashError: false,
+      })
+    } else {
+      this.setState({
+        hashError: hashError,
+      })
+    }
+
   }
 
   onSignOrder = () =>{
@@ -113,12 +143,17 @@ class ExchangeOrderCreator extends React.Component {
           <Typography variant="headline" >
             ORDER HASH
           </Typography>
-          {/* <FormControl fullWidth={true}>
-            <Button variant="raised" onClick={this.onSubmitOrder}>
-              SUBMIT
-            </Button>
-          </FormControl> */}
-          {[this.state.orderHash]}
+          {(this.state.hashError) 
+          ?           <ReactJson
+          src={this.state.hashError}
+          style={{ padding: "5px" }}
+          theme="codeschool"
+          indentWidth="2"
+          collapsed="2"
+        />
+          : this.state.orderHash}
+        </Grid>
+        <Grid item xs={12}>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="headline" >
