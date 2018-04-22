@@ -5,7 +5,6 @@ import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
 import ContractPage from './contract';
 import EventsPage from './events';
-import RigoblockApi from './rigoblockApi';
 import HomePage from './home';
 import Web3 from 'web3';
 import TopBar from '../elements/topBar'
@@ -68,7 +67,6 @@ class Index extends React.Component {
     })
   }
 
-
   render() {
     return (
       <Grid container spacing={0} >
@@ -81,8 +79,8 @@ class Index extends React.Component {
               <Route exact path='/' component={HomePage} />
               <Route exact path='/contract' component={ContractPage} />
               <Route exact path='/events' component={EventsPage} />
-              <Route exact path='/rigoblock-api' component={RigoblockApi} />
-              <Route exact path='/exchange' component={Exchange} />
+              {/* <Route exact path='/rigoblock-api' component={RigoblockApi} /> */}
+              <Route path='/zeroex' component={Exchange} />
             </Switch>
             : <Switch>
               <Route path='/' component={HomePage} />

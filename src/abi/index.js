@@ -10,6 +10,7 @@ import rigotoken from './rigoToken-v2.json';
 import vault from './vault-v2.json';
 import vaulteventful from './vaultEventful-v2.json';
 import vaultfactory from './vaultFactory-v2.json';
+import fundProxy from './fundProxy.json';
 
 // Legacy v1 contracts
 import ethusd from './ethusd.json';
@@ -33,6 +34,7 @@ import exchange from './exchange.json';
 // import rigotoken from './v1/rigoToken.json';
 
 export {
+  fundProxy,
   vault,
   vaultfactory,
   dragoregistry,

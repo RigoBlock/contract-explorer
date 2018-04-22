@@ -16,7 +16,7 @@ class TopBar extends React.Component {
         number: 0
       },
       accountsError: true,
-      tabSelected: this.props.location.pathname,
+      tabSelected: this.props.location.pathname.split('/'),
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -59,13 +59,12 @@ class TopBar extends React.Component {
 
   handleChange = (event, value) => {
     this.setState({
-      tabSelected: value,
+      tabSelected: value.split('/'),
     });
     this.props.history.push(value);
   };
 
   render() {
-
     const styles = {
       counter: {
         textAlign: "right",
@@ -80,14 +79,14 @@ class TopBar extends React.Component {
         <Grid container spacing={0} >
           <Grid item xs={8}>
             <Tabs
-              value={this.state.tabSelected}
+              value={"/" + this.state.tabSelected[1]}
               onChange={this.handleChange}
             >
               <Tab label="Home" value="/" />
               <Tab label="Contracts" value="/contract" />
               <Tab label="Events" value="/events" />
-              <Tab label="RigoBlock API" value="/rigoblock-api" />
-              <Tab label="Exchange" value="/exchange" />
+              {/* <Tab label="RigoBlock API" value="/rigoblock-api" /> */}
+              <Tab label="ZeroEx" value="/zeroex" />
             </Tabs>
           </Grid>
           <Grid item xs={4} style={{ margin: 'auto' }}>
