@@ -16,7 +16,7 @@ import red from 'material-ui/colors/red';
 import green from 'material-ui/colors/green';
 import {SchemaValidator, ValidatorResult, schemas} from '@0xproject/json-schemas';
 import ReactJson from 'react-json-view'
-import serializeError  from 'serialize-error';
+// import serializeError  from 'serialize-error';
 
 
 class ExchangeOrderValidator extends React.Component {
@@ -135,7 +135,7 @@ class ExchangeOrderValidator extends React.Component {
       }
       catch (error) {
         console.log(error)
-        validation.hashError = serializeError(error)
+        // validation.hashError = serializeError(error)
         return false
       }
     }
@@ -150,7 +150,7 @@ class ExchangeOrderValidator extends React.Component {
       }
       catch (error) {
         console.log(error)
-        validation.signatureError = serializeError(error)
+        // validation.signatureError = serializeError(error)
         return false
       }
     }
@@ -160,8 +160,7 @@ class ExchangeOrderValidator extends React.Component {
 
     this.setState({
       validation: validation})
-    
-    console.log(validation)
+  
   }
 
   onTextFieldChange = (event) => {

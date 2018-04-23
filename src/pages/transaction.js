@@ -33,7 +33,6 @@ class TransactionPage extends React.Component {
 
   handleClick = () => {
     const web3 = this._web3
-    console.log(this.context.web3.eth)
     this.context.web3.eth.getTransactionReceipt('0x768f85ea09ba5857f70e1e54d07970cd78c4948b3abc12f0d0b31e81996d2b42')
     .then(receipt =>{
       console.log(receipt)

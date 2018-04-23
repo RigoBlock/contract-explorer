@@ -11,7 +11,7 @@ import * as Web3ProviderEngine from 'web3-provider-engine';
 import * as RPCSubprovider from 'web3-provider-engine/subproviders/rpc';
 import { InjectedWeb3Subprovider } from '@0xproject/subproviders';
 import {ZeroEx} from '0x.js';
-import serializeError  from 'serialize-error';
+// import serializeError  from 'serialize-error';
 
 import OrderInputFields from "../elements/orderInputFields"
 
@@ -88,13 +88,12 @@ class ExchangeOrderCreator extends React.Component {
       }
       catch (error) {
         console.log(error)
-        hashError = serializeError(error)
+        // hashError = serializeError(error)
         return ''
       }
     }
     
     const orderHash = getHash()
-    console.log(hashError)
 
     if ( orderHash !== '') {
       const signerAddress = await zeroEx.getAvailableAddressesAsync()
