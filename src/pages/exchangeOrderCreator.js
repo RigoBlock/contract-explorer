@@ -7,19 +7,20 @@ import JsonView from '../elements/jsonView'
 import ReactJson from 'react-json-view'
 
 // 0x stuff
-import * as Web3ProviderEngine from 'web3-provider-engine';
-import * as RPCSubprovider from 'web3-provider-engine/subproviders/rpc';
-import { InjectedWeb3Subprovider } from '@0xproject/subproviders';
+// import * as Web3ProviderEngine from 'web3-provider-engine/dist/es5';
+// import * as RPCSubprovider from 'web3-provider-engine/dist/es5/subproviders/rpc';
+// import { InjectedWeb3Subprovider } from '@0xproject/subproviders';
 import {ZeroEx} from '0x.js';
-// import serializeError  from 'serialize-error';
+import Web3 from 'web3';
+import serializeError  from 'serialize-error';
 
 import OrderInputFields from "../elements/orderInputFields"
 
 
 class ExchangeOrderCreator extends React.Component {
 
-  constructor(props) {
-    super(props)
+  constructor(props, context) {
+    super(props, context)
     const KOVAN_NETWORK_ID = 42;
     const DECIMALS = 18;
     const ZeroExConfig = {
@@ -27,11 +28,12 @@ class ExchangeOrderCreator extends React.Component {
       // exchangeContractAddress: this.state.fundProxyAddress
     }
     // Create a Web3 Provider Engine
-    const providerEngine = new Web3ProviderEngine();
-    providerEngine.addProvider(new InjectedWeb3Subprovider(window.web3.currentProvider));
-    providerEngine.addProvider(new RPCSubprovider({ rpcUrl: 'https://srv03.endpoint.network:8545' }));
-    providerEngine.start();
-    var zeroEx = new ZeroEx(providerEngine, ZeroExConfig);
+    // const providerEngine = new Web3ProviderEngine();
+    // providerEngine.addProvider(new InjectedWeb3Subprovider(web3.currentProvider));
+    // providerEngine.addProvider(new RPCSubprovider({ rpcUrl: 'https://srv03.endpoint.network:8545' }));
+    // providerEngine.start();
+    var web3 = new Web3(window.web3.currentProvider)
+    var zeroEx = new ZeroEx(web3.currentProvider, ZeroExConfig);
     const WETH_ADDRESS = zeroEx.etherToken.getContractAddressIfExists(); // The wrapped ETH token contract
     const ZRX_ADDRESS = zeroEx.exchange.getZRXTokenAddress(); // The ZRX token contract
     const EXCHANGE_ADDRESS = zeroEx.exchange.getContractAddress();
@@ -80,7 +82,6 @@ class ExchangeOrderCreator extends React.Component {
     const { order, zeroEx } = this.state
     var ecSignatureError = false
     var hashError = false
-
     const getHash = () => {
       try {
         const hash = ZeroEx.getOrderHashHex(order)
@@ -88,7 +89,7 @@ class ExchangeOrderCreator extends React.Component {
       }
       catch (error) {
         console.log(error)
-        // hashError = serializeError(error)
+        hashError = serializeError(error)
         return ''
       }
     }
@@ -100,6 +101,7 @@ class ExchangeOrderCreator extends React.Component {
 
       // Signing orderHash -> ecSignature
       const shouldAddPersonalMessagePrefix = true;
+      
       const ecSignature = await zeroEx.signOrderHashAsync(orderHash, signerAddress[0], shouldAddPersonalMessagePrefix)
                                 .catch((error)=>{
                                   console.log(error)

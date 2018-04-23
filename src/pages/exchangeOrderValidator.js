@@ -6,17 +6,18 @@ import { FormControl, FormHelperText } from 'material-ui/Form';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper';
+import Web3 from 'web3';
 
 // 0x stuff
-import * as Web3ProviderEngine from 'web3-provider-engine';
-import * as RPCSubprovider from 'web3-provider-engine/subproviders/rpc';
-import { InjectedWeb3Subprovider } from '@0xproject/subproviders';
+// import * as Web3ProviderEngine from 'web3-provider-engine/dist/es5';
+// import * as RPCSubprovider from 'web3-provider-engine/dist/es5/subproviders/rpc';
+// import { InjectedWeb3Subprovider } from '@0xproject/subproviders';
 import {ZeroEx} from '0x.js';
 import red from 'material-ui/colors/red';
 import green from 'material-ui/colors/green';
 import {SchemaValidator, ValidatorResult, schemas} from '@0xproject/json-schemas';
 import ReactJson from 'react-json-view'
-// import serializeError  from 'serialize-error';
+import serializeError  from 'serialize-error';
 
 
 class ExchangeOrderValidator extends React.Component {
@@ -29,11 +30,12 @@ class ExchangeOrderValidator extends React.Component {
       // exchangeContractAddress: this.state.fundProxyAddress
     }
     // Create a Web3 Provider Engine
-    const providerEngine = new Web3ProviderEngine();
-    providerEngine.addProvider(new InjectedWeb3Subprovider(window.web3.currentProvider));
-    providerEngine.addProvider(new RPCSubprovider({ rpcUrl: 'https://srv03.endpoint.network:8545' }));
-    providerEngine.start();
-    var zeroEx = new ZeroEx(providerEngine, ZeroExConfig);
+    // const providerEngine = new Web3ProviderEngine();
+    // providerEngine.addProvider(new InjectedWeb3Subprovider(window.web3.currentProvider));
+    // providerEngine.addProvider(new RPCSubprovider({ rpcUrl: 'https://srv03.endpoint.network:8545' }));
+    // providerEngine.start();
+    var web3 = new Web3(window.web3.currentProvider)
+    var zeroEx = new ZeroEx(web3.currentProvider, ZeroExConfig);
     this.state = {
       zeroEx: zeroEx,
       orderError: false,
@@ -112,8 +114,16 @@ class ExchangeOrderValidator extends React.Component {
         error: {}
       }
     }
-    const orderObject = JSON.parse(order)
+    const getOrderObject = () =>{
+      try {
+        return JSON.parse(order)
+      }
+      catch (error) {
+        return {}
+      }
+    }
     const validator = new SchemaValidator();
+    const orderObject = getOrderObject()
     validation.schema = validator.validate(orderObject, orderSchema)
 
     const getHash = () => {
@@ -135,7 +145,7 @@ class ExchangeOrderValidator extends React.Component {
       }
       catch (error) {
         console.log(error)
-        // validation.hashError = serializeError(error)
+        validation.hashError = serializeError(error)
         return false
       }
     }
@@ -150,7 +160,7 @@ class ExchangeOrderValidator extends React.Component {
       }
       catch (error) {
         console.log(error)
-        // validation.signatureError = serializeError(error)
+        validation.signatureError = serializeError(error)
         return false
       }
     }
