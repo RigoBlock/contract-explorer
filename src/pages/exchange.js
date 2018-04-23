@@ -8,6 +8,7 @@ import { Route, Switch } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import ExchangeOrderCreator from './exchangeOrderCreator'
 import ExchangeOrderValidator from './exchangeOrderValidator'
+import ExchangeOrderFiller from './exchangeOrderFiller'
 
 const drawerWidth = 150;
 
@@ -61,6 +62,7 @@ class Exchange extends React.Component {
               <Route exact path='/zeroex' component={ExchangeOrderCreator} />
               <Route exact path='/zeroex/orders-creator' component={ExchangeOrderCreator} />
               <Route exact path='/zeroex/orders-validator' component={ExchangeOrderValidator} />
+              <Route exact path='/zeroex/orders-filler' component={ExchangeOrderFiller} />
             </Switch>
             </main>
           </div>

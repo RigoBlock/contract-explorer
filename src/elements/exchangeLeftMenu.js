@@ -15,6 +15,9 @@ class ExchangeLeftMenu extends React.Component {
         <ListItem button component={Link} to="/zeroex/orders-validator">
           <ListItemText primary="Validator" />
         </ListItem>
+        <ListItem button component={Link} to="/zeroex/orders-filler">
+          <ListItemText primary="Filler" />
+        </ListItem>
       </List>
     );
   }
