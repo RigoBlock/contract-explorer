@@ -48,7 +48,7 @@ class ExchangeOrderFiller extends React.Component {
         amount: '0',
       },
       submitDisabled: true,
-      exchangeSelected: 'zeroEx',
+      exchangeSelected: 'rigoBlock',
 
       exchangeList: {
         zeroEx: {
