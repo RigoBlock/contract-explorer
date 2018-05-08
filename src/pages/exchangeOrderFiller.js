@@ -191,7 +191,7 @@ class ExchangeOrderFiller extends React.Component {
 
     // 2
     //
-    // WEB3 RAW TRANSACTION
+    // WEB3 
     //
 
     const ZeroExConfig = { ...this.state.exchangeList[this.state.exchangeSelected] }
@@ -233,7 +233,7 @@ class ExchangeOrderFiller extends React.Component {
 
     // 3
     //
-    // WEB3 NORMAL
+    // WEB3 RAW
     //
 
     const encodedABI = exchangeContract.methods
@@ -275,6 +275,7 @@ class ExchangeOrderFiller extends React.Component {
         })
       })
 
+    // 4
     //
     // WEB3 NORMAL
     //
