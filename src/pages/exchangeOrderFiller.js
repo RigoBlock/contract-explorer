@@ -48,7 +48,7 @@ class ExchangeOrderFiller extends React.Component {
         txReceipt: {},
         amount: '0',
       },
-      submitDisabled: true,
+      submitDisabled: false,
       exchangeSelected: 'rigoBlock',
 
       exchangeList: {
@@ -324,9 +324,9 @@ class ExchangeOrderFiller extends React.Component {
 
   onAmountChange = (event) => {
     try {
-      new BigNumber(event.target.value)
+      var amount = new BigNumber(event.target.value).greaterThan(0)
       this.setState({
-        submitDisabled: false,
+        submitDisabled: !amount,
       })
     }
     catch (error) {
@@ -428,7 +428,7 @@ class ExchangeOrderFiller extends React.Component {
             <br />
             < br />
             <FormControl fullWidth={true} >
-              <Button variant="raised" color="primary" onClick={this.onFillOrder} disabled={!this.state.submitDisabled}>
+              <Button variant="raised" color="primary" onClick={this.onFillOrder} disabled={this.state.submitDisabled}>
                 SUBMIT
               </Button>
             </FormControl>
