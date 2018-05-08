@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
-import Paper from 'material-ui/Paper';
 import { BigNumber } from '@0xproject/utils';
-
+import Icon from 'material-ui/Icon';
+import {
+  ETHERSCAN_KOVAN
+} from '../_utils/const'
 
 class OrderInputFields extends Component {
 
@@ -49,6 +51,26 @@ class OrderInputFields extends Component {
     const newOrder = { ...order, ...{[event.target.id]: event.target.value}}
     this.props.onOrderChange(newOrder)
   };
+
+  renderLabel = (label, value) => {
+    var labels = [
+      'maker',
+      'taker',
+      'feeRecipient',
+      'makerTokenAddress',
+      'takerTokenAddress',
+      'exchangeContractAddress',
+    ]
+    return labels.includes(label) ?
+      ([label + ' ',
+      <a key={label} href={ETHERSCAN_KOVAN + '/address/' + value} target='_blank'>
+        <Icon color="primary">
+          open_in_new
+    </Icon>
+      </a>
+      ])
+    : label
+  }
   
   renderInputFields = () => {
     const { order } = this.props
@@ -71,7 +93,7 @@ class OrderInputFields extends Component {
       <TextField
           id={key}
           key={key}
-          label={key}
+          label={this.renderLabel(key, fieldValue)}
           InputLabelProps={{
             shrink: true,
           }}
@@ -87,20 +109,15 @@ class OrderInputFields extends Component {
   }
 
   render() {
-    const paperStyle = {
-      padding: 10,
-    }
+
     return (
-      <Paper style={paperStyle} elevation={2} >
-        <FormControl fullWidth={true} error={this.error}>
-          {this.renderInputFields()}
-          <FormHelperText>{this.state.errorMsg}</FormHelperText>
-          <br />
-          <Button variant="raised" color="primary" onClick={this.props.onSignOrder}>
+      <FormControl fullWidth={true} error={this.error}>
+        {this.renderInputFields()}
+        <FormHelperText>{this.state.errorMsg}</FormHelperText>
+        <Button variant="raised" color="primary" onClick={this.props.onSignOrder}>
           Sign
         </Button>
-        </FormControl>
-      </Paper>
+      </FormControl>
     );
   }
 }

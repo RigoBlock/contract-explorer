@@ -1,53 +1,42 @@
 [
 	{
-		"constant": false,
+		"anonymous": false,
 		"inputs": [
 			{
-				"name": "_newAddress",
-				"type": "address"
+				"indexed": true,
+				"name": "symbol",
+				"type": "string"
+			},
+			{
+				"indexed": true,
+				"name": "id",
+				"type": "uint256"
 			}
 		],
-		"name": "upgrade",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
+		"name": "Unregistered",
+		"type": "event"
 	},
 	{
 		"constant": false,
 		"inputs": [
 			{
-				"name": "_new",
+				"name": "_group",
 				"type": "address"
 			}
 		],
-		"name": "setOwner",
+		"name": "addGroup",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"name": "_symbol",
-				"type": "string"
-			}
-		],
-		"name": "fromNameSymbol",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
+		"constant": false,
+		"inputs": [],
+		"name": "drain",
+		"outputs": [],
 		"payable": false,
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -89,20 +78,6 @@
 		"constant": false,
 		"inputs": [
 			{
-				"name": "_version",
-				"type": "uint256"
-			}
-		],
-		"name": "setUpgraded",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
 				"name": "_fee",
 				"type": "uint256"
 			}
@@ -114,7 +89,7 @@
 		"type": "function"
 	},
 	{
-		"constant": true,
+		"constant": false,
 		"inputs": [
 			{
 				"name": "_id",
@@ -123,51 +98,41 @@
 			{
 				"name": "_key",
 				"type": "bytes32"
-			}
-		],
-		"name": "meta",
-		"outputs": [
+			},
 			{
-				"name": "",
+				"name": "_value",
 				"type": "bytes32"
 			}
 		],
+		"name": "setMeta",
+		"outputs": [],
 		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "AUTHORITY",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"constant": false,
-		"inputs": [],
-		"name": "drain",
+		"inputs": [
+			{
+				"name": "_new",
+				"type": "address"
+			}
+		],
+		"name": "setOwner",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_version",
+				"type": "uint256"
+			}
+		],
+		"name": "setUpgraded",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
@@ -188,96 +153,192 @@
 		"type": "function"
 	},
 	{
-		"constant": true,
+		"constant": false,
 		"inputs": [
 			{
-				"name": "_pool",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "updateOwner",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256[]"
+			}
+		],
+		"name": "updateOwners",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "old",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "current",
 				"type": "address"
 			}
 		],
-		"name": "getNameFromAddress",
-		"outputs": [
+		"name": "NewOwner",
+		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
 			{
-				"name": "",
+				"name": "_newAddress",
+				"type": "address"
+			}
+		],
+		"name": "upgrade",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"name": "key",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"name": "value",
 				"type": "bytes32"
 			}
 		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
+		"name": "MetaChanged",
+		"type": "event"
 	},
 	{
-		"constant": true,
+		"anonymous": false,
 		"inputs": [
 			{
-				"name": "_name",
-				"type": "string"
-			}
-		],
-		"name": "fromName",
-		"outputs": [
-			{
-				"name": "id",
-				"type": "uint256"
-			},
-			{
-				"name": "drago",
-				"type": "address"
-			},
-			{
-				"name": "symbol",
-				"type": "string"
-			},
-			{
-				"name": "dragoId",
-				"type": "uint256"
-			},
-			{
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"name": "group",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_symbol",
-				"type": "string"
-			}
-		],
-		"name": "fromSymbol",
-		"outputs": [
-			{
-				"name": "id",
-				"type": "uint256"
-			},
-			{
-				"name": "drago",
-				"type": "address"
-			},
-			{
+				"indexed": true,
 				"name": "name",
 				"type": "string"
 			},
 			{
-				"name": "dragoId",
+				"indexed": true,
+				"name": "symbol",
+				"type": "string"
+			},
+			{
+				"indexed": true,
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "Unregistered",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "symbol",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "id",
 				"type": "uint256"
 			},
 			{
+				"indexed": true,
+				"name": "drago",
+				"type": "address"
+			},
+			{
+				"indexed": true,
 				"name": "owner",
 				"type": "address"
 			},
 			{
+				"indexed": true,
 				"name": "group",
 				"type": "address"
+			}
+		],
+		"name": "Registered",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"name": "_authority",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "AUTHORITY",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "dragoCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "fee",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -364,12 +425,37 @@
 	},
 	{
 		"constant": true,
-		"inputs": [],
-		"name": "getGroups",
+		"inputs": [
+			{
+				"name": "_name",
+				"type": "string"
+			}
+		],
+		"name": "fromName",
 		"outputs": [
 			{
-				"name": "",
-				"type": "address[]"
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"name": "drago",
+				"type": "address"
+			},
+			{
+				"name": "symbol",
+				"type": "string"
+			},
+			{
+				"name": "dragoId",
+				"type": "uint256"
+			},
+			{
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"name": "group",
+				"type": "address"
 			}
 		],
 		"payable": false,
@@ -378,12 +464,60 @@
 	},
 	{
 		"constant": true,
-		"inputs": [],
-		"name": "dragoCount",
+		"inputs": [
+			{
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"name": "_symbol",
+				"type": "string"
+			}
+		],
+		"name": "fromNameSymbol",
 		"outputs": [
 			{
 				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_symbol",
+				"type": "string"
+			}
+		],
+		"name": "fromSymbol",
+		"outputs": [
+			{
+				"name": "id",
 				"type": "uint256"
+			},
+			{
+				"name": "drago",
+				"type": "address"
+			},
+			{
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"name": "dragoId",
+				"type": "uint256"
+			},
+			{
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"name": "group",
+				"type": "address"
 			}
 		],
 		"payable": false,
@@ -398,6 +532,39 @@
 			{
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getGroups",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_pool",
+				"type": "address"
+			}
+		],
+		"name": "getNameFromAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bytes32"
 			}
 		],
 		"payable": false,
@@ -424,7 +591,7 @@
 		"type": "function"
 	},
 	{
-		"constant": false,
+		"constant": true,
 		"inputs": [
 			{
 				"name": "_id",
@@ -433,26 +600,13 @@
 			{
 				"name": "_key",
 				"type": "bytes32"
-			},
-			{
-				"name": "_value",
-				"type": "bytes32"
 			}
 		],
-		"name": "setMeta",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "fee",
+		"name": "meta",
 		"outputs": [
 			{
 				"name": "",
-				"type": "uint256"
+				"type": "bytes32"
 			}
 		],
 		"payable": false,
@@ -460,17 +614,17 @@
 		"type": "function"
 	},
 	{
-		"constant": false,
-		"inputs": [
+		"constant": true,
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
 			{
-				"name": "_group",
+				"name": "",
 				"type": "address"
 			}
 		],
-		"name": "addGroup",
-		"outputs": [],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -486,131 +640,5 @@
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"name": "_authority",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "symbol",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "id",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"name": "drago",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "group",
-				"type": "address"
-			}
-		],
-		"name": "Registered",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"indexed": true,
-				"name": "symbol",
-				"type": "string"
-			},
-			{
-				"indexed": true,
-				"name": "id",
-				"type": "uint256"
-			}
-		],
-		"name": "Unregistered",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "id",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"name": "key",
-				"type": "bytes32"
-			},
-			{
-				"indexed": false,
-				"name": "value",
-				"type": "bytes32"
-			}
-		],
-		"name": "MetaChanged",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "old",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "current",
-				"type": "address"
-			}
-		],
-		"name": "NewOwner",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "symbol",
-				"type": "string"
-			},
-			{
-				"indexed": true,
-				"name": "id",
-				"type": "uint256"
-			}
-		],
-		"name": "Unregistered",
-		"type": "event"
 	}
 ]

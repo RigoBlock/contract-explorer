@@ -167,11 +167,11 @@ class EventsPage extends Component {
       })
   }
 
-  onNewEvent = (error, events) =>{
+  onNewEvent = (error, event) =>{
     // Adding the new event to the event list.
     const { json_object } = this.state
     var newEventsList = [...json_object]
-    newEventsList.unshift(events) 
+    newEventsList.unshift(event) 
     this.setState({
       json_object: newEventsList
     })

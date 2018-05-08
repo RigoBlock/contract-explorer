@@ -49,11 +49,47 @@
 		"constant": false,
 		"inputs": [
 			{
+				"name": "_enforced",
+				"type": "bool"
+			},
+			{
+				"name": "_kycProvider",
+				"type": "address"
+			}
+		],
+		"name": "enforceKyc",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
 				"name": "_new",
 				"type": "address"
 			}
 		],
 		"name": "setOwner",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_exchange",
+				"type": "address"
+			},
+			{
+				"name": "_assembledTransaction",
+				"type": "bytes"
+			}
+		],
+		"name": "operateOnExchange",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
@@ -71,6 +107,42 @@
 		],
 		"payable": false,
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_exchange",
+				"type": "address"
+			},
+			{
+				"name": "_assembledTransaction",
+				"type": "bytes"
+			}
+		],
+		"name": "operateOnExchangeThroughAdapter",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_exchange",
+				"type": "address"
+			},
+			{
+				"name": "_assembledTransaction",
+				"type": "bytes"
+			}
+		],
+		"name": "operateOnExchangeDirectly",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -279,6 +351,38 @@
 		"type": "function"
 	},
 	{
+		"constant": true,
+		"inputs": [],
+		"name": "calcSharePrice",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_tokenTransferProxy",
+				"type": "address"
+			},
+			{
+				"name": "_token",
+				"type": "address[]"
+			}
+		],
+		"name": "SetMultipleAllowances",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"constant": false,
 		"inputs": [
 			{
@@ -298,10 +402,51 @@
 			{
 				"name": "_exchange",
 				"type": "address"
+			},
+			{
+				"name": "_amount",
+				"type": "uint256"
 			}
 		],
-		"name": "operateOnExchange",
+		"name": "withdrawFromExchange",
 		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getKycProvider",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_tokenTransferProxy",
+				"type": "address"
+			},
+			{
+				"name": "_token",
+				"type": "address"
+			}
+		],
+		"name": "setInfiniteAllowance",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"

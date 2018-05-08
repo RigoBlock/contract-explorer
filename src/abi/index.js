@@ -15,6 +15,8 @@ import fundProxy from './fundProxy.json';
 // Legacy v1 contracts
 import ethusd from './ethusd.json';
 import exchange from './exchange.json';
+import rigoBlockExchange from './rigoBlockExchange.json';
+import zeroExExchange from './zeroExExchange.json';
 
 // import vault from './v1/vault.json';
 // import vaultfactory from './v1/vaultFactory.json';
@@ -45,5 +47,7 @@ export {
   ethusd,
   vaulteventful,
   parityregister,
-  rigotoken
+  rigotoken,
+  rigoBlockExchange,
+  zeroExExchange
 };

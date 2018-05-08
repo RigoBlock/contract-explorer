@@ -3,15 +3,14 @@
 
 import * as abis from '../../contracts/abi'
 import Registry from '../registry'
-import { RIGOTOKEN_ADDRESSES } from '../../utils/const'
 
-class RigoTokenWeb3 {
+class FundProxyWeb3 {
   constructor(api) {
     if (!api) {
       throw new Error('API instance needs to be provided to Contract')
     }
     this._api = api
-    this._abi = abis.rigotoken
+    this._abi = abis.fundproxy
     this._registry = new Registry(api)
     this._constunctorName = this.constructor.name
   }
@@ -26,7 +25,8 @@ class RigoTokenWeb3 {
   init = () => {
     const api = this._api
     const abi = this._abi
-    const address = RIGOTOKEN_ADDRESSES[api._rb.network.id]
+    console.log(api._rb.network.fundProxyContractAddress)
+    const address = api._rb.network.fundProxyContractAddress
     this._instance = new api.eth.Contract(abi)
     this._instance.options.address = address
     return this._instance
@@ -40,8 +40,8 @@ class RigoTokenWeb3 {
     return instance.methods.balanceOf(accountAddress).call({})
   }
 
-  transfer = (fromAddress, toAddress, amount) => {
-    if (!toAddress) {
+  unwrapETH = (fromAddress, amount) => {
+    if (!fromAddress) {
       throw new Error('toAddress needs to be provided')
     }
     if (!amount) {
@@ -53,16 +53,40 @@ class RigoTokenWeb3 {
     }
 
     return instance.methods
-      .transfer(toAddress, amount)
+      .unwrapEth(amount)
       .estimateGas(options)
       .then(gasEstimate => {
         console.log(gasEstimate)
         options.gas = gasEstimate
       })
       .then(() => {
-        return instance.methods.transfer(toAddress, amount).send(options)
+        return instance.methods.unwrapEth(amount).send(options)
+      })
+  }
+
+  wrapETH = (fromAddress, amount) => {
+    if (!fromAddress) {
+      throw new Error('toAddress needs to be provided')
+    }
+    if (!amount) {
+      throw new Error('amount needs to be provided')
+    }
+    const instance = this._instance
+    const options = {
+      from: fromAddress
+    }
+
+    return instance.methods
+      .wrapEth(amount)
+      .estimateGas(options)
+      .then(gasEstimate => {
+        console.log(gasEstimate)
+        options.gas = gasEstimate
+      })
+      .then(() => {
+        return instance.methods.wrapEth(amount).send(options)
       })
   }
 }
 
-export default RigoTokenWeb3
+export default FundProxyWeb3
