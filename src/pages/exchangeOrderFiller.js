@@ -33,6 +33,7 @@ class ExchangeOrderFiller extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      encodedABI: '',
       orderError: false,
       validation: {
         schema: { valid: false, errors: {} },
@@ -248,6 +249,10 @@ class ExchangeOrderFiller extends React.Component {
       )
       .encodeABI()
 
+      this.setState({
+        encodedABI
+      })
+
     console.log(encodedABI)
 
     const transactionObject = {
@@ -260,12 +265,12 @@ class ExchangeOrderFiller extends React.Component {
         console.log(gasEstimate)
         transactionObject.gas = gasEstimate
       })
-      .then(() =>{
+      .then(() => {
         web3.eth.sendTransaction(transactionObject)
-        .then(result => {
-          console.log(result)
+          .then(result => {
+            console.log(result)
 
-        })
+          })
       })
       .catch(error => {
         console.log(error)
@@ -435,7 +440,21 @@ class ExchangeOrderFiller extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={8}>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
+              <Typography variant="headline" >
+                ENCODED ABI
+            </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <div style={{wordWrap: "break-word"}}>
+                {this.state.encodedABI}
+              </div>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={8}>
+            <Grid item xs={12}>
               <Typography variant="headline" >
                 RECEIPT
               </Typography>
