@@ -46,21 +46,39 @@ class ExchangeOrderCreator extends React.Component {
     const ZRX_ADDRESS = '0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570'; // The ZRX token contract
     // const EXCHANGE_ADDRESS = zeroEx.exchange.getContractAddress();
     const EXCHANGE_ADDRESS = '0xf307de6528fa16473d8f6509b7b1d8851320dba5'
-    const order = {
-      maker: ZeroEx.NULL_ADDRESS,
-      // maker: '0x456c3C14aAe3A2d361E6B2879Bfc0Bae15E30c38'.toLowerCase(),
-      taker: ZeroEx.NULL_ADDRESS,
-      feeRecipient: ZeroEx.NULL_ADDRESS,
-      makerTokenAddress: WETH_ADDRESS,
-      takerTokenAddress: ZRX_ADDRESS,
-      exchangeContractAddress: EXCHANGE_ADDRESS,
-      salt: ZeroEx.generatePseudoRandomSalt(),
-      makerFee: new BigNumber(0),
-      takerFee: new BigNumber(0),
-      makerTokenAmount: ZeroEx.toBaseUnitAmount(new BigNumber(0.01), DECIMALS), // Base 18 decimals
-      takerTokenAmount: ZeroEx.toBaseUnitAmount(new BigNumber(0.01), DECIMALS), // Base 18 decimals
-      expirationUnixTimestampSec: new BigNumber(Date.now() + 3600000), // Valid for up to an hour
-    };
+    // const order = {
+    //   maker: ZeroEx.NULL_ADDRESS,
+    //   // maker: '0x456c3C14aAe3A2d361E6B2879Bfc0Bae15E30c38'.toLowerCase(),
+    //   taker: ZeroEx.NULL_ADDRESS,
+    //   feeRecipient: ZeroEx.NULL_ADDRESS,
+    //   makerTokenAddress: WETH_ADDRESS,
+    //   takerTokenAddress: ZRX_ADDRESS,
+    //   exchangeContractAddress: EXCHANGE_ADDRESS,
+    //   salt: ZeroEx.generatePseudoRandomSalt(),
+    //   makerFee: new BigNumber(0),
+    //   takerFee: new BigNumber(0),
+    //   makerTokenAmount: ZeroEx.toBaseUnitAmount(new BigNumber(0.001), DECIMALS), // Base 18 decimals
+    //   takerTokenAmount: ZeroEx.toBaseUnitAmount(new BigNumber(0.01), DECIMALS), // Base 18 decimals
+    //   expirationUnixTimestampSec: new BigNumber(Date.now() + 3600000), // Valid for up to an hour
+    // };
+    const order = JSON.parse(
+      `
+      {
+        "maker": "0xc8dcd42e846466f2d2b89f3c54eba37bf738019b",
+        "taker": "0x0000000000000000000000000000000000000000",
+        "feeRecipient": "0x173a2467cece1f752eb8416e337d0f0b58cad795",
+        "makerTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "takerTokenAddress": "0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570",
+        "exchangeContractAddress": "0x90fe2af704b34e0224bf2299c838e04d4dcf1364",
+        "salt": "47645531054892401359967946945272893750943820141091654528528947855572347379873",
+        "makerFee": "135",
+        "takerFee": "400",
+        "makerTokenAmount": "344000000000000000",
+        "takerTokenAmount": "20000000000000000000",
+        "expirationUnixTimestampSec": "1526065104396"
+      }
+    `
+    )
     this.state = {
       zeroEx: zeroEx,
       json_object: {},
@@ -89,7 +107,7 @@ class ExchangeOrderCreator extends React.Component {
     const { order } = this.state
     zeroEx._web3Wrapper._web3.eth.getAccounts((error, result) => {
       this.setState({
-        // order: { ...order, maker: result[0] },
+        order: { ...order, maker: result[0] },
         walletAddress: result[0]
       })
     })

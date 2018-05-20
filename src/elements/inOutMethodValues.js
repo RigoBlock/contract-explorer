@@ -22,11 +22,21 @@ class InOutMethodValues extends Component {
           <Grid container spacing={8} >
             <Grid item xs={12}>
               <Typography variant="subheading" gutterBottom>
+                METHOD SIGNATURE
+            </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <JsonView
+                json_object={[methodSelected.methodSignature]}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subheading" gutterBottom>
                 INPUTS
             </Typography>
             </Grid>
             <Grid item xs={12}>
-              <JsonView 
+              <JsonView
                 json_object={methodSelected.inputs}
               />
             </Grid>
@@ -36,14 +46,14 @@ class InOutMethodValues extends Component {
             </Typography>
             </Grid>
             <Grid item xs={12}>
-              <JsonView 
+              <JsonView
                 json_object={methodSelected.outputs}
               />
             </Grid>
           </Grid>
         </Paper>
       )
-    } else{
+    } else {
       return null
     }
 

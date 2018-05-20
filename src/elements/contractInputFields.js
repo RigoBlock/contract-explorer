@@ -4,6 +4,8 @@ import { FormControl, FormHelperText } from 'material-ui/Form';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Paper from 'material-ui/Paper';
+import Grid from 'material-ui/Grid';
+import Typography from 'material-ui/Typography';
 
 
 class ContractInputFields extends Component {
@@ -18,18 +20,19 @@ class ContractInputFields extends Component {
     };
   }
 
-  static contextTypes = {web3: PropTypes.object.isRequired};
+  static contextTypes = { web3: PropTypes.object.isRequired };
 
   static propTypes = {
     methodSelected: PropTypes.object.isRequired,
     onSend: PropTypes.func.isRequired,
+    enableSubmit: PropTypes.bool.isRequired,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { prevProps } = prevState
     if (nextProps.methodSelected.name !== prevProps.methodSelected.name) {
       return {
-        inputs: Array.apply(null, Array(nextProps.methodSelected.inputs.length)).map(function () { return ""}),
+        inputs: Array.apply(null, Array(nextProps.methodSelected.inputs.length)).map(function () { return "" }),
         value: 0,
         prevProps: nextProps,
       };
@@ -47,7 +50,7 @@ class ContractInputFields extends Component {
     const { methodSelected } = this.props
     const { inputs } = this.state
     var newInputs = [...inputs]
-    if (event.target.id === 'value' ){
+    if (event.target.id === 'value') {
       this.setState({
         value: event.target.value
       })
@@ -69,7 +72,7 @@ class ContractInputFields extends Component {
     )
     return true
   };
-  
+
   renderInputFields = () => {
     const { methodSelected } = this.props
     return methodSelected.inputs.map((element, index) => {
@@ -86,7 +89,7 @@ class ContractInputFields extends Component {
           fullWidth
           margin="normal"
           value={this.state.inputs[index]}
-      />
+        />
       )
     }
     )
@@ -94,8 +97,8 @@ class ContractInputFields extends Component {
 
   renderInputFieldValue = () => {
     const { methodSelected } = this.props
-    
-    if (methodSelected.payable){
+
+    if (methodSelected.payable) {
       return (
         <TextField
           id='value'
@@ -108,8 +111,8 @@ class ContractInputFields extends Component {
           fullWidth
           onChange={this.onTextFieldChange}
           margin="normal"
-          // value={this.state.value}
-      />
+        // value={this.state.value}
+        />
       )
     }
   }
@@ -123,16 +126,26 @@ class ContractInputFields extends Component {
     }
     return (
       <Paper style={paperStyle} elevation={2} >
-        <FormControl fullWidth={true} error={this.error}>
-          {this.renderInputFieldValue()}
-          {this.renderInputFields()}
-          <FormHelperText>{this.state.errorMsg}</FormHelperText>
-          <br />
-          <Button variant="raised" color="primary" onClick={this.onSend}>
-          Send
-        </Button>
-        </FormControl>
-
+        <Grid container spacing={8} >
+          <Grid item xs={12}>
+            <Typography variant="subheading" gutterBottom>
+              INPUTE VARIABLES
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth={true} error={this.error}>
+              {this.renderInputFieldValue()}
+              {this.renderInputFields()}
+              <FormHelperText>{this.state.errorMsg}</FormHelperText>
+              <br />
+              <Button variant="raised" color="primary" onClick={this.onSend}
+              disabled={!this.props.enableSubmit}
+              >
+                Send
+              </Button>
+            </FormControl>
+          </Grid>
+        </Grid>
       </Paper>
     );
   }

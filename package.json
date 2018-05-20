@@ -21,7 +21,7 @@
     "web3-provider-engine": "^14.0.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3000 react-scripts start",
     "build": "GENERATE_SOURCEMAP=false PUBLIC_URL=./ react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

@@ -31,7 +31,9 @@ class ContractPage extends Component {
       gas: 0,
       enableContractAddressField: false,
       enableContractMethodsSelector: false,
-      loading: false
+      enableSubmit: false,
+      loading: false,
+      encodedABI: ''
     };
   }
   
@@ -86,6 +88,12 @@ class ContractPage extends Component {
               // contract.myMethod.call(options) or contract.myMethod.send(options)
               //
               // ******************************************************************
+
+              const encodedABI = contract.methods[methodName]().encodeABI();
+              this.setState({
+                encodedABI
+              })
+
               contract.methods[methodName]()[constantMethod](options)
               // .send(options)
                 .then(result => {
@@ -131,6 +139,12 @@ class ContractPage extends Component {
               // contract.myMethod.call(options) or contract.myMethod.send(options)
               //
               // ******************************************************************
+
+              const encodedABI = contract.methods[methodName](...inputs).encodeABI();
+              this.setState({
+                encodedABI
+              })
+              
               contract.methods[methodName](...inputs)[constantMethod](options)
                 // .send(options)
                 .then(result => {
@@ -159,11 +173,15 @@ class ContractPage extends Component {
   }
 
   onMethodSelect = event => {
+    const { web3 } = this.context
     const methodSelected = this.state.abi.find(method => {
       return method.name === event.target.value
     })
+    const methodSignature = web3.eth.abi.encodeFunctionSignature(
+      methodSelected
+    )
     this.setState({
-      methodSelected: methodSelected
+      methodSelected: { ...methodSelected, methodSignature }
     });
   };
 
@@ -178,8 +196,11 @@ class ContractPage extends Component {
   }
   
   onChangeContractAddress = event => {
+    const { web3 } = this.context
+    const enableSubmit = web3.utils.isAddress(event.target.value);
     this.setState({
-      contractAddress: event.target.value,
+      contractAddress: event.target.value.toLowerCase(),
+      enableSubmit
     });
   };
 
@@ -255,6 +276,7 @@ class ContractPage extends Component {
               <ContractInputFields
                 methodSelected={this.state.methodSelected}
                 onSend={this.onSend}
+                enableSubmit={this.state.enableSubmit}
               />
             </Grid>
           </Grid>
@@ -269,6 +291,15 @@ class ContractPage extends Component {
               </Grid>
               <Grid item xs={12}>
                 <Paper style={paperStyle} elevation={2}>
+                  <Typography variant="subheading">
+                    Encoded ABI: {this.state.encodedABI}
+                  </Typography>
+                  <Typography variant="subheading">
+                    Function Signature: {this.state.encodedABI.substring(0,10)}
+                  </Typography>
+                  <Typography variant="subheading">
+                    Encoded Parameters: {this.state.encodedABI.substring(10)}
+                  </Typography>
                   <Typography variant="subheading">
                     Gas used: {this.state.gas}
                   </Typography>

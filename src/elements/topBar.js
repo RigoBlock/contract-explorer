@@ -92,7 +92,7 @@ class TopBar extends React.Component {
           <Grid item xs={4} style={{ margin: 'auto' }}>
             <div style={styles.counter}>
               <Typography variant="body2" style={styles.counter} >
-                #{this.state.newBlock.number.toLocaleString('en')}
+                Kovan #{this.state.newBlock.number.toLocaleString('en')}
               </Typography>
             </div>
           </Grid>
