@@ -36,9 +36,9 @@ class ContractPage extends Component {
       encodedABI: ''
     };
   }
-  
-  
-  static contextTypes = {web3: PropTypes.object.isRequired};
+
+
+  static contextTypes = { web3: PropTypes.object.isRequired };
 
   onSend = (inputs, value) => {
     const { contractAddress, methodSelected, abi } = this.state
@@ -89,16 +89,23 @@ class ContractPage extends Component {
               //
               // ******************************************************************
 
-              const encodedABI = contract.methods[methodName]().encodeABI();
-              this.setState({
-                encodedABI
-              })
+              const encodedABI = () => {
+                try {
+                  const encodedABI = contract.methods[methodName]().encodeABI();
+                  this.setState({
+                    encodedABI
+                  })
+                } catch (error) {
+                  console.log(error)
+                }
+              }
+              encodedABI()
 
               contract.methods[methodName]()[constantMethod](options)
-              // .send(options)
+                // .send(options)
                 .then(result => {
                   this.setState({
-                    json_object: typeof result === 'object' ? result : {result},
+                    json_object: typeof result === 'object' ? result : { result },
                     loading: false
                   })
                 })
@@ -140,16 +147,23 @@ class ContractPage extends Component {
               //
               // ******************************************************************
 
-              const encodedABI = contract.methods[methodName](...inputs).encodeABI();
-              this.setState({
-                encodedABI
-              })
-              
+              const encodedABI = () => {
+                try {
+                  const encodedABI = contract.methods[methodName](...inputs).encodeABI();
+                  this.setState({
+                    encodedABI
+                  })
+                } catch (error) {
+                  console.log(error)
+                }
+              }
+              encodedABI()
+
               contract.methods[methodName](...inputs)[constantMethod](options)
                 // .send(options)
                 .then(result => {
                   this.setState({
-                    json_object: typeof result === 'object' ? result : {result},
+                    json_object: typeof result === 'object' ? result : { result },
                     loading: false
                   })
                 })
@@ -185,16 +199,16 @@ class ContractPage extends Component {
     });
   };
 
-  onUpload = (file, text) =>{
+  onUpload = (file, text) => {
     const uploadedAbi = JSON.parse(text)
     this.setState({
       abi: uploadedAbi,
-      methodList: List(uploadedAbi).sortBy(method => method.name).filter(method => method.type === 'function' ),
+      methodList: List(uploadedAbi).sortBy(method => method.name).filter(method => method.type === 'function'),
       enableContractAddressField: true,
       enableContractMethodsSelector: true,
     })
   }
-  
+
   onChangeContractAddress = event => {
     const { web3 } = this.context
     const enableSubmit = web3.utils.isAddress(event.target.value);
@@ -295,7 +309,7 @@ class ContractPage extends Component {
                     Encoded ABI: {this.state.encodedABI}
                   </Typography>
                   <Typography variant="subheading">
-                    Function Signature: {this.state.encodedABI.substring(0,10)}
+                    Function Signature: {this.state.encodedABI.substring(0, 10)}
                   </Typography>
                   <Typography variant="subheading">
                     Encoded Parameters: {this.state.encodedABI.substring(10)}
