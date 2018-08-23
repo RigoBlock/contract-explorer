@@ -22,33 +22,33 @@ class RigoblockApi extends React.Component {
       etherscan: "https://kovan.etherscan.io/"
     }
     const ENDPOINTS = {
-      name: "rigoblock",
+      name: "infura",
       https: {
         kovan: {
-          dev: "https://srv03.endpoint.network:8545",
-          prod: "https://kovan.endpoint.network:8545"
+          dev: "https://kovan.infura.io/metamask",
+          prod: "https://kovan.infura.io/metamask"
         },
         ropsten: {
-          dev: "https://srv03.endpoint.network:8645",
-          prod: "https://ropsten.endpoint.network:8645"
+          dev: "https://ropsten.infura.io/metamask",
+          prod: "https://ropsten.infura.io/metamask"
         },
         mainnet: {
-          dev: "https://srv03.endpoint.network:8745",
-          prod: "https://mainnet.endpoint.network:8745"
+          dev: "https://mainnet.infura.io/metamask",
+          prod: "https://mainnet.infura.io/metamask"
         },
       },
       wss: {
         kovan: {
-          dev: "wss://srv03.endpoint.network:8546",
-          prod: "wss://kovan.endpoint.network:8546"
+          dev: "wss://kovan.infura.io/ws",
+          prod: "wss://kovan.infura.io/ws"
         },
         ropsten: {
-          dev: "wss://srv03.endpoint.network:8646",
-          prod: "wss://ropsten.endpoint.network:8646"
+          dev: "wss://ropsten.infura.io/ws",
+          prod: "wss://ropsten.infura.io/ws"
         },
         mainnet: {
-          dev: "wss://srv03.endpoint.network:8746",
-          prod: "wss://mainnet.endpoint.network:8746"
+          dev: "wss://mainnet.infura.io/ws",
+          prod: "wss://mainnet.infura.io/ws"
         },
       }
       }
@@ -56,7 +56,7 @@ class RigoblockApi extends React.Component {
     var endpoint = new Endpoint(ENDPOINTS, networkInfo)
     this._api = endpoint.connect() // Returns a Parity API instance.
 
-    const transport = new Api.Provider.Http('https://srv03.endpoint.network:8545', 1000)
+    const transport = new Api.Provider.Http('https://kovan.infura.io/metamask', 1000)
     this._apiParity = new Api(transport)
   }
 
@@ -99,7 +99,7 @@ class RigoblockApi extends React.Component {
           })
       })
       .then (() =>{
-        const web3Parity = new Web3('https://srv03.endpoint.network:8545')
+        const web3Parity = new Web3('https://kovan.infura.io/metamask')
         const contract = new web3Parity.eth.Contract(drago, dragoAddress)
         var options = {
           from: '0x00791547B03F5541971B199a2d347446eB8Dc9bE',
@@ -171,7 +171,7 @@ class RigoblockApi extends React.Component {
     const dragoId = "5"
 
     const web3 = new Web3(window.web3.currentProvider)
-    const transport = new Api.Provider.Http('https://srv03.endpoint.network:8545', 1000)
+    const transport = new Api.Provider.Http('https://kovan.infura.io/metamask', 1000)
     const parityApi = new Api(transport)
 
     // Setting _rb will not be necessary in Pools Api V3
