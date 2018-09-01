@@ -7,8 +7,10 @@ import ReactJson from 'react-json-view'
 import Paper from 'material-ui/Paper';
 import {
   FUND_PROXY_ADDRESS,
-  RB_EXCHANGE_ADDRESS,
-  RB_TOKEN_TRANSFER_PROXY_ADDRESS
+  RB_EXCHANGE_ADDRESS_KV,
+  RB_EXCHANGE_ADDRESS_RP,
+  RB_TOKEN_TRANSFER_PROXY_ADDRESS_KV,
+  RB_TOKEN_TRANSFER_PROXY_ADDRESS_RP
 } from '../_utils/const'
 
 // 0x stuff
@@ -42,10 +44,10 @@ class ExchangeOrderCreator extends React.Component {
     // providerEngine.start();
     var web3 = new Web3(window.web3.currentProvider)
     var zeroEx = new ZeroEx(web3.currentProvider, ZeroExConfig);
-    const WETH_ADDRESS = '0xd0a1e359811322d97991e03f863a0c30c2cf029c'; // The wrapped ETH token contract
-    const ZRX_ADDRESS = '0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570'; // The ZRX token contract
+    // const WETH_ADDRESS = '0xd0a1e359811322d97991e03f863a0c30c2cf029c'; // The wrapped ETH token contract
+    // const ZRX_ADDRESS = '0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570'; // The ZRX token contract
     // const EXCHANGE_ADDRESS = zeroEx.exchange.getContractAddress();
-    const EXCHANGE_ADDRESS = '0xf307de6528fa16473d8f6509b7b1d8851320dba5'
+    // const EXCHANGE_ADDRESS = '0xf307de6528fa16473d8f6509b7b1d8851320dba5'
     // const order = {
     //   maker: ZeroEx.NULL_ADDRESS,
     //   // maker: '0x456c3C14aAe3A2d361E6B2879Bfc0Bae15E30c38'.toLowerCase(),
@@ -85,16 +87,34 @@ class ExchangeOrderCreator extends React.Component {
       order: order,
       orderHash: '',
       signedOrderStatus: 'succeed',
-      exchangeSelected: 'rigoBlock',
+      exchangeSelected: 'RigoBlock',
       walletAddress: '',
       exchangeList: {
-        zeroEx: {
-          networkId: 42,
+        3: {
+          zeroEx: {
+            networkId: 3,
+          },
+          RigoBlockEthfinex: {
+            exchangeContractAddress: RB_EXCHANGE_ADDRESS_RP,
+            networkId: 3,
+            tokenTransferProxyContractAddress: RB_TOKEN_TRANSFER_PROXY_ADDRESS_RP,
+          },
         },
-        rigoBlock: {
-          exchangeContractAddress: RB_EXCHANGE_ADDRESS,
-          networkId: 42,
-          tokenTransferProxyContractAddress: RB_TOKEN_TRANSFER_PROXY_ADDRESS,
+        
+        42:{
+          zeroEx: {
+            networkId: 42,
+          },
+          RigoBlockZeroX: {
+            exchangeContractAddress: RB_EXCHANGE_ADDRESS_KV,
+            networkId: 42,
+            tokenTransferProxyContractAddress: RB_TOKEN_TRANSFER_PROXY_ADDRESS_KV,
+          },
+          RigoBlockEthfinex: {
+            exchangeContractAddress: RB_EXCHANGE_ADDRESS_KV,
+            networkId: 42,
+            tokenTransferProxyContractAddress: RB_TOKEN_TRANSFER_PROXY_ADDRESS_KV,
+          }
         }
       },
     };
