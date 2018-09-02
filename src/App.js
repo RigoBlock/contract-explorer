@@ -48,23 +48,26 @@ class App extends Component {
   };
 
   getChildContext() {
-    return {web3: this.state.web3};
+    return {web3: this.state.web3,
+      networId: this.state.networId};
   }
 
-  componentWillMount() {
+  componentWillMount = async() => {
     const { web3 } = this.state
-    web3.eth.getAccounts()
-    .then((accounts) => {
-      if (typeof accounts[0] === 'undefined'){
-        this.setState({ 
-          accountsError: true
-        });
-      } else {
-        this.setState({ 
-          accountsError: false
-        });
-      }
-    })
+    const accounts = await web3.eth.getAccounts()
+    const networId = await web3.eth.net.getId
+    if (typeof accounts[0] === 'undefined'){
+      this.setState({ 
+        accountsError: true,
+        networId
+      });
+    } else {
+      this.setState({ 
+        accountsError: false,
+        networId
+      });
+    }
+
   }
 
   render() {

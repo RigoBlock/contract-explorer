@@ -21,8 +21,8 @@ import SetAllowanceButton from "../elements/setAllowanceButton"
 import * as abis from '../abi/index'
 import {
   FUND_PROXY_ADDRESS,
-  RB_EXCHANGE_ADDRESS,
-  RB_TOKEN_TRANSFER_PROXY_ADDRESS
+  RB_EXCHANGE_ADDRESS_KV,
+  RB_TOKEN_TRANSFER_PROXY_ADDRESS_KV
 } from '../_utils/const'
 
 
@@ -57,9 +57,9 @@ class ExchangeOrderFiller extends React.Component {
           exchangeContractAddress: '0x90fe2af704b34e0224bf2299c838e04d4dcf1364'
         },
         rigoBlock: {
-          exchangeContractAddress: RB_EXCHANGE_ADDRESS.toLowerCase(),
+          exchangeContractAddress: RB_EXCHANGE_ADDRESS_KV.toLowerCase(),
           networkId: 42,
-          tokenTransferProxyContractAddress: RB_TOKEN_TRANSFER_PROXY_ADDRESS.toLowerCase(),
+          tokenTransferProxyContractAddress: RB_TOKEN_TRANSFER_PROXY_ADDRESS_KV.toLowerCase(),
         }
       },
       // DRAGO ORDER

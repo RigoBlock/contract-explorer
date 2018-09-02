@@ -20,7 +20,7 @@
     "web3": "^1.0.0-beta.33",
     "web3-provider-engine": "^14.0.4"
   },
-    "devDependencies": {
+  "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-es6-polyfill": "^1.1.0",
