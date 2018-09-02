@@ -113,7 +113,8 @@ class ExchangeOrderValidator extends React.Component {
       signature: false,
       signatureError: {
         error: {}
-      }
+      },
+      orderErrorMsg: ''
     }
     const getOrderObject = () =>{
       try {
@@ -175,17 +176,19 @@ class ExchangeOrderValidator extends React.Component {
   }
 
   onTextFieldChange = (event) => {
-
+console.log('ok')
       try {
         JSON.parse(event.target.value)
         this.setState({
           order: event.target.value,
-          orderError: true
+          orderError: true,
+          orderErrorMsg: ''
         }) 
       }
       catch (err) {
         this.setState({
-          orderError: false
+          orderError: false,
+          orderErrorMsg: 'Error: the text does not seem to conform to json format.'
         }) 
       }
 
@@ -212,6 +215,9 @@ class ExchangeOrderValidator extends React.Component {
             VALIDATOR
           </Typography>
           <Paper style={paperStyle} elevation={2} >
+            <div style={{color: '#F44336'}}>
+              <b>{this.state.orderErrorMsg}</b>
+            </div>
             <FormControl fullWidth={true} error={this.error}>
               <TextField
                 id="order"
