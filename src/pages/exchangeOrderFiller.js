@@ -243,7 +243,7 @@ class ExchangeOrderFiller extends React.Component {
       .fillOrder(
         orderAddresses,
         orderValues,
-        ZeroEx.toBaseUnitAmount(new BigNumber(this.state.filledAmount), DECIMALS).toString(),
+        1000000,
         shouldThrowOnInsufficientBalanceOrAllowance,
         v,
         r,

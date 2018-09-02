@@ -61,24 +61,40 @@ class ExchangeOrderCreator extends React.Component {
     //   takerTokenAmount: ZeroEx.toBaseUnitAmount(new BigNumber(0.01), DECIMALS), // Base 18 decimals
     //   expirationUnixTimestampSec: new BigNumber(Date.now() + 3600000), // Valid for up to an hour
     // };
-    const order = JSON.parse(
-      `
-      {
-        "maker": "0xc8dcd42e846466f2d2b89f3c54eba37bf738019b",
-        "taker": "0x0000000000000000000000000000000000000000",
-        "feeRecipient": "0x173a2467cece1f752eb8416e337d0f0b58cad795",
-        "makerTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
-        "takerTokenAddress": "0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570",
-        "exchangeContractAddress": "0x90fe2af704b34e0224bf2299c838e04d4dcf1364",
-        "salt": "47645531054892401359967946945272893750943820141091654528528947855572347379873",
-        "makerFee": "135",
-        "takerFee": "400",
-        "makerTokenAmount": "344000000000000000",
-        "takerTokenAmount": "20000000000000000000",
-        "expirationUnixTimestampSec": "1526065104396"
-      }
-    `
-    )
+    const order = {
+      maker: ZeroEx.NULL_ADDRESS,
+      // maker: '0x456c3C14aAe3A2d361E6B2879Bfc0Bae15E30c38'.toLowerCase(),
+      taker: '0xd360bBb7378725eAC80a474572feaB371CE4B1Af'.toLowerCase(),
+      feeRecipient: '0xd360bBb7378725eAC80a474572feaB371CE4B1Af'.toLowerCase(),
+      makerTokenAddress: ZeroEx.NULL_ADDRESS,
+      takerTokenAddress: ZeroEx.NULL_ADDRESS,
+      exchangeContractAddress: "0x8965a813fb43a141d7741320cd16cc1898af97fb".toLowerCase(),
+      salt: ZeroEx.generatePseudoRandomSalt().toFixed(),
+      makerFee: '0',
+      takerFee: '0',
+      makerTokenAmount: '1000000', // Base 18 decimals
+      takerTokenAmount: '1000000', // Base 18 decimals
+      expirationUnixTimestampSec: new BigNumber(Date.now() + 86400000*365).toFixed(), // Valid for up to an hour
+    };
+    // const order = JSON.parse(
+    //   `
+    //   {
+    //     "maker": "",
+    //     "taker": "0xd360bBb7378725eAC80a474572feaB371CE4B1Af",
+    //     "feeRecipient": "0xd360bBb7378725eAC80a474572feaB371CE4B1Af",
+    //     "makerTokenAddress": "",
+    //     "takerTokenAddress": "",
+    //     "exchangeContractAddress": "0x8965a813fb43a141d7741320cd16cc1898af97fb",
+    //     "salt": "47645531054892401359967946945272893750943820141091654528528947855572347379873",
+    //     "makerFee": "0",
+    //     "takerFee": "0",
+    //     "makerTokenAmount": "10000",
+    //     "takerTokenAmount": "10000",
+    //     "expirationUnixTimestampSec": "1567376665000"
+    //   }
+    // `
+    // )
+    // const order = {}
     this.state = {
       zeroEx: zeroEx,
       json_object: {},
