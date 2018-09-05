@@ -15,6 +15,7 @@ import vaultfactory from './vaultFactory-v2.json'
 import wrapper from './wrapper.json'
 // Legacy v1 contracts
 import ethusd from './ethusd.json'
+import ethw from './ethw.json'
 import exchange from './exchange.json'
 import rigoBlockExchange from './rigoBlockExchange.json'
 import zeroExExchange from './zeroExExchange.json'
@@ -52,5 +53,6 @@ export {
   rigoBlockExchange,
   zeroExExchange,
   wrapper,
-  erc20
+  erc20,
+  ethw
 }

@@ -36,15 +36,71 @@ class LockUnlockActions extends Component {
 
   tokenUnLock = async () => {
     const { amountToUnlock } = this.state
-    const { managerAddress, token, fund, exchange } = this.props
-    await Drago.operateOnExchangeEFXUnlock(
-      managerAddress,
-      fund.address,
-      exchange.address,
-      token.address,
-      token.wrappers.Ethfinex.address,
-      Drago.toBaseUnitAmount(new BigNumber(amountToUnlock), token.decimals)
-    )
+    const { web3 } = this.context
+    const { amountToLock } = this.state
+    const { token, fund, exchange } = this.props
+    const amount = Drago.toBaseUnitAmount(
+      new BigNumber(amountToLock),
+      token.decimals
+    ).toFixed()
+    if (fund.address === '') {
+      let options = {
+        from: this.context.accounts[0]
+      }
+      const v = 1
+      const r =
+        '0xfa39c1a29cab1aa241b62c2fd067a6602a9893c2afe09aaea371609e11cbd92d'
+      const s =
+        '0xfa39c1a29cab1aa241b62c2fd067a6602a9893c2afe09aaea371609e11cbd92d'
+      const validUntil = 1
+      console.log(token.wrappers.Ethfinex.address)
+      console.log(amount)
+      let receipt
+      const abi = token.address === '0x0' ? abis.ethw : abis.wrapper
+      const contractWrapper = await new web3.eth.Contract(
+        abi,
+        token.wrappers.Ethfinex.address
+      )
+      console.log(contractWrapper)
+      if (token.address === '0x0') {
+        console.log('locking ETH')
+        options.value = amount
+        receipt = await contractWrapper.methods
+          .withdraw(amount, v, r, s, validUntil)
+          .estimateGas(options)
+          .then(gasEstimate => {
+            console.log(gasEstimate)
+            options.gas = gasEstimate
+          })
+          .then(() => {
+            return contractWrapper.methods
+              .withdraw(amount, v, r, s, validUntil)
+              .send(options)
+          })
+        console.log(receipt)
+      } else {
+        receipt = await contractWrapper.methods
+          .withdraw(amount, 1)
+          .estimateGas(options)
+          .then(gasEstimate => {
+            console.log(gasEstimate)
+            options.gas = gasEstimate
+          })
+          .then(() => {
+            return contractWrapper.methods.withdraw(amount, 1).send(options)
+          })
+        console.log(receipt)
+      }
+    } else {
+      await Drago.operateOnExchangeEFXUnlock(
+        this.context.accounts[0],
+        fund.address,
+        exchange.exchangeContractAddress,
+        token.address,
+        token.wrappers.Ethfinex.address,
+        Drago.toBaseUnitAmount(new BigNumber(amountToUnlock), token.decimals)
+      )
+    }
   }
 
   tokenLock = async () => {
@@ -61,51 +117,40 @@ class LockUnlockActions extends Component {
       }
       console.log(token.wrappers.Ethfinex.address)
       console.log(amount)
-      const allowance = parseInt(
-        '0x' +
-          'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-      )
       let receipt
-      console.log(allowance)
-      // const contractToken = await new web3.eth.Contract(
-      //   abis.erc20,
-      //   token.address
-      // )
-      // console.log(contractToken)
-      // receipt = await contractToken.methods
-      //   .approve(
-      //     token.wrappers.Ethfinex.address,
-      //     'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-      //   )
-      //   .estimateGas(options)
-      //   .then(gasEstimate => {
-      //     console.log(gasEstimate)
-      //     options.gas = gasEstimate
-      //   })
-      //   .then(() => {
-      //     return contractToken.methods
-      //       .approve(
-      //         token.wrappers.Ethfinex.address,
-      //         'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-      //       )
-      //       .send(options)
-      //   })
+      const abi = token.address === '0x0' ? abis.ethw : abis.wrapper
       const contractWrapper = await new web3.eth.Contract(
-        abis.wrapper,
+        abi,
         token.wrappers.Ethfinex.address
       )
       console.log(contractWrapper)
-      receipt = await contractWrapper.methods
-        .deposit(amount, 1)
-        .estimateGas(options)
-        .then(gasEstimate => {
-          console.log(gasEstimate)
-          options.gas = gasEstimate
-        })
-        .then(() => {
-          return contractWrapper.methods.deposit(amount, 1).send(options)
-        })
-      console.log(receipt)
+      if (token.address === '0x0') {
+        console.log('locking ETH')
+        options.value = amount
+        receipt = await contractWrapper.methods
+          .deposit(amount, 1)
+          .estimateGas(options)
+          .then(gasEstimate => {
+            console.log(gasEstimate)
+            options.gas = gasEstimate
+          })
+          .then(() => {
+            return contractWrapper.methods.deposit(amount, 1).send(options)
+          })
+        console.log(receipt)
+      } else {
+        receipt = await contractWrapper.methods
+          .deposit(amount, 1)
+          .estimateGas(options)
+          .then(gasEstimate => {
+            console.log(gasEstimate)
+            options.gas = gasEstimate
+          })
+          .then(() => {
+            return contractWrapper.methods.deposit(amount, 1).send(options)
+          })
+        console.log(receipt)
+      }
     } else {
       console.log(this.props)
       await Drago.operateOnExchangeEFXLock(

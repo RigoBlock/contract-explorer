@@ -12,8 +12,9 @@ import LockUnlockActions from '../elements/lockUnlockActions'
 import Paper from '@material-ui/core/Paper'
 import PoweredMsg from '../elements/poweredMsg'
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import React, { Component, PureComponent } from 'react'
 import ReactJson from 'react-json-view'
+import ReactTimeout from 'react-timeout'
 import RigoblockLink from '../elements/rigoblockLink'
 import SetAllowanceButtons from '../elements/setAllowanceButtons'
 import TokenAllowanceAddressFields from '../elements/tokenAllowanceAddressFields'
@@ -36,6 +37,9 @@ class ExchangeToolsPage extends Component {
       CONST.exchanges[context.networkInfo.id][exchangeSelected].tradedTokens[
         context.networkInfo.id
       ]
+    let tokenSelected = typeof tokensList !== 'undefined' ? tokensList.GRG : {}
+    tokenSelected.availableBalance = 0
+    tokenSelected.wrappedBalance = 0
     const exchangeList = CONST.exchanges[context.networkInfo.id]
     this.state = {
       zeroEx: zeroEx,
@@ -46,7 +50,7 @@ class ExchangeToolsPage extends Component {
       exchangeSelected,
       walletAddress: '',
       tokensList,
-      tokenSelected: typeof tokensList !== 'undefined' ? tokensList.GRG : {},
+      tokenSelected: tokenSelected,
       tokenAllowanceAddress: '',
       tokenAllowanceAddressError: '',
       spenderAddress: '',
@@ -68,24 +72,48 @@ class ExchangeToolsPage extends Component {
   }
 
   componentDidMount = async () => {
-    console.log(this.context.accounts)
+    const { accounts } = this.context
+    const { fundSelected, tokenSelected } = this.state
+    let fundSelectedUpdated = Object.assign(fundSelected)
+    let address =
+      fundSelectedUpdated.address === ''
+        ? accounts[0]
+        : fundSelectedUpdated.address
     await this.initFundSelect()
+    console.log('didMount')
+    console.log(tokenSelected.availableBalance)
+    let token = await this.getBalances(tokenSelected, address)
+    this.setState(
+      {
+        tokenSelected: token
+      },
+      this.getBalancesTimer
+    )
+  }
+
+  getBalancesTimer = () => {
     let that = this
-    this._td = setTimeout(async function checkBalance() {
+    this._td = this.props.setTimeout(async function checkBalance() {
       const { tokenSelected, fundSelected } = that.state
       const { accounts } = that.context
-      const address =
-        fundSelected.address === '' ? accounts[0] : fundSelected.address
-      await that.updateBalances(tokenSelected, address)
-      setTimeout(checkBalance, 1000)
+      let fundSelectedUpdated = Object.assign(fundSelected)
+      let address =
+        fundSelectedUpdated.address === ''
+          ? accounts[0]
+          : fundSelectedUpdated.address
+      let token = await that.getBalances(tokenSelected, address)
+      that.setState({
+        tokenSelected: token
+      })
+      that.props.setTimeout(checkBalance, 1000)
     }, 1000)
   }
 
   componentWillUnmount = () => {
-    clearTimeout(this._td)
+    console.log(this._td)
   }
 
-  updateBalances = async (token, address) => {
+  getBalances = async (token, address) => {
     const { web3 } = this.context
     if (typeof token.wrappers !== 'undefined') {
       token.wrappedBalance = await Drago.getWrapperBalance(
@@ -98,10 +126,10 @@ class ExchangeToolsPage extends Component {
         address,
         web3
       )
-      this.setState({
-        tokenSelected: token
-      })
+      console.log(token.availableBalance)
+      return token
     }
+    return token
   }
 
   initFundSelect = async () => {
@@ -189,13 +217,16 @@ class ExchangeToolsPage extends Component {
         let receipt = await contractToken.methods
           .allowance(owner, spenderAddress)
           .call()
-        console.log(
-          Drago.toUnitAmount(receipt, tokenSelected.decimals).toFixed()
-        )
+        let decimals =
+          typeof tokenSelected.decimals === 'undefined'
+            ? await contractToken.methods.decimals().call()
+            : tokenSelected.decimals
+        console.log(receipt)
+        console.log(Drago.toUnitAmount(receipt, decimals).toFixed())
         this.setState({
           spenderAddressAllowance: Drago.toUnitAmount(
             receipt,
-            tokenSelected.decimals
+            decimals
           ).toFixed()
         })
       }
@@ -205,6 +236,7 @@ class ExchangeToolsPage extends Component {
   setAllowance = async () => {
     const { fundSelected, spenderAddress, tokenAllowanceAddress } = this.state
     const { web3 } = this.context
+    console.log('setAllowance')
     if (fundSelected.address === '') {
       const contractToken = await new web3.eth.Contract(
         abis.erc20,
@@ -377,7 +409,7 @@ class ExchangeToolsPage extends Component {
       spenderAddress: '',
       spenderAddressError: ''
     })
-    // this.updateBalances({ ...tokenSelected }, fundSelected)
+    // this.getBalances({ ...tokenSelected }, fundSelected)
   }
 
   onFundSelect = async event => {
@@ -397,6 +429,7 @@ class ExchangeToolsPage extends Component {
   }
 
   render() {
+    console.log('render')
     const paperStyle = {
       padding: 10
     }
@@ -499,7 +532,10 @@ class ExchangeToolsPage extends Component {
                 <SetAllowanceButtons
                   onSetAllowance={this.onSetAllowance}
                   order={order}
-                  disabled={tokenAllowanceAddressError !== ''}
+                  disabled={
+                    tokenAllowanceAddressError === '' &&
+                    spenderAddressAllowance === ''
+                  }
                 />
               </Grid>
             </Grid>
@@ -549,4 +585,4 @@ class ExchangeToolsPage extends Component {
   }
 }
 
-export default ExchangeToolsPage
+export default ReactTimeout(ExchangeToolsPage)

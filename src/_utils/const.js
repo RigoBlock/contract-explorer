@@ -200,7 +200,7 @@ export const tokensRigoblockEthfinex = {
 
 export const exchanges = {
   3: {
-    zeroEx: {
+    ZeroEx: {
       networkId: 3,
       needLocking: false,
       needAllowance: true,
@@ -232,10 +232,14 @@ export const exchanges = {
     }
   },
   42: {
-    zeroEx: {
+    ZeroEx: {
       needLocking: false,
       needAllowance: true,
+      exchangeContractAddress: '0x90Fe2Af704B34E0224bF2299C838E04d4Dcf1364',
       networkId: 42,
+      name: 'ZeroEx',
+      tokenTransferProxyContractAddress:
+        '0x087Eed4Bc1ee3DE49BeFbd66C662B434B15d49d4',
       tradedTokens: {}
     },
     RigoBlockZeroX: {

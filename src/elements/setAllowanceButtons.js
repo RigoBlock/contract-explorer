@@ -37,6 +37,7 @@ class SetAllowanceButtons extends Component {
               variant="raised"
               color="primary"
               onClick={this.props.onSetAllowance}
+              fullWidth={true}
             >
               Set allowance
             </Button>
@@ -48,6 +49,7 @@ class SetAllowanceButtons extends Component {
               variant="raised"
               color="primary"
               onClick={this.props.onSetAllowance}
+              fullWidth={true}
             >
               remove allowance
             </Button>
