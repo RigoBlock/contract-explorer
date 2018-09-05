@@ -46,7 +46,7 @@ class ExchangeToolsPage extends Component {
       exchangeSelected,
       walletAddress: '',
       tokensList,
-      tokenSelected: tokensList.GRG,
+      tokenSelected: typeof tokensList !== 'undefined' ? tokensList.GRG : {},
       tokenAllowanceAddress: '0x6fa8590920c5966713b1a86916f7b0419411e474',
       tokenAllowanceAddressError: '',
       spenderAddress: '0x5959f2036608d693b4d085020acadbbf664c793e',
@@ -87,7 +87,7 @@ class ExchangeToolsPage extends Component {
 
   updateBalances = async (token, address) => {
     const { web3 } = this.context
-    if (typeof token.wrappers.Ethfinex !== 'undefined') {
+    if (typeof token.wrappers !== 'undefined') {
       token.wrappedBalance = await Drago.getWrapperBalance(
         token.wrappers.Ethfinex.address,
         address,
@@ -202,12 +202,12 @@ class ExchangeToolsPage extends Component {
   }
 
   setAllowance = async () => {
-    const { fundSelected, spenderAddress, tokenSelected } = this.state
+    const { fundSelected, spenderAddress, tokenAllowanceAddress } = this.state
     const { web3 } = this.context
     if (fundSelected.address === '') {
       const contractToken = await new web3.eth.Contract(
         abis.erc20,
-        tokenSelected.address
+        tokenAllowanceAddress
       )
       console.log(contractToken)
       let options = {
@@ -274,12 +274,12 @@ class ExchangeToolsPage extends Component {
   }
 
   removeAllowance = async () => {
-    const { fundSelected, spenderAddress, tokenSelected } = this.state
+    const { fundSelected, spenderAddress, tokenAllowanceAddress } = this.state
     const { web3 } = this.context
     if (fundSelected.address === '') {
       const contractToken = await new web3.eth.Contract(
         abis.erc20,
-        tokenSelected.address
+        tokenAllowanceAddress
       )
       console.log(contractToken)
       let options = {
@@ -511,24 +511,27 @@ class ExchangeToolsPage extends Component {
                 </Typography>
                 <Divider />
               </Grid>
-
-              <Grid item xs={12}>
-                <div className="text">Select a token.</div>
-                <TokenSelect
-                  tokensList={Object.values(tokensList)}
-                  onTokenSelect={this.onTokenSelect}
-                  tokenSelected={tokenSelected}
-                  disabled={exchangeList[exchangeSelected].needAllowance}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <LockUnlockActions
-                  token={tokenSelected}
-                  fund={fundSelected}
-                  managerAddress={accounts[0]}
-                  exchange={exchangeList[exchangeSelected]}
-                />
-              </Grid>
+              {typeof tokensList !== 'undefined' && (
+                <div>
+                  <Grid item xs={12}>
+                    <div className="text">Select a token.</div>
+                    <TokenSelect
+                      tokensList={Object.values(tokensList)}
+                      onTokenSelect={this.onTokenSelect}
+                      tokenSelected={tokenSelected}
+                      disabled={exchangeList[exchangeSelected].needAllowance}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <LockUnlockActions
+                      token={tokenSelected}
+                      fund={fundSelected}
+                      managerAddress={accounts[0]}
+                      exchange={exchangeList[exchangeSelected]}
+                    />
+                  </Grid>
+                </div>
+              )}
 
               <ReactJson
                 src={signedOrder}
