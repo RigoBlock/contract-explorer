@@ -1,16 +1,16 @@
-import { List } from 'immutable';
+import { List } from 'immutable'
 import ContractInputAddress from '../elements/contractInputAddress'
 import ContractInputFields from '../elements/contractInputFields'
-import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid'
 import InOutMethodValues from '../elements/inOutMethodValues'
 import JsonView from '../elements/jsonView'
-import Loading from '../elements/loading';
+import Loading from '../elements/loading'
 import MethodSelect from '../elements/methodSelect'
-import Paper from '@material-ui/core/Paper';
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import Sticky from 'react-stickynode';
-import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import Sticky from 'react-stickynode'
+import Typography from '@material-ui/core/Typography'
 import UploadButton from '../elements/uploadButton'
 // import Web3 from 'web3';
 
