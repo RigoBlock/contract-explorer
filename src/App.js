@@ -1,98 +1,104 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import './App.css'
 import { Route, Switch } from 'react-router-dom'
-import { withStyles } from 'material-ui/styles';
-import withRoot from './withRoot';
-import ContractPage from './pages/contract';
-import EventsPage from './pages/events';
-import HomePage from './pages/home';
-import Web3 from 'web3';
-import TopBar from './elements/topBar'
-import Grid from 'material-ui/Grid';
+import { networkInfo } from './_utils/const'
+import { withStyles } from '@material-ui/core/styles'
+import ContractPage from './pages/contract'
+import EventsPage from './pages/events'
 import Exchange from './pages/exchange'
+import Grid from '@material-ui/core/Grid'
+import HomePage from './pages/home'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import TopBar from './elements/topBar'
+import Web3 from 'web3'
+import withRoot from './withRoot'
 
 const styles = theme => ({
   root: {
     textAlign: 'center',
-    paddingTop: theme.spacing.unit * 5,
-  },
-});
+    paddingTop: theme.spacing.unit * 5
+  }
+})
 
 class App extends Component {
-
   constructor(props) {
     super(props)
-    var web3
+    let web3
 
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof window.web3 !== 'undefined') {
-
       // Use the browser's ethereum provider
-      web3 = new Web3(window.web3.currentProvider)
-
+      try {
+        web3 = new Web3(window.web3.currentProvider)
+      } catch (err) {
+        console.warn(err)
+      }
     } else {
       console.log('No web3? You should consider trying MetaMask!')
     }
     this.state = {
       web3,
-      newBlock: {
-        number: 0
-      },
-      accountsError: true
-
+      accounts: [],
+      accountsError: true,
+      networkInfo: {}
     }
   }
 
   static childContextTypes = {
-    web3: PropTypes.object
-  };
-
-  getChildContext() {
-    return {web3: this.state.web3,
-      networId: this.state.networId};
+    web3: PropTypes.object,
+    accounts: PropTypes.array,
+    networkInfo: PropTypes.object
   }
 
-  componentWillMount = async() => {
+  getChildContext() {
+    return {
+      web3: this.state.web3,
+      accounts: this.state.accounts,
+      networkInfo: this.state.networkInfo
+    }
+  }
+
+  UNSAFE_componentWillMount = async () => {
     const { web3 } = this.state
     const accounts = await web3.eth.getAccounts()
-    const networId = await web3.eth.net.getId
-    if (typeof accounts[0] === 'undefined'){
-      this.setState({ 
+    const networId = await web3.eth.net.getId()
+    if (typeof accounts[0] === 'undefined') {
+      this.setState({
         accountsError: true,
-        networId
-      });
+        networkInfo: networkInfo[networId]
+      })
     } else {
-      this.setState({ 
+      this.setState({
+        accounts,
         accountsError: false,
-        networId
-      });
+        networkInfo: networkInfo[networId]
+      })
     }
-
   }
 
   render() {
     return (
-      <Grid container spacing={0} >
+      <Grid container spacing={0}>
         <Grid item xs={12}>
-          <TopBar accountsError={this.state.accountsError} ></TopBar>
+          <TopBar accountsError={this.state.accountsError} />
         </Grid>
         <Grid item xs={12}>
-          {!this.state.accountsError
-            ? <Switch>
-              <Route exact path='/' component={HomePage} />
-              <Route exact path='/contract' component={ContractPage} />
-              <Route exact path='/events' component={EventsPage} />
-              {/* <Route exact path='/rigoblock-api' component={RigoblockApi} /> */}
-              <Route path='/zeroex' component={Exchange} />
+          {!this.state.accountsError ? (
+            <Switch>
+              <Route exact path="/" component={HomePage} />
+              <Route exact path="/contract" component={ContractPage} />
+              <Route exact path="/events" component={EventsPage} />
+              <Route path="/zeroex" component={Exchange} />
             </Switch>
-            : <Switch>
-              <Route path='/' component={HomePage} />
+          ) : (
+            <Switch>
+              <Route path="/" component={HomePage} />
             </Switch>
-          }
+          )}
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 
-export default withRoot(withStyles(styles)(App));
+export default withRoot(withStyles(styles)(App))

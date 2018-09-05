@@ -1,37 +1,34 @@
-import React from 'react';
-import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid';
-import PropTypes from 'prop-types';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import TextField from 'material-ui/TextField';
-import Button from 'material-ui/Button';
-import Paper from 'material-ui/Paper';
-import Web3 from 'web3';
-import { BigNumber } from '@0xproject/utils';
+import * as CONST from '../_utils/const'
+import { BigNumber } from '@0xproject/utils'
+import Button from '@material-ui/core/Button'
+import FormControl from '@material-ui/core/FormControl'
+import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
+import PropTypes from 'prop-types'
+import React from 'react'
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
+import Web3 from 'web3'
 // import BigNumber from 'bignumber.js';
-// 0x stuff
-// import * as Web3ProviderEngine from 'web3-provider-engine/dist/es5';
-// import * as RPCSubprovider from 'web3-provider-engine/dist/es5/subproviders/rpc';
-// import { InjectedWeb3Subprovider } from '@0xproject/subproviders';
-import { ZeroEx } from '0x.js';
-import ReactJson from 'react-json-view'
-import serializeError from 'serialize-error';
-import ExchangeSelect from '../elements/exchangeSelect'
-import SetAllowanceButton from "../elements/setAllowanceButton"
 import * as abis from '../abi/index'
 import {
   FUND_PROXY_ADDRESS,
-  RB_EXCHANGE_ADDRESS_KV,
+  RB_0X_EXCHANGE_ADDRESS_KV,
   RB_TOKEN_TRANSFER_PROXY_ADDRESS_KV
 } from '../_utils/const'
-
-
-
+import { ZeroEx } from '0x.js'
+import ExchangeSelect from '../elements/exchangeSelect'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import ReactJson from 'react-json-view'
+import SetAllowanceButtons from '../elements/setAllowanceButtons'
+import serializeError from 'serialize-error'
 
 class ExchangeOrderFiller extends React.Component {
-
-  constructor(props) {
+  constructor(props, context) {
     super(props)
+    const exchangeSelected =
+      context.networkInfo.id === 3 ? 'Ethfinex' : 'RigoBlockZeroX'
+    const exchangeList = CONST.exchanges[context.networkInfo.id]
     this.state = {
       encodedABI: '',
       orderError: false,
@@ -46,22 +43,12 @@ class ExchangeOrderFiller extends React.Component {
           error: {}
         },
         txReceipt: {},
-        amount: '0',
+        amount: '0'
       },
       submitDisabled: false,
-      exchangeSelected: 'rigoBlock',
+      exchangeSelected,
 
-      exchangeList: {
-        zeroEx: {
-          networkId: 42,
-          exchangeContractAddress: '0x90fe2af704b34e0224bf2299c838e04d4dcf1364'
-        },
-        rigoBlock: {
-          exchangeContractAddress: RB_EXCHANGE_ADDRESS_KV.toLowerCase(),
-          networkId: 42,
-          tokenTransferProxyContractAddress: RB_TOKEN_TRANSFER_PROXY_ADDRESS_KV.toLowerCase(),
-        }
-      },
+      exchangeList,
       // DRAGO ORDER
       // order: JSON.parse(
       //   `
@@ -111,24 +98,27 @@ class ExchangeOrderFiller extends React.Component {
         `
       ),
       filledAmount: '0.001'
-      // order: 
+      // order:
       // `
       // {"maker":"0xec4ee1bcf8107480815b08b530e0ead75b9f804f","taker":"0x0000000000000000000000000000000000000000","makerFee":"0","takerFee":"0","makerTokenAmount":"10000000000000000","takerTokenAmount":"10000000000000000","makerTokenAddress":"0xd0a1e359811322d97991e03f863a0c30c2cf029c","takerTokenAddress":"0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570","expirationUnixTimestampSec":"2524608000","feeRecipient":"0x0000000000000000000000000000000000000000","salt":"42915409420279271885015915205547393322324115969244938610857696117752690836404","ecSignature":{"v":27,"r":"0xa28fb15b28bebdf29c89593fe2e1bd999d5ab416622a6f4157b041b27e7fcab0","s":"0x51ae5e4c276e60b429ecc31da788840e5e1f24a6e260d0fb62c952e4968496a9"},"exchangeContractAddress":"0x90fe2af704b34e0224bf2299c838e04d4dcf1364"}
       // `,
       // order: ''
-
-    };
+    }
   }
 
-  static contextTypes = { web3: PropTypes.object.isRequired };
+  static contextTypes = {
+    web3: PropTypes.object.isRequired,
+    accounts: PropTypes.array.isRequired,
+    networkInfo: PropTypes.object.isRequired
+  }
 
   componentDidMount() {
-    const KOVAN_NETWORK_ID = 42;
+    const KOVAN_NETWORK_ID = 42
     const ZeroExConfig = {
-      networkId: KOVAN_NETWORK_ID,
+      networkId: KOVAN_NETWORK_ID
     }
-    var web3 = new Web3(window.web3.currentProvider)
-    var zeroEx = new ZeroEx(web3.currentProvider, ZeroExConfig);
+    let web3 = new Web3(window.web3.currentProvider)
+    let zeroEx = new ZeroEx(web3.currentProvider, ZeroExConfig)
     zeroEx._web3Wrapper._web3.eth.getAccounts((error, result) => {
       this.setState({
         walletAddress: result[0]
@@ -137,7 +127,7 @@ class ExchangeOrderFiller extends React.Component {
   }
 
   onFillOrder = async () => {
-    const DECIMALS = 18;
+    const DECIMALS = 18
     const { order } = this.state
 
     // 1
@@ -193,23 +183,28 @@ class ExchangeOrderFiller extends React.Component {
 
     // 2
     //
-    // WEB3 
+    // WEB3
     //
 
-    const ZeroExConfig = { ...this.state.exchangeList[this.state.exchangeSelected] }
+    const ZeroExConfig = {
+      ...this.state.exchangeList[this.state.exchangeSelected]
+    }
     const options = {
       from: this.state.walletAddress
     }
     let web3 = new Web3(window.web3.currentProvider)
     console.log(`Exchange address: ${ZeroExConfig.exchangeContractAddress}`)
-    const exchangeContract = new web3.eth.Contract(abis.zeroExExchange, ZeroExConfig.exchangeContractAddress)
+    const exchangeContract = new web3.eth.Contract(
+      abis.zeroExExchange,
+      ZeroExConfig.exchangeContractAddress
+    )
     console.log(exchangeContract)
     const orderAddresses = [
       order.maker,
       order.taker,
       order.makerTokenAddress,
       order.takerTokenAddress,
-      order.feeRecipient,
+      order.feeRecipient
     ]
     const orderValues = [
       order.makerTokenAmount,
@@ -222,11 +217,14 @@ class ExchangeOrderFiller extends React.Component {
     const v = order.ecSignature.v
     const r = order.ecSignature.r
     const s = order.ecSignature.s
-    const shouldThrowOnInsufficientBalanceOrAllowance = true;
+    const shouldThrowOnInsufficientBalanceOrAllowance = true
     console.log(
       orderAddresses,
       orderValues,
-      ZeroEx.toBaseUnitAmount(new BigNumber(this.state.filledAmount), DECIMALS).toString(),
+      ZeroEx.toBaseUnitAmount(
+        new BigNumber(this.state.filledAmount),
+        DECIMALS
+      ).toString(),
       shouldThrowOnInsufficientBalanceOrAllowance,
       v,
       r,
@@ -238,7 +236,12 @@ class ExchangeOrderFiller extends React.Component {
     // WEB3 RAW
     //
 
-    console.log(ZeroEx.toBaseUnitAmount(new BigNumber(this.state.filledAmount), DECIMALS).toString())
+    console.log(
+      ZeroEx.toBaseUnitAmount(
+        new BigNumber(this.state.filledAmount),
+        DECIMALS
+      ).toString()
+    )
     const encodedABI = exchangeContract.methods
       .fillOrder(
         orderAddresses,
@@ -251,9 +254,9 @@ class ExchangeOrderFiller extends React.Component {
       )
       .encodeABI()
 
-      this.setState({
-        encodedABI
-      })
+    this.setState({
+      encodedABI
+    })
 
     console.log(encodedABI)
 
@@ -262,17 +265,16 @@ class ExchangeOrderFiller extends React.Component {
       to: ZeroExConfig.exchangeContractAddress,
       data: encodedABI
     }
-    web3.eth.estimateGas(transactionObject)
+    web3.eth
+      .estimateGas(transactionObject)
       .then(gasEstimate => {
         console.log(gasEstimate)
         transactionObject.gas = gasEstimate
       })
       .then(() => {
-        web3.eth.sendTransaction(transactionObject)
-          .then(result => {
-            console.log(result)
-
-          })
+        web3.eth.sendTransaction(transactionObject).then(result => {
+          console.log(result)
+        })
       })
       .catch(error => {
         console.log(error)
@@ -324,80 +326,59 @@ class ExchangeOrderFiller extends React.Component {
     //   })
   }
 
-  onAmountChange = (event) => {
+  onAmountChange = event => {
     try {
-      var amount = new BigNumber(event.target.value).greaterThan(0)
+      let amount = new BigNumber(event.target.value).greaterThan(0)
       this.setState({
-        submitDisabled: !amount,
+        submitDisabled: !amount
       })
-    }
-    catch (error) {
+    } catch (error) {
       this.setState({
-        submitDisabled: true,
+        submitDisabled: true
       })
     }
     this.setState({
-      filledAmount: event.target.value,
+      filledAmount: event.target.value
     })
   }
 
-  onExchangeSelect = (exchangeSelected) => {
+  onExchangeSelect = exchangeSelected => {
     this.setState({
       exchangeSelected
     })
   }
 
-  onTextFieldChange = (event) => {
+  onTextFieldChange = event => {
     try {
       const parsedOrder = JSON.parse(event.target.value)
       this.setState({
         order: parsedOrder,
         orderError: true
       })
-    }
-    catch (err) {
+    } catch (err) {
       this.setState({
         orderError: false
       })
     }
   }
 
-
-  onSetAllowance = async () => {
-    const { order } = this.state
-    const ZeroExConfig = { ...this.state.exchangeList[this.state.exchangeSelected] }
-    console.log(ZeroExConfig)
-    console.log('Setting allowance for MM account')
-    let web3 = new Web3(window.web3.currentProvider)
-    var zeroEx = new ZeroEx(web3.currentProvider, ZeroExConfig);
-    const setTakerAllowTxHash = await zeroEx.token.setUnlimitedProxyAllowanceAsync(order.takerTokenAddress, this.state.walletAddress.toLowerCase());
-    let txReceipt = await zeroEx.awaitTransactionMinedAsync(setTakerAllowTxHash);
-    console.log(txReceipt)
-    // const setMakerAllowTxHash2 = await zeroEx.token.setUnlimitedProxyAllowanceAsync(order.takerTokenAddress, order.maker);
-    // const txReceipt2 = await zeroEx.awaitTransactionMinedAsync(setMakerAllowTxHash2);
-    // console.log(txReceipt2)
-
-  }
-
   render() {
     const paperStyle = {
-      padding: 10,
+      padding: 10
     }
     return (
       <Grid container spacing={8}>
         <Grid item xs={12}>
           <br />
-          <Typography variant="headline" >
-            FILLER
-          </Typography>
-          <Paper style={paperStyle} elevation={2} >
+          <Typography variant="headline">FILLER</Typography>
+          <Paper style={paperStyle} elevation={2}>
             <FormControl fullWidth={true} error={this.error}>
               <TextField
                 id="order"
                 key="order"
                 label="Order"
                 InputLabelProps={{
-                  shrink: true,
+                  shrink: true
                 }}
                 // placeholder={element.type}
                 onChange={this.onTextFieldChange}
@@ -415,7 +396,7 @@ class ExchangeOrderFiller extends React.Component {
                 key="amount"
                 label="Amount"
                 InputLabelProps={{
-                  shrink: true,
+                  shrink: true
                 }}
                 // placeholder={element.type}
                 onChange={this.onAmountChange}
@@ -426,29 +407,34 @@ class ExchangeOrderFiller extends React.Component {
               <FormHelperText>{this.state.errorMsg}</FormHelperText>
               <br />
             </FormControl>
-            <ExchangeSelect onExchangeSelect={this.onExchangeSelect} exchangesList={this.state.exchangeList} />
+            <ExchangeSelect
+              exchangeSelected={this.state.exchangeSelected}
+              onExchangeSelect={this.onExchangeSelect}
+              exchangesList={this.state.exchangeList}
+            />
             <br />
-            < br />
-            <FormControl fullWidth={true} >
-              <Button variant="raised" color="primary" onClick={this.onFillOrder} disabled={this.state.submitDisabled}>
+            <br />
+            <FormControl fullWidth={true}>
+              <Button
+                variant="raised"
+                color="primary"
+                onClick={this.onFillOrder}
+                disabled={this.state.submitDisabled}
+              >
                 SUBMIT
               </Button>
             </FormControl>
-            < br />
-            < br />
-
-            <SetAllowanceButton onSetAllowance={this.onSetAllowance} />
+            <br />
+            <br />
           </Paper>
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={8}>
             <Grid item xs={12}>
-              <Typography variant="headline" >
-                ENCODED ABI
-            </Typography>
+              <Typography variant="headline">ENCODED ABI</Typography>
             </Grid>
             <Grid item xs={12}>
-              <div style={{wordWrap: "break-word"}}>
+              <div style={{ wordWrap: 'break-word' }}>
                 {this.state.encodedABI}
               </div>
             </Grid>
@@ -457,14 +443,12 @@ class ExchangeOrderFiller extends React.Component {
         <Grid item xs={12}>
           <Grid container spacing={8}>
             <Grid item xs={12}>
-              <Typography variant="headline" >
-                RECEIPT
-              </Typography>
+              <Typography variant="headline">RECEIPT</Typography>
             </Grid>
             <Grid item xs={12}>
               <ReactJson
                 src={this.state.txReceipt}
-                style={{ padding: "5px" }}
+                style={{ padding: '5px' }}
                 theme="codeschool"
                 indentWidth="2"
                 collapsed="2"
@@ -473,8 +457,8 @@ class ExchangeOrderFiller extends React.Component {
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 
-export default ExchangeOrderFiller;
+export default ExchangeOrderFiller
