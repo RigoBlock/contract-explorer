@@ -31,7 +31,7 @@ class ExchangeToolsPage extends Component {
     }
     let zeroEx = new ZeroEx(context.web3.currentProvider, ZeroExConfig)
     const exchangeSelected =
-      context.networkInfo.id === 3 ? 'Ethfinex' : 'RigoBlockZeroX'
+      context.networkInfo.id === 3 ? 'RigoBlockEthfinex' : 'RigoBlockZeroX'
     const tokensList =
       CONST.exchanges[context.networkInfo.id][exchangeSelected].tradedTokens[
         context.networkInfo.id
@@ -47,9 +47,9 @@ class ExchangeToolsPage extends Component {
       walletAddress: '',
       tokensList,
       tokenSelected: typeof tokensList !== 'undefined' ? tokensList.GRG : {},
-      tokenAllowanceAddress: '0x6fa8590920c5966713b1a86916f7b0419411e474',
+      tokenAllowanceAddress: '',
       tokenAllowanceAddressError: '',
-      spenderAddress: '0x5959f2036608d693b4d085020acadbbf664c793e',
+      spenderAddress: '',
       spenderAddressAllowance: '',
       spenderAddressError: '',
       fundsList: [],
@@ -123,11 +123,12 @@ class ExchangeToolsPage extends Component {
 
   onTokenAllowanceAddressFieldChange = async event => {
     const { web3 } = this.context
+    const address = event.target.value.toLowerCase()
     if (web3.utils.isAddress(event.target.value)) {
       if (event.target.id === 'tokenAllowanceAddress') {
         this.setState(
           {
-            tokenAllowanceAddress: event.target.value,
+            tokenAllowanceAddress: address,
             tokenAllowanceAddressError: ''
           },
           this.checkAllowance
@@ -136,7 +137,7 @@ class ExchangeToolsPage extends Component {
       if (event.target.id === 'spenderAddress') {
         this.setState(
           {
-            spenderAddress: event.target.value,
+            spenderAddress: address,
             spenderAddressError: ''
           },
           this.checkAllowance
@@ -146,7 +147,7 @@ class ExchangeToolsPage extends Component {
       if (event.target.id === 'tokenAllowanceAddress') {
         this.setState(
           {
-            tokenAllowanceAddress: event.target.value,
+            tokenAllowanceAddress: address,
             tokenAllowanceAddressError: 'Please enter a valid address.'
           },
           this.checkAllowance
@@ -155,7 +156,7 @@ class ExchangeToolsPage extends Component {
       if (event.target.id === 'spenderAddress') {
         this.setState(
           {
-            spenderAddress: event.target.value,
+            spenderAddress: address,
             spenderAddressError: 'Please enter a valid address.'
           },
           this.checkAllowance

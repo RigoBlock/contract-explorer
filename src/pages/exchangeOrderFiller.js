@@ -27,7 +27,7 @@ class ExchangeOrderFiller extends React.Component {
   constructor(props, context) {
     super(props)
     const exchangeSelected =
-      context.networkInfo.id === 3 ? 'Ethfinex' : 'RigoBlockZeroX'
+      context.networkInfo.id === 3 ? 'RigoBlockEthfinex' : 'RigoBlockZeroX'
     const exchangeList = CONST.exchanges[context.networkInfo.id]
     this.state = {
       encodedABI: '',
