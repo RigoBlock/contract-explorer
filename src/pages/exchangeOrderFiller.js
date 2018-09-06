@@ -135,115 +135,115 @@ class ExchangeOrderFiller extends React.Component {
     // 0x LIBRARY
     //
 
-    const shouldThrowOnInsufficientBalanceOrAllowance = true
-    const orderToFill = {
-      maker: order.maker.toLowerCase(),
-      taker: order.taker.toLowerCase(),
-      feeRecipient: order.feeRecipient.toLowerCase(),
-      makerTokenAddress: order.makerTokenAddress.toLowerCase(),
-      takerTokenAddress: order.takerTokenAddress.toLowerCase(),
-      exchangeContractAddress: order.exchangeContractAddress.toLowerCase(),
-      salt: order.salt,
-      makerFee: new BigNumber(order.makerFee),
-      takerFee: new BigNumber(order.takerFee),
-      makerTokenAmount: new BigNumber(order.makerTokenAmount),
-      takerTokenAmount: new BigNumber(order.takerTokenAmount),
-      expirationUnixTimestampSec: new BigNumber(
-        order.expirationUnixTimestampSec
-      ),
-      ecSignature: order.ecSignature
-    }
+    // const shouldThrowOnInsufficientBalanceOrAllowance = true
+    // const orderToFill = {
+    //   maker: order.maker.toLowerCase(),
+    //   taker: order.taker.toLowerCase(),
+    //   feeRecipient: order.feeRecipient.toLowerCase(),
+    //   makerTokenAddress: order.makerTokenAddress.toLowerCase(),
+    //   takerTokenAddress: order.takerTokenAddress.toLowerCase(),
+    //   exchangeContractAddress: order.exchangeContractAddress.toLowerCase(),
+    //   salt: order.salt,
+    //   makerFee: new BigNumber(order.makerFee),
+    //   takerFee: new BigNumber(order.takerFee),
+    //   makerTokenAmount: new BigNumber(order.makerTokenAmount),
+    //   takerTokenAmount: new BigNumber(order.takerTokenAmount),
+    //   expirationUnixTimestampSec: new BigNumber(
+    //     order.expirationUnixTimestampSec
+    //   ),
+    //   ecSignature: order.ecSignature
+    // }
 
-    console.log(orderToFill)
-    const takerAddress = this.context.accounts[0]
-    console.log(this.context.accounts[0])
-    const fillTakerTokenAmount = ZeroEx.toBaseUnitAmount(
-      new BigNumber(this.state.filledAmount),
-      DECIMALS
-    )
-    const ZeroExConfig = {
-      networkId: 42
-    }
-    console.log(ZeroExConfig)
-    let web3 = new Web3(window.web3.currentProvider)
-    let zeroEx = new ZeroEx(web3.currentProvider, ZeroExConfig)
-    console.log(
-      orderToFill,
-      fillTakerTokenAmount,
-      shouldThrowOnInsufficientBalanceOrAllowance,
-      takerAddress
-    )
-    const txHash = await zeroEx.exchange
-      .fillOrderAsync(
-        orderToFill,
-        fillTakerTokenAmount,
-        shouldThrowOnInsufficientBalanceOrAllowance,
-        takerAddress,
-        {
-          shouldValidate: true
-        }
-      )
-      .catch(error => {
-        this.setState({
-          txReceipt: serializeError(error)
-        })
-        return serializeError(error)
-      })
-    const txReceipt = await zeroEx.awaitTransactionMinedAsync(txHash)
-    this.setState({
-      txReceipt: txReceipt
-    })
-    console.log('FillOrder transaction receipt: ', txReceipt)
+    // console.log(orderToFill)
+    // const takerAddress = this.context.accounts[0]
+    // console.log(this.context.accounts[0])
+    // const fillTakerTokenAmount = ZeroEx.toBaseUnitAmount(
+    //   new BigNumber(this.state.filledAmount),
+    //   DECIMALS
+    // )
+    // const ZeroExConfig = {
+    //   networkId: 42
+    // }
+    // console.log(ZeroExConfig)
+    // let web3 = new Web3(window.web3.currentProvider)
+    // let zeroEx = new ZeroEx(web3.currentProvider, ZeroExConfig)
+    // console.log(
+    //   orderToFill,
+    //   fillTakerTokenAmount,
+    //   shouldThrowOnInsufficientBalanceOrAllowance,
+    //   takerAddress
+    // )
+    // const txHash = await zeroEx.exchange
+    //   .fillOrderAsync(
+    //     orderToFill,
+    //     fillTakerTokenAmount,
+    //     shouldThrowOnInsufficientBalanceOrAllowance,
+    //     takerAddress,
+    //     {
+    //       shouldValidate: true
+    //     }
+    //   )
+    //   .catch(error => {
+    //     this.setState({
+    //       txReceipt: serializeError(error)
+    //     })
+    //     return serializeError(error)
+    //   })
+    // const txReceipt = await zeroEx.awaitTransactionMinedAsync(txHash)
+    // this.setState({
+    //   txReceipt: txReceipt
+    // })
+    // console.log('FillOrder transaction receipt: ', txReceipt)
 
     // 2
     //
     // WEB3
     //
 
-    // const ZeroExConfig = {
-    //   ...this.state.exchangeList[this.state.exchangeSelected]
-    // }
-    // const options = {
-    //   from: this.state.walletAddress
-    // }
-    // let web3 = new Web3(window.web3.currentProvider)
-    // console.log(`Exchange address: ${ZeroExConfig.exchangeContractAddress}`)
-    // const exchangeContract = new web3.eth.Contract(
-    //   abis.zeroExExchange,
-    //   ZeroExConfig.exchangeContractAddress
-    // )
-    // console.log(exchangeContract)
-    // const orderAddresses = [
-    //   order.maker,
-    //   order.taker,
-    //   order.makerTokenAddress,
-    //   order.takerTokenAddress,
-    //   order.feeRecipient
-    // ]
-    // const orderValues = [
-    //   order.makerTokenAmount,
-    //   order.takerTokenAmount,
-    //   order.makerFee,
-    //   order.takerFee,
-    //   order.expirationUnixTimestampSec,
-    //   order.salt
-    // ]
-    // const v = order.ecSignature.v
-    // const r = order.ecSignature.r
-    // const s = order.ecSignature.s
-    // const shouldThrowOnInsufficientBalanceOrAllowance = true
-    // console.log(
-    //   orderAddresses,
-    //   orderValues,
-    //   ZeroEx.toBaseUnitAmount(
-    //     new BigNumber(this.state.filledAmount),
-    //     DECIMALS
-    //   ).toString(),
-    //   shouldThrowOnInsufficientBalanceOrAllowance,
-    //   v,
-    //   r,
-    //   s
-    // )
+    const ZeroExConfig = {
+      ...this.state.exchangeList[this.state.exchangeSelected]
+    }
+    const options = {
+      from: this.state.walletAddress
+    }
+    let web3 = new Web3(window.web3.currentProvider)
+    console.log(`Exchange address: ${ZeroExConfig.exchangeContractAddress}`)
+    const exchangeContract = new web3.eth.Contract(
+      abis.zeroExExchange,
+      ZeroExConfig.exchangeContractAddress
+    )
+    console.log(exchangeContract)
+    const orderAddresses = [
+      order.maker,
+      order.taker,
+      order.makerTokenAddress,
+      order.takerTokenAddress,
+      order.feeRecipient
+    ]
+    const orderValues = [
+      order.makerTokenAmount,
+      order.takerTokenAmount,
+      order.makerFee,
+      order.takerFee,
+      order.expirationUnixTimestampSec,
+      order.salt
+    ]
+    const v = order.ecSignature.v
+    const r = order.ecSignature.r
+    const s = order.ecSignature.s
+    const shouldThrowOnInsufficientBalanceOrAllowance = true
+    console.log(
+      orderAddresses,
+      orderValues,
+      ZeroEx.toBaseUnitAmount(
+        new BigNumber(this.state.filledAmount),
+        DECIMALS
+      ).toString(),
+      shouldThrowOnInsufficientBalanceOrAllowance,
+      v,
+      r,
+      s
+    )
 
     // 3
     //
@@ -303,41 +303,49 @@ class ExchangeOrderFiller extends React.Component {
     // WEB3 NORMAL
     //
 
-    // exchangeContract.methods
-    //   .fillOrder(
-    //     orderAddresses,
-    //     orderValues,
-    //     ZeroEx.toBaseUnitAmount(new BigNumber(this.state.filledAmount), DECIMALS),
-    //     shouldThrowOnInsufficientBalanceOrAllowance,
-    //     v,
-    //     r,
-    //     s
-    //   )
-    //   .estimateGas(options)
-    //   .then(gasEstimate => {
-    //     console.log(gasEstimate)
-    //     options.gas = '600000'
-    //   })
-    //   .then(() => {
-    //     exchangeContract.methods
-    //       .fillOrder(orderAddresses,
-    //         orderValues,
-    //         ZeroEx.toBaseUnitAmount(new BigNumber(this.state.filledAmount), DECIMALS),
-    //         shouldThrowOnInsufficientBalanceOrAllowance,
-    //         v,
-    //         r,
-    //         s)
-    //       .send(options)
-    //       .then(result => {
-    //         console.log(result)
-    //       })
-    //   })
-    //   .catch(error => {
-    //     console.log(error)
-    //     this.setState({
-    //       txReceipt: serializeError(error)
-    //     })
-    //   })
+    exchangeContract.methods
+      .fillOrder(
+        orderAddresses,
+        orderValues,
+        ZeroEx.toBaseUnitAmount(
+          new BigNumber(this.state.filledAmount),
+          DECIMALS
+        ),
+        shouldThrowOnInsufficientBalanceOrAllowance,
+        v,
+        r,
+        s
+      )
+      .estimateGas(options)
+      .then(gasEstimate => {
+        console.log(gasEstimate)
+        options.gas = '600000'
+      })
+      .then(() => {
+        exchangeContract.methods
+          .fillOrder(
+            orderAddresses,
+            orderValues,
+            ZeroEx.toBaseUnitAmount(
+              new BigNumber(this.state.filledAmount),
+              DECIMALS
+            ),
+            shouldThrowOnInsufficientBalanceOrAllowance,
+            v,
+            r,
+            s
+          )
+          .send(options)
+          .then(result => {
+            console.log(result)
+          })
+      })
+      .catch(error => {
+        console.log(error)
+        this.setState({
+          txReceipt: serializeError(error)
+        })
+      })
   }
 
   onAmountChange = event => {

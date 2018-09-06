@@ -57,3 +57,11 @@
   padding-bottom: 10px;
   padding-top: 10px;
 }
+
+.button {
+  font-weight: 700
+}
+
+.secondary {
+  color: white
+}

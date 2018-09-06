@@ -210,14 +210,24 @@ export const exchanges = {
         '0xa8e9fa8f91e5ae138c74648c9c304f1c75003a8d',
       tradedTokens: {}
     },
+    // RigoBlockEthfinex: {
+    //   needLocking: true,
+    //   needAllowance: false,
+    //   exchangeContractAddress: '0x8965a813fb43a141d7741320cd16cc1898af97fb',
+    //   networkId: 3,
+    //   name: 'RigoBlockEthfinex',
+    //   tokenTransferProxyContractAddress:
+    //     '0x567c68a23cf5066973d2c3D7e3Daf3405e2ea9E4',
+    //   tradedTokens: tokensRigoblockEthfinex
+    // },
     RigoBlockEthfinex: {
       needLocking: true,
       needAllowance: false,
-      exchangeContractAddress: '0x8965a813fb43a141d7741320cd16cc1898af97fb',
+      exchangeContractAddress: '0x1d8643aae25841322ecde826862a9fa922770981',
       networkId: 3,
       name: 'RigoBlockEthfinex',
       tokenTransferProxyContractAddress:
-        '0x567c68a23cf5066973d2c3D7e3Daf3405e2ea9E4',
+        '0xEEA64EeBd1F2Dc273cfC79CbDda23b69C6b5588D',
       tradedTokens: tokensRigoblockEthfinex
     },
     Ethfinex: {

@@ -1,9 +1,11 @@
+import '../App.css'
 import * as Drago from '../_utils/drago_utils'
 import Button from '@material-ui/core/Button'
 import EtherscanLink from '../elements/etherscanLink'
 import FormControl from '@material-ui/core/FormControl'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import Grid from '@material-ui/core/Grid'
+import LinearProgress from '@material-ui/core/LinearProgress';
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import TextField from '@material-ui/core/TextField'
@@ -17,7 +19,8 @@ class LockToken extends Component {
     disabled: PropTypes.bool.isRequired,
     errorMsg: PropTypes.object.isRequired,
     tokenLock: PropTypes.func.isRequired,
-    tokenUnLock: PropTypes.func.isRequired
+    tokenUnLock: PropTypes.func.isRequired,
+    loading: PropTypes.bool
   }
 
   static defaultProps = {
@@ -28,7 +31,8 @@ class LockToken extends Component {
       amountToLock: '',
       amountToUnlock: ''
     },
-    disabled: true
+    disabled: true,
+    loading: false
   }
 
   onChangeAmount = event => {
@@ -41,7 +45,8 @@ class LockToken extends Component {
       token,
       errorMsg,
       amountToLock,
-      amountToUnlock
+      amountToUnlock,
+      loading
     } = this.props
     return (
       <FormControl error={errorMsg !== ''} fullWidth={true} margin={'normal'}>
@@ -105,6 +110,9 @@ class LockToken extends Component {
             />
             <FormHelperText>{errorMsg.amountToUnlock}</FormHelperText>
           </Grid>
+          <Grid item xs={12}>
+            {loading && <LinearProgress />}
+          </Grid>
           <Grid item xs={6}>
             <Button
               disabled={
@@ -113,6 +121,7 @@ class LockToken extends Component {
               variant="contained"
               color="primary"
               onClick={this.props.tokenLock}
+              fullWidth={true}
             >
               Lock
             </Button>
@@ -127,6 +136,7 @@ class LockToken extends Component {
               variant="contained"
               color="secondary"
               onClick={this.props.tokenUnLock}
+              fullWidth={true}
             >
               Unlock
             </Button>

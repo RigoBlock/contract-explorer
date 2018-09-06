@@ -42,6 +42,7 @@ class ExchangeToolsPage extends Component {
     tokenSelected.wrappedBalance = 0
     const exchangeList = CONST.exchanges[context.networkInfo.id]
     this.state = {
+      receipt: {},
       zeroEx: zeroEx,
       json_object: {},
       order: {},
@@ -126,7 +127,8 @@ class ExchangeToolsPage extends Component {
         address,
         web3
       )
-      console.log(token.availableBalance)
+      console.log(token.address, token.availableBalance)
+      console.log(token.wrappers.Ethfinex.address, token.wrappedBalance)
       return token
     }
     return token
@@ -246,25 +248,26 @@ class ExchangeToolsPage extends Component {
       let options = {
         from: this.context.accounts[0]
       }
-      let receipt = await contractToken.methods
-        .approve(
-          spenderAddress,
-          'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-        )
-        .estimateGas(options)
-        .then(gasEstimate => {
-          console.log(gasEstimate)
-          options.gas = gasEstimate
-        })
-        .then(() => {
-          return contractToken.methods
-            .approve(
-              spenderAddress,
-              'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-            )
-            .send(options)
-        })
-      console.log(receipt)
+      this.showReceipt(
+        await contractToken.methods
+          .approve(
+            spenderAddress,
+            'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+          )
+          .estimateGas(options)
+          .then(gasEstimate => {
+            console.log(gasEstimate)
+            options.gas = gasEstimate
+          })
+          .then(() => {
+            return contractToken.methods
+              .approve(
+                spenderAddress,
+                'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+              )
+              .send(options)
+          })
+      )
       this.checkAllowance()
     } else {
       // console.log('Setting allowance for the fund')
@@ -318,19 +321,20 @@ class ExchangeToolsPage extends Component {
       let options = {
         from: this.context.accounts[0]
       }
-      let receipt = await contractToken.methods
-        .approve(spenderAddress, '0')
-        .estimateGas(options)
-        .then(gasEstimate => {
-          console.log(gasEstimate)
-          options.gas = gasEstimate
-        })
-        .then(() => {
-          return contractToken.methods
-            .approve(spenderAddress, '0')
-            .send(options)
-        })
-      console.log(receipt)
+      this.showReceipt(
+        await contractToken.methods
+          .approve(spenderAddress, '0')
+          .estimateGas(options)
+          .then(gasEstimate => {
+            console.log(gasEstimate)
+            options.gas = gasEstimate
+          })
+          .then(() => {
+            return contractToken.methods
+              .approve(spenderAddress, '0')
+              .send(options)
+          })
+      )
       this.checkAllowance()
     } else {
       // console.log('Setting allowance for the fund')
@@ -390,7 +394,6 @@ class ExchangeToolsPage extends Component {
       })
     } else {
       const tokensList = exchange.tradedTokens[this.context.networkInfo.id]
-      console.log(tokensList)
       this.setState({
         exchangeSelected,
         tokensList,
@@ -428,6 +431,13 @@ class ExchangeToolsPage extends Component {
     })
   }
 
+  showReceipt = receipt => {
+    console.log(receipt)
+    this.setState({
+      receipt
+    })
+  }
+
   render() {
     console.log('render')
     const paperStyle = {
@@ -439,7 +449,7 @@ class ExchangeToolsPage extends Component {
       tokenSelected,
       exchangeList,
       order,
-      signedOrder,
+      receipt,
       exchangeSelected,
       tokenAllowanceAddress,
       tokenAllowanceAddressError,
@@ -565,13 +575,14 @@ class ExchangeToolsPage extends Component {
                       fund={fundSelected}
                       managerAddress={accounts[0]}
                       exchange={exchangeList[exchangeSelected]}
+                      showReceipt={this.showReceipt}
                     />
                   </Grid>
                 </div>
               )}
 
               <ReactJson
-                src={signedOrder}
+                src={receipt}
                 style={{ padding: '5px' }}
                 theme="codeschool"
                 indentWidth="2"
