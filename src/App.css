@@ -65,3 +65,8 @@
 .secondary {
   color: white
 }
+
+.progress {
+  margin: auto;
+    margin-top: 25px;
+}

@@ -399,11 +399,17 @@ class ExchangeToolsPage extends Component {
     }
   }
 
-  onTokenSelect = event => {
+  onTokenSelect = async event => {
+    const { web3 } = this.context
     const { tokensList } = this.state
     const tokenSelected = Object.values(tokensList).find(token => {
       return token.symbol === event.target.value
     })
+
+    // const contractWrapperToken = await new web3.eth.Contract(
+    //   abis.wrapper,
+    //   tokenSelected.wrappers.Ethfinex.address
+    // )
     this.setState({
       tokenSelected,
       spenderAddress: '',
@@ -471,8 +477,8 @@ class ExchangeToolsPage extends Component {
                   {fundsList.length !== 0 &&
                     `We have detected that you own ${
                       fundsList.length
-                    } Rigoblock fund${fundsList.length > 1 &&
-                      's' || ''}. Please select one if you want to manage it on this page.`}
+                    } Rigoblock fund${(fundsList.length > 1 && 's') ||
+                      ''}. Please select one if you want to manage it on this page.`}
                 </div>
                 <div className="text">Your Rigoblock funds:</div>
                 <Paper style={paperStyle} elevation={2}>
@@ -496,6 +502,7 @@ class ExchangeToolsPage extends Component {
               </Grid>
             </Grid>
             <br />
+
             <Grid container spacing={8}>
               <Grid item xs={12} className="subheading">
                 <Typography variant="subheading">
@@ -520,31 +527,41 @@ class ExchangeToolsPage extends Component {
                   {fundSelected.symbol}
                 </div>
               </Grid>
-              <Grid item xs={12}>
-                <Paper style={paperStyle} elevation={2}>
-                  <TokenAllowanceAddressFields
-                    tokenAllowanceAddress={tokenAllowanceAddress}
-                    onTokenAllowanceAddressFieldChange={
-                      this.onTokenAllowanceAddressFieldChange
-                    }
-                    disabled={false}
-                    spenderAddress={spenderAddress}
-                    spenderAddressError={spenderAddressError}
-                    tokenAllowanceAddressError={tokenAllowanceAddressError}
-                  />
-                </Paper>
-              </Grid>
-              <Grid item xs={12}>
-                <SetAllowanceButtons
-                  onSetAllowance={this.onSetAllowance}
-                  order={order}
-                  disabled={
-                    tokenAllowanceAddressError === '' &&
-                    spenderAddressAllowance === ''
-                  }
-                />
-              </Grid>
+              {fundSelected.address !== '' && (
+                <Grid item xs={12}>
+                  <div>Not available for funds.</div>
+                </Grid>
+              )}
+              {fundSelected.address === '' && (
+                <Grid container spacing={8}>
+                  <Grid item xs={12}>
+                    <Paper style={paperStyle} elevation={2}>
+                      <TokenAllowanceAddressFields
+                        tokenAllowanceAddress={tokenAllowanceAddress}
+                        onTokenAllowanceAddressFieldChange={
+                          this.onTokenAllowanceAddressFieldChange
+                        }
+                        disabled={false}
+                        spenderAddress={spenderAddress}
+                        spenderAddressError={spenderAddressError}
+                        tokenAllowanceAddressError={tokenAllowanceAddressError}
+                      />
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <SetAllowanceButtons
+                      onSetAllowance={this.onSetAllowance}
+                      order={order}
+                      disabled={
+                        tokenAllowanceAddressError === '' &&
+                        spenderAddressAllowance === ''
+                      }
+                    />
+                  </Grid>
+                </Grid>
+              )}
             </Grid>
+
             <br />
             <br />
             <Grid item xs={12}>
@@ -557,6 +574,10 @@ class ExchangeToolsPage extends Component {
               {typeof tokensList !== 'undefined' && (
                 <div>
                   <Grid item xs={12}>
+                    <div className="text">
+                      Make sure you have approve an allowance for the wrapper
+                      token address.
+                    </div>
                     <div className="text">Select a token.</div>
                     <TokenSelect
                       tokensList={Object.values(tokensList)}

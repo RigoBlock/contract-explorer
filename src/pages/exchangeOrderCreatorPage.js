@@ -51,16 +51,16 @@ class ExchangeOrderCreatorPage extends React.Component {
     const order = {
       maker: ZeroEx.NULL_ADDRESS,
       // maker: '0x456c3C14aAe3A2d361E6B2879Bfc0Bae15E30c38'.toLowerCase(),
-      taker: '0xd360bBb7378725eAC80a474572feaB371CE4B1Af'.toLowerCase(),
-      feeRecipient: '0xd360bBb7378725eAC80a474572feaB371CE4B1Af'.toLowerCase(),
+      taker: ''.toLowerCase(),
+      feeRecipient: ''.toLowerCase(),
       makerTokenAddress: ZeroEx.NULL_ADDRESS,
       takerTokenAddress: ZeroEx.NULL_ADDRESS,
-      exchangeContractAddress: '0x8965a813fb43a141d7741320cd16cc1898af97fb'.toLowerCase(),
+      exchangeContractAddress: ''.toLowerCase(),
       salt: ZeroEx.generatePseudoRandomSalt().toFixed(),
       makerFee: '0',
       takerFee: '0',
-      makerTokenAmount: '1000000', // Base 18 decimals
-      takerTokenAmount: '1000000', // Base 18 decimals
+      makerTokenAmount: '', // Base 18 decimals
+      takerTokenAmount: '', // Base 18 decimals
       expirationUnixTimestampSec: new BigNumber(
         Date.now() + 86400000 * 365
       ).toFixed() // Valid for up to an hour

@@ -114,7 +114,7 @@ class ExchangeOrderFiller extends React.Component {
       //     }
       //   `
       // ),
-      filledAmount: '0.0000000000001'
+      filledAmount: '0'
       // order:
       // `
       // {"maker":"0xec4ee1bcf8107480815b08b530e0ead75b9f804f","taker":"0x0000000000000000000000000000000000000000","makerFee":"0","takerFee":"0","makerTokenAmount":"10000000000000000","takerTokenAmount":"10000000000000000","makerTokenAddress":"0xd0a1e359811322d97991e03f863a0c30c2cf029c","takerTokenAddress":"0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570","expirationUnixTimestampSec":"2524608000","feeRecipient":"0x0000000000000000000000000000000000000000","salt":"42915409420279271885015915205547393322324115969244938610857696117752690836404","ecSignature":{"v":27,"r":"0xa28fb15b28bebdf29c89593fe2e1bd999d5ab416622a6f4157b041b27e7fcab0","s":"0x51ae5e4c276e60b429ecc31da788840e5e1f24a6e260d0fb62c952e4968496a9"},"exchangeContractAddress":"0x90fe2af704b34e0224bf2299c838e04d4dcf1364"}
@@ -650,6 +650,16 @@ class ExchangeOrderFiller extends React.Component {
           <br />
           <Typography variant="headline">FILLER</Typography>
           <Paper style={paperStyle} elevation={2}>
+            <div>
+              A single order or an array of orders. Input is parsed with&nbsp;
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                JSON.parse()
+              </a>
+            </div>
             <FormControl fullWidth={true} error={this.error}>
               <TextField
                 id="order"
