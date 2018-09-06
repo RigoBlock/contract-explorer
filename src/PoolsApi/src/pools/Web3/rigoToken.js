@@ -56,7 +56,7 @@ class RigoTokenWeb3 {
       .transfer(toAddress, amount)
       .estimateGas(options)
       .then(gasEstimate => {
-        console.log(gasEstimate)
+
         options.gas = gasEstimate
       })
       .then(() => {

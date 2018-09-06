@@ -2,11 +2,12 @@
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import _ from 'underscore'
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import Grid from 'material-ui/Grid';
+import FormControl from '@material-ui/core/FormControl'
+import Grid from '@material-ui/core/Grid'
+import FormHelperText from '@material-ui/core/FormHelperText'
 
 class UploadButton extends Component {
 

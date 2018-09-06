@@ -118,7 +118,6 @@ class VaultParity {
     // const api = this._api
     // const basisPoints = api.util.toWei(price * 100, 'ether')
     const basisPoints = (price * 100).toFixed(0)
-    console.log(basisPoints)
     const values = [basisPoints]
     const instance = this._instance
     const options = {

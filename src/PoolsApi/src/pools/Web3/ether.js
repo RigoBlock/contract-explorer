@@ -25,7 +25,6 @@ class EtherWeb3 {
       to: toAddress,
       value: amount
     }
-    console.log(this._api)
     return this._api.eth.sendTransaction(options)
   }
 }

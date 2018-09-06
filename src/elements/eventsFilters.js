@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import TextField from 'material-ui/TextField';
-import { FormControl } from 'material-ui/Form';
-import Button from 'material-ui/Button';
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import Button from '@material-ui/core/Button';
 
 class EventsFilters extends Component {
 
@@ -70,7 +70,7 @@ class EventsFilters extends Component {
       filtersObject = JSON.parse("{"+filters+"}");
     }
     catch(error) {
-      console.log(error);
+      console.warn(error);
     }
 
     topicsArray = topics.map( (topic) => {
