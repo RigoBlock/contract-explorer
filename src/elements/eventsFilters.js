@@ -70,7 +70,7 @@ class EventsFilters extends Component {
       filtersObject = JSON.parse("{"+filters+"}");
     }
     catch(error) {
-      console.log(error);
+      console.warn(error);
     }
 
     topicsArray = topics.map( (topic) => {

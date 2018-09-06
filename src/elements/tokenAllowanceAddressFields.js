@@ -4,7 +4,6 @@ import Grid from '@material-ui/core/Grid'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
 
 class TokenAllowanceAddressFields extends Component {
   constructor(props) {

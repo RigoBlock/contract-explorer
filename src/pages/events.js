@@ -67,7 +67,7 @@ class EventsPage extends Component {
     try {
       contract = new web3.eth.Contract(abi, contractAddress)
     } catch (error) {
-      console.log(error)
+      console.warn(error)
       this.setState({
         json_object: { error: String(error) },
         loading: false
@@ -150,7 +150,7 @@ class EventsPage extends Component {
         //   console.log(event)
         // })
         // .on('error', error =>{
-        //   console.log(error)
+        //   console.warn(error)
         // });
         this.setState({
           contractSubscription: subscription
@@ -158,7 +158,7 @@ class EventsPage extends Component {
         return true
       })
       .catch(error => {
-        console.log(error)
+        console.warn(error)
         this.setState({
           json_object: { error: String(error) },
           loading: false

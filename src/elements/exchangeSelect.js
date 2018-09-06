@@ -27,7 +27,7 @@ class ExchangeSelect extends Component {
 
   renderMenuItems = () => {
     const { exchangesList } = this.props
-    let menuItems = Array()
+    let menuItems = Array(0)
 
     Object.keys(exchangesList).forEach(function(key, index) {
       menuItems.push(

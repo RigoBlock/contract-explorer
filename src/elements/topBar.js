@@ -10,11 +10,6 @@ import Typography from '@material-ui/core/Typography'
 import Web3 from 'web3'
 
 class TopBar extends React.Component {
-  constructor(props) {
-    super(props)
-    // this.handleChange = this.handleChange.bind(this)
-  }
-
   static contextTypes = {
     web3: PropTypes.object.isRequired,
     networkInfo: PropTypes.object.isRequired

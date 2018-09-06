@@ -25,7 +25,7 @@ class FundProxyWeb3 {
   init = () => {
     const api = this._api
     const abi = this._abi
-    console.log(api._rb.network.fundProxyContractAddress)
+
     const address = api._rb.network.fundProxyContractAddress
     this._instance = new api.eth.Contract(abi)
     this._instance.options.address = address
@@ -56,7 +56,6 @@ class FundProxyWeb3 {
       .unwrapEth(amount)
       .estimateGas(options)
       .then(gasEstimate => {
-        console.log(gasEstimate)
         options.gas = gasEstimate
       })
       .then(() => {
@@ -80,7 +79,6 @@ class FundProxyWeb3 {
       .wrapEth(amount)
       .estimateGas(options)
       .then(gasEstimate => {
-        console.log(gasEstimate)
         options.gas = gasEstimate
       })
       .then(() => {

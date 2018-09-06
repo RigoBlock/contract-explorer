@@ -94,14 +94,12 @@ class ContractPage extends Component {
                     encodedABI
                   })
                 } catch (error) {
-                  console.log(error)
+                  console.warn(error)
                 }
               }
               encodedABI()
-
               contract.methods[methodName]()
                 [constantMethod](options)
-                // .send(options)
                 .then(result => {
                   this.setState({
                     json_object:
@@ -110,7 +108,7 @@ class ContractPage extends Component {
                   })
                 })
                 .catch(error => {
-                  console.log(error)
+                  console.warn(error)
                   this.setState({
                     json_object: { error: String(error) },
                     loading: false
@@ -118,7 +116,7 @@ class ContractPage extends Component {
                 })
             })
             .catch(error => {
-              console.log(error)
+              console.warn(error)
               this.setState({
                 json_object: { error: String(error) },
                 loading: false
@@ -127,11 +125,9 @@ class ContractPage extends Component {
         } else {
           // Calling estimateGas to calculate required gas for the transaction.
           console.log('With paramenters')
-          console.log(...inputs)
           contract.methods[methodName](...inputs)
             .estimateGas(options)
             .then(gasEstimate => {
-              console.log(gasEstimate)
               options.gas = gasEstimate
               this.setState({
                 gas: gasEstimate
@@ -155,14 +151,12 @@ class ContractPage extends Component {
                     encodedABI
                   })
                 } catch (error) {
-                  console.log(error)
+                  console.warn(error)
                 }
               }
               encodedABI()
-
               contract.methods[methodName](...inputs)
                 [constantMethod](options)
-                // .send(options)
                 .then(result => {
                   this.setState({
                     json_object:
@@ -171,7 +165,7 @@ class ContractPage extends Component {
                   })
                 })
                 .catch(error => {
-                  console.log(error)
+                  console.warn(error)
                   this.setState({
                     json_object: { error: String(error) },
                     loading: false
@@ -179,7 +173,7 @@ class ContractPage extends Component {
                 })
             })
             .catch(error => {
-              console.log(error)
+              console.warn(error)
               this.setState({
                 json_object: { error: String(error) },
                 loading: false
@@ -222,7 +216,6 @@ class ContractPage extends Component {
   }
 
   onNewBlockNumber = (_error, blockNumber) => {
-    console.log(blockNumber)
   }
 
   render() {

@@ -1,4 +1,4 @@
-import { MenuItem } from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'

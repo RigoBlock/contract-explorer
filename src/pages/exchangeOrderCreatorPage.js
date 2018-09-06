@@ -1,21 +1,20 @@
 import * as abis from '../abi'
 import { BigNumber } from '@0xproject/utils'
 import {
-  FUND_PROXY_ADDRESS,
   RB_0X_EXCHANGE_ADDRESS_KV,
   RB_EFX_EXCHANGE_ADDRESS_RP,
   RB_EFX_TOKEN_TRANSFER_PROXY_ADDRESS_RP,
   RB_TOKEN_TRANSFER_PROXY_ADDRESS_KV
 } from '../_utils/const'
 import { ZeroEx } from '0x.js'
-import ExchangeSelect from '../elements/exchangeSelect'
+// import ExchangeSelect from '../elements/exchangeSelect'
 import Grid from '@material-ui/core/Grid'
 import OrderInputFields from '../elements/orderInputFields'
 import Paper from '@material-ui/core/Paper'
 import PropTypes from 'prop-types'
 import React from 'react'
 import ReactJson from 'react-json-view'
-import TokenSelect from '../elements/tokenSelect'
+// import TokenSelect from '../elements/tokenSelect'
 import Typography from '@material-ui/core/Typography'
 import Web3 from 'web3'
 import serializeError from 'serialize-error'
@@ -24,7 +23,7 @@ class ExchangeOrderCreatorPage extends React.Component {
   constructor(props, context) {
     super(props, context)
     const KOVAN_NETWORK_ID = 42
-    const DECIMALS = 18
+    // const DECIMALS = 18
     const ZeroExConfig = {
       networkId: KOVAN_NETWORK_ID
       // exchangeContractAddress: this.state.fundProxyAddress
@@ -157,14 +156,14 @@ class ExchangeOrderCreatorPage extends React.Component {
 
   async signOrder() {
     const { order, zeroEx } = this.state
-    let ecSignatureError = false
+    // let ecSignatureError = false
     let hashError = false
     const getHash = () => {
       try {
         const hash = ZeroEx.getOrderHashHex(order)
         return hash
       } catch (error) {
-        console.log(error)
+        console.warn(error)
         hashError = serializeError(error)
         return ''
       }
@@ -185,7 +184,7 @@ class ExchangeOrderCreatorPage extends React.Component {
           shouldAddPersonalMessagePrefix
         )
         .catch(error => {
-          console.log(error)
+          console.warn(error)
         })
       // Append signature to order
       const signedOrder = {
@@ -278,7 +277,7 @@ class ExchangeOrderCreatorPage extends React.Component {
     const paperStyle = {
       padding: 10
     }
-    const { networkInfo } = this.context
+    // const { networkInfo } = this.context
     return (
       <Grid container spacing={8}>
         <Grid item xs={12}>

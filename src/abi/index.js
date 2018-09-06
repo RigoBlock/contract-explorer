@@ -18,6 +18,7 @@ import ethusd from './ethusd.json'
 import ethw from './ethw.json'
 import exchange from './exchange.json'
 import rigoBlockExchange from './rigoBlockExchange.json'
+import rigoBlockZeroEx from './rigoBlockZeroEx.json'
 import zeroExExchange from './zeroExExchange.json'
 
 // import vault from './v1/vault.json';
@@ -50,6 +51,7 @@ export {
   vaulteventful,
   parityregister,
   rigotoken,
+  rigoBlockZeroEx,
   rigoBlockExchange,
   zeroExExchange,
   wrapper,

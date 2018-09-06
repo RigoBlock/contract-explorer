@@ -1,28 +1,27 @@
-import { EP_INFURA_KV_WS, EP_INFURA_RP_WS } from '../_utils/const'
-import FormControl from '@material-ui/core/FormControl'
+import {
+  SchemaValidator,
+  // ValidatorResult,
+  schemas
+} from '@0xproject/json-schemas'
+import { ZeroEx } from '0x.js'
 import Button from '@material-ui/core/Button'
+import FormControl from '@material-ui/core/FormControl'
+import FormHelperText from '@material-ui/core/FormHelperText'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import PropTypes from 'prop-types'
 import React from 'react'
+import ReactJson from 'react-json-view'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import Web3 from 'web3'
-import {
-  SchemaValidator,
-  ValidatorResult,
-  schemas
-} from '@0xproject/json-schemas'
-import { ZeroEx } from '0x.js'
-import ReactJson from 'react-json-view'
 import green from '@material-ui/core/colors/green'
 import red from '@material-ui/core/colors/red'
 import serializeError from 'serialize-error'
-import FormHelperText from '@material-ui/core/FormHelperText'
 
 class ExchangeOrderValidator extends React.Component {
-  constructor(props) {
+  constructor(props, context) {
     super(props)
+
     // const KOVAN_NETWORK_ID = 42
     // const ZeroExConfig = {
     //   networkId: KOVAN_NETWORK_ID
@@ -91,26 +90,28 @@ class ExchangeOrderValidator extends React.Component {
     // `,
     //   order: ''
     // }
-  }
-
-  state = {
-    orderError: false,
-    validation: {
-      schema: { valid: false, errors: {} },
-      hash: false,
-      hashError: {
-        error: {}
+    this.state = {
+      orderError: true,
+      validation: {
+        schema: { valid: false, errors: {} },
+        hash: false,
+        hashError: {
+          error: {}
+        },
+        signature: false,
+        signatureError: {
+          error: {}
+        }
       },
-      signature: false,
-      signatureError: {
-        error: {}
-      }
-    },
-    order: ''
+      order: '',
+      signerAddress: context.accounts[0].toLowerCase(),
+      signerAddressError: ''
+    }
   }
 
   static contextTypes = {
     web3: PropTypes.object.isRequired,
+    accounts: PropTypes.array.isRequired,
     networkInfo: PropTypes.object.isRequired
   }
 
@@ -163,7 +164,7 @@ class ExchangeOrderValidator extends React.Component {
         validation.hash = false
         return hash
       } catch (err) {
-        console.log(err)
+        console.warn(err)
         return ''
       }
     }
@@ -173,7 +174,7 @@ class ExchangeOrderValidator extends React.Component {
       try {
         return ZeroEx.isValidOrderHash(orderHash)
       } catch (error) {
-        console.log(error)
+        console.warn(error)
         validation.hashError = serializeError(error)
         return false
       }
@@ -185,10 +186,10 @@ class ExchangeOrderValidator extends React.Component {
           orderHash,
           orderObject.ecSignature,
           // orderObject.maker
-          this.state.account
+          this.state.signerAddress
         )
       } catch (error) {
-        console.log(error)
+        console.warn(error)
         validation.signatureError = serializeError(error)
         return false
       }
@@ -203,7 +204,6 @@ class ExchangeOrderValidator extends React.Component {
   }
 
   onTextFieldChange = event => {
-    console.log('ok')
     try {
       JSON.parse(event.target.value)
       this.setState({
@@ -217,6 +217,26 @@ class ExchangeOrderValidator extends React.Component {
         orderErrorMsg:
           'Error: the text does not seem to conform to json format.'
       })
+    }
+  }
+
+  onSignerAddressFieldChange = async event => {
+    const { web3 } = this.context
+    const address = event.target.value.toLowerCase()
+    if (web3.utils.isAddress(event.target.value)) {
+      if (event.target.id === 'signerAddress') {
+        this.setState({
+          signerAddress: address,
+          signerAddressError: ''
+        })
+      }
+    } else {
+      if (event.target.id === 'signerAddress') {
+        this.setState({
+          signerAddress: address,
+          signerAddressError: 'Please enter a valid address.'
+        })
+      }
     }
   }
 
@@ -241,7 +261,20 @@ class ExchangeOrderValidator extends React.Component {
             <div style={{ color: '#F44336' }}>
               <b>{this.state.orderErrorMsg}</b>
             </div>
-            <FormControl fullWidth={true} error={this.error}>
+            <FormControl fullWidth={true} error={this.signerAddressError}>
+              <TextField
+                id="signerAddress"
+                label="Signer address"
+                InputLabelProps={{
+                  shrink: true
+                }}
+                placeholder="Address"
+                fullWidth
+                onChange={this.onSignerAddressFieldChange}
+                margin="normal"
+                value={this.state.signerAddress}
+              />
+              <FormHelperText>{this.state.signerAddressError}</FormHelperText>
               <TextField
                 id="order"
                 key="order"
@@ -263,6 +296,10 @@ class ExchangeOrderValidator extends React.Component {
                 variant="raised"
                 color="primary"
                 onClick={this.onValidateOrder}
+                // disabled={
+                //   this.state.signerAddressError !== '' ||
+                //   this.state.orderError !== ''
+                // }
               >
                 Validate
               </Button>

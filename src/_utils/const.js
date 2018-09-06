@@ -157,6 +157,53 @@ export const tokensEthfinex = {
   }
 }
 
+// FIRST DEPLOYMENT
+//
+
+// export const tokensRigoblockEthfinex = {
+//   3: {
+//     ETH: {
+//       symbol: 'ETH',
+//       isOldERC20: false,
+//       symbolTicker: {
+//         Ethfinex: 'ETH'
+//       },
+//       address: '0x0',
+//       decimals: 18,
+//       name: 'Ether',
+//       wrappers: {
+//         Ethfinex: {
+//           symbol: 'ETHW',
+//           decimals: 18,
+//           address: '0x31ac2a9c844862696dda952999c4e2c399cf0f2c',
+//           name: 'ETH Wrapper'
+//         }
+//       }
+//     },
+//     GRG: {
+//       symbol: 'GRG',
+//       isOldERC20: false,
+//       symbolTicker: {
+//         Ethfinex: 'GRG'
+//       },
+//       address: '0x6FA8590920c5966713b1a86916f7b0419411e474',
+//       decimals: 18,
+//       name: 'GRG Token',
+//       wrappers: {
+//         Ethfinex: {
+//           symbol: 'GRGW',
+//           decimals: 18,
+//           address: '0x1069b83bd0900211adf86a752abd16b4a2b4d68d',
+//           name: 'GRG Wrapper'
+//         }
+//       }
+//     }
+//   }
+// }
+
+// SECOND DEPLOYMENT
+//
+
 export const tokensRigoblockEthfinex = {
   3: {
     ETH: {
@@ -172,7 +219,7 @@ export const tokensRigoblockEthfinex = {
         Ethfinex: {
           symbol: 'ETHW',
           decimals: 18,
-          address: '0x31ac2a9c844862696dda952999c4e2c399cf0f2c',
+          address: '0x06da2eb72279c1cec53c251bbff4a06fbfb93a5b',
           name: 'ETH Wrapper'
         }
       }
@@ -190,7 +237,7 @@ export const tokensRigoblockEthfinex = {
         Ethfinex: {
           symbol: 'GRGW',
           decimals: 18,
-          address: '0x1069b83bd0900211adf86a752abd16b4a2b4d68d',
+          address: '0xacfb4c79259e3c2c1bf054f136e6d75f7cc2b07e',
           name: 'GRG Wrapper'
         }
       }

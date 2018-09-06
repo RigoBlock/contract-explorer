@@ -20,7 +20,7 @@ class HomePage extends React.Component {
           <Paper style={paperStyle} elevation={2}>
             <Typography gutterBottom>
               A simple dev tool to interact with Smart Contracts and events.
-              This application is connected to Ethereum <strong>Kovan</strong>{' '}
+              <strong>Kovan</strong> and <strong>Ropsten</strong> supported.
               network.
             </Typography>
             <Typography gutterBottom>

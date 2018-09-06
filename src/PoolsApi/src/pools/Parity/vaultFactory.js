@@ -69,7 +69,6 @@ class VaultFactoryParity {
     return instance.createVault
       .estimateGas(options, values)
       .then(gasEstimate => {
-        console.log(gasEstimate.toFormat())
         options.gas = gasEstimate.mul(1.2).toFixed(0)
         return instance.createVault.postTransaction(options, values)
       })

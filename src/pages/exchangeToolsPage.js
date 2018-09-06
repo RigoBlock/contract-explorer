@@ -1,7 +1,7 @@
 import * as CONST from '../_utils/const'
 import * as Drago from '../_utils/drago_utils'
 import * as abis from '../abi'
-import { BigNumber } from '@0xproject/utils'
+// import { BigNumber } from '@0xproject/utils'
 import { ZeroEx } from '0x.js'
 import Divider from '@material-ui/core/Divider'
 import EtherscanLink from '../elements/etherscanLink'
@@ -12,7 +12,7 @@ import LockUnlockActions from '../elements/lockUnlockActions'
 import Paper from '@material-ui/core/Paper'
 import PoweredMsg from '../elements/poweredMsg'
 import PropTypes from 'prop-types'
-import React, { Component, PureComponent } from 'react'
+import React, { Component } from 'react'
 import ReactJson from 'react-json-view'
 import ReactTimeout from 'react-timeout'
 import RigoblockLink from '../elements/rigoblockLink'
@@ -20,7 +20,7 @@ import SetAllowanceButtons from '../elements/setAllowanceButtons'
 import TokenAllowanceAddressFields from '../elements/tokenAllowanceAddressFields'
 import TokenSelect from '../elements/tokenSelect'
 import Typography from '@material-ui/core/Typography'
-import serializeError from 'serialize-error'
+// import serializeError from 'serialize-error'
 
 class ExchangeToolsPage extends Component {
   constructor(props, context) {
@@ -81,8 +81,6 @@ class ExchangeToolsPage extends Component {
         ? accounts[0]
         : fundSelectedUpdated.address
     await this.initFundSelect()
-    console.log('didMount')
-    console.log(tokenSelected.availableBalance)
     let token = await this.getBalances(tokenSelected, address)
     this.setState(
       {
@@ -127,8 +125,8 @@ class ExchangeToolsPage extends Component {
         address,
         web3
       )
-      console.log(token.address, token.availableBalance)
-      console.log(token.wrappers.Ethfinex.address, token.wrappedBalance)
+      // console.log(token.address, token.availableBalance)
+      // console.log(token.wrappers.Ethfinex.address, token.wrappedBalance)
       return token
     }
     return token
@@ -140,7 +138,6 @@ class ExchangeToolsPage extends Component {
       accounts[0],
       networkInfo.id
     )
-    console.log(fundsAddresses)
     const fundsList = await Promise.all(
       fundsAddresses.map(fundAddress => {
         return Drago.getFundDetails(fundAddress, networkInfo.id)
@@ -439,7 +436,6 @@ class ExchangeToolsPage extends Component {
   }
 
   render() {
-    console.log('render')
     const paperStyle = {
       padding: 10
     }
@@ -476,7 +472,7 @@ class ExchangeToolsPage extends Component {
                     `We have detected that you own ${
                       fundsList.length
                     } Rigoblock fund${fundsList.length > 1 &&
-                      's'}. Please select one if you want to manage it on this page.`}
+                      's' || ''}. Please select one if you want to manage it on this page.`}
                 </div>
                 <div className="text">Your Rigoblock funds:</div>
                 <Paper style={paperStyle} elevation={2}>

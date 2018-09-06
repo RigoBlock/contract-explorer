@@ -51,7 +51,7 @@ class VaultFactoryWeb3 {
     const options = {
       from: accountAddress
     }
-    console.log(options)
+
     instance.options.from = accountAddress
     return instance.methods
       .createVault(vaultName, vaultSymbol)
