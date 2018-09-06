@@ -1,22 +1,20 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid';
-import MethodSelect from '../elements/methodSelect'
-import InOutMethodValues from '../elements/inOutMethodValues'
-import ContractInputFields from '../elements/contractInputFields'
-import { List } from 'immutable';
-import Paper from 'material-ui/Paper';
-import UploadButton from '../elements/uploadButton'
+import { List } from 'immutable'
 import ContractInputAddress from '../elements/contractInputAddress'
-import Loading from '../elements/loading';
-import Sticky from 'react-stickynode';
+import ContractInputFields from '../elements/contractInputFields'
+import Grid from '@material-ui/core/Grid'
+import InOutMethodValues from '../elements/inOutMethodValues'
 import JsonView from '../elements/jsonView'
+import Loading from '../elements/loading'
+import MethodSelect from '../elements/methodSelect'
+import Paper from '@material-ui/core/Paper'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import Sticky from 'react-stickynode'
+import Typography from '@material-ui/core/Typography'
+import UploadButton from '../elements/uploadButton'
 // import Web3 from 'web3';
 
-
 class ContractPage extends Component {
-
   constructor(props) {
     super(props)
 
@@ -34,18 +32,17 @@ class ContractPage extends Component {
       enableSubmit: false,
       loading: false,
       encodedABI: ''
-    };
+    }
   }
 
-
-  static contextTypes = { web3: PropTypes.object.isRequired };
+  static contextTypes = { web3: PropTypes.object.isRequired }
 
   onSend = (inputs, value) => {
     const { contractAddress, methodSelected, abi } = this.state
     const { web3 } = this.context
     const methodName = methodSelected.name
     const constantMethod = methodSelected.constant ? 'call' : 'send'
-    var accountAddress
+    let accountAddress
     this.setState({
       loading: true
     })
@@ -56,8 +53,9 @@ class ContractPage extends Component {
     this.setState({
       loading: true
     })
-    web3.eth.getAccounts()
-      .then((accounts) => {
+    web3.eth
+      .getAccounts()
+      .then(accounts => {
         accountAddress = accounts[0]
       })
       .then(() => {
@@ -65,21 +63,21 @@ class ContractPage extends Component {
         const contract = new web3.eth.Contract(abi, contractAddress)
 
         // Setting options.
-        var options = {
+        let options = {
           from: accountAddress,
           value: value
         }
         if (inputs.length === 0) {
           console.log('Without paramenters')
           // Calling estimateGas to calculate required gas for the transaction.
-          contract.methods[methodName]().estimateGas(options)
+          contract.methods[methodName]()
+            .estimateGas(options)
             .then(gasEstimate => {
               options.gas = gasEstimate
               this.setState({
                 gas: gasEstimate
               })
-            }
-            )
+            })
             .then(() => {
               // ******************************************************************
               //
@@ -91,26 +89,26 @@ class ContractPage extends Component {
 
               const encodedABI = () => {
                 try {
-                  const encodedABI = contract.methods[methodName]().encodeABI();
+                  const encodedABI = contract.methods[methodName]().encodeABI()
                   this.setState({
                     encodedABI
                   })
                 } catch (error) {
-                  console.log(error)
+                  console.warn(error)
                 }
               }
               encodedABI()
-
-              contract.methods[methodName]()[constantMethod](options)
-                // .send(options)
+              contract.methods[methodName]()
+                [constantMethod](options)
                 .then(result => {
                   this.setState({
-                    json_object: typeof result === 'object' ? result : { result },
+                    json_object:
+                      typeof result === 'object' ? result : { result },
                     loading: false
                   })
                 })
                 .catch(error => {
-                  console.log(error)
+                  console.warn(error)
                   this.setState({
                     json_object: { error: String(error) },
                     loading: false
@@ -118,7 +116,7 @@ class ContractPage extends Component {
                 })
             })
             .catch(error => {
-              console.log(error)
+              console.warn(error)
               this.setState({
                 json_object: { error: String(error) },
                 loading: false
@@ -127,17 +125,14 @@ class ContractPage extends Component {
         } else {
           // Calling estimateGas to calculate required gas for the transaction.
           console.log('With paramenters')
-          console.log(...inputs)
           contract.methods[methodName](...inputs)
             .estimateGas(options)
             .then(gasEstimate => {
-              console.log(gasEstimate)
               options.gas = gasEstimate
               this.setState({
                 gas: gasEstimate
               })
-            }
-            )
+            })
             .then(() => {
               // ******************************************************************
               //
@@ -149,26 +144,28 @@ class ContractPage extends Component {
 
               const encodedABI = () => {
                 try {
-                  const encodedABI = contract.methods[methodName](...inputs).encodeABI();
+                  const encodedABI = contract.methods[methodName](
+                    ...inputs
+                  ).encodeABI()
                   this.setState({
                     encodedABI
                   })
                 } catch (error) {
-                  console.log(error)
+                  console.warn(error)
                 }
               }
               encodedABI()
-
-              contract.methods[methodName](...inputs)[constantMethod](options)
-                // .send(options)
+              contract.methods[methodName](...inputs)
+                [constantMethod](options)
                 .then(result => {
                   this.setState({
-                    json_object: typeof result === 'object' ? result : { result },
+                    json_object:
+                      typeof result === 'object' ? result : { result },
                     loading: false
                   })
                 })
                 .catch(error => {
-                  console.log(error)
+                  console.warn(error)
                   this.setState({
                     json_object: { error: String(error) },
                     loading: false
@@ -176,7 +173,7 @@ class ContractPage extends Component {
                 })
             })
             .catch(error => {
-              console.log(error)
+              console.warn(error)
               this.setState({
                 json_object: { error: String(error) },
                 loading: false
@@ -191,50 +188,49 @@ class ContractPage extends Component {
     const methodSelected = this.state.abi.find(method => {
       return method.name === event.target.value
     })
-    const methodSignature = web3.eth.abi.encodeFunctionSignature(
-      methodSelected
-    )
+    const methodSignature = web3.eth.abi.encodeFunctionSignature(methodSelected)
     this.setState({
       methodSelected: { ...methodSelected, methodSignature }
-    });
-  };
+    })
+  }
 
   onUpload = (file, text) => {
     const uploadedAbi = JSON.parse(text)
     this.setState({
       abi: uploadedAbi,
-      methodList: List(uploadedAbi).sortBy(method => method.name).filter(method => method.type === 'function'),
+      methodList: List(uploadedAbi)
+        .sortBy(method => method.name)
+        .filter(method => method.type === 'function'),
       enableContractAddressField: true,
-      enableContractMethodsSelector: true,
+      enableContractMethodsSelector: true
     })
   }
 
   onChangeContractAddress = event => {
     const { web3 } = this.context
-    const enableSubmit = web3.utils.isAddress(event.target.value);
+    const enableSubmit = web3.utils.isAddress(event.target.value)
     this.setState({
       contractAddress: event.target.value.toLowerCase(),
       enableSubmit
-    });
-  };
+    })
+  }
 
   onNewBlockNumber = (_error, blockNumber) => {
-    console.log(blockNumber)
   }
 
   render() {
     const containerWrapperStyle = {
       paddingRight: 5,
-      paddingLeft: 5,
+      paddingLeft: 5
     }
 
     const containerGroupWrapperStyle = {
-      paddingBottom: 15,
+      paddingBottom: 15
     }
 
     const paperStyle = {
       padding: 10,
-      width: "100%"
+      width: '100%'
     }
 
     return (
@@ -242,9 +238,7 @@ class ContractPage extends Component {
         <Grid item xs={4}>
           <Grid container spacing={8} style={containerGroupWrapperStyle}>
             <Grid item xs={12}>
-              <Typography variant="headline" >
-                CONTRACT
-              </Typography>
+              <Typography variant="headline">CONTRACT</Typography>
             </Grid>
             <Grid item xs={12}>
               <Paper style={paperStyle} elevation={2}>
@@ -255,7 +249,9 @@ class ContractPage extends Component {
                   <ContractInputAddress
                     onChangeContractAddress={this.onChangeContractAddress}
                     contractAddress={this.state.contractAddress}
-                    enableContractAddressField={this.state.enableContractAddressField}
+                    enableContractAddressField={
+                      this.state.enableContractAddressField
+                    }
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -270,21 +266,15 @@ class ContractPage extends Component {
           </Grid>
           <Grid container spacing={8} style={containerGroupWrapperStyle}>
             <Grid item xs={12}>
-              <Typography variant="headline" >
-                VARIABLES
-            </Typography>
+              <Typography variant="headline">VARIABLES</Typography>
             </Grid>
             <Grid item xs={12}>
-              <InOutMethodValues
-                methodSelected={this.state.methodSelected}
-              />
+              <InOutMethodValues methodSelected={this.state.methodSelected} />
             </Grid>
           </Grid>
           <Grid container spacing={8} style={containerGroupWrapperStyle}>
             <Grid item xs={12}>
-              <Typography variant="headline">
-                CALL
-            </Typography>
+              <Typography variant="headline">CALL</Typography>
             </Grid>
             <Grid item xs={12}>
               <ContractInputFields
@@ -299,9 +289,7 @@ class ContractPage extends Component {
           <Sticky>
             <Grid container spacing={8} style={containerGroupWrapperStyle}>
               <Grid item xs={12}>
-                <Typography variant="headline">
-                  LOG
-                </Typography>
+                <Typography variant="headline">LOG</Typography>
               </Grid>
               <Grid item xs={12}>
                 <Paper style={paperStyle} elevation={2}>
@@ -319,21 +307,20 @@ class ContractPage extends Component {
                   </Typography>
                   <Typography variant="subheading">
                     Transaction receipt:
-                </Typography>
-                  {this.state.loading
-                    ? <Loading />
-                    : <JsonView
-                      json_object={[this.state.json_object]}
-                    />
-                  }
+                  </Typography>
+                  {this.state.loading ? (
+                    <Loading />
+                  ) : (
+                    <JsonView json_object={[this.state.json_object]} />
+                  )}
                 </Paper>
               </Grid>
             </Grid>
           </Sticky>
         </Grid>
       </Grid>
-    );
+    )
   }
 }
 
-export default ContractPage;
+export default ContractPage

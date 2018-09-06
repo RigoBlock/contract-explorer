@@ -1,6 +1,6 @@
 import React from 'react';
-import Grid from 'material-ui/Grid';
-import { LinearProgress } from 'material-ui/Progress';
+import Grid from '@material-ui/core/Grid';
+import LinearProgress from '@material-ui/core/LinearProgress'
 
 class Loading extends React.Component {
 

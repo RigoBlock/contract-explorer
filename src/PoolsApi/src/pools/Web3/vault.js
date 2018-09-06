@@ -37,7 +37,7 @@ class DragoWeb3 {
       throw new Error('accountAddress needs to be provided')
     }
     const instance = this._instance
-    console.log(instance)
+
     return instance.methods.balanceOf(accountAddress).call({})
   }
 
@@ -56,7 +56,7 @@ class DragoWeb3 {
       .buyVault()
       .estimateGas(options)
       .then(gasEstimate => {
-        console.log(gasEstimate)
+
         options.gas = gasEstimate
       })
       .then(() => {
@@ -75,12 +75,12 @@ class DragoWeb3 {
     var options = {
       from: accountAddress
     }
-    console.log(amount)
+
     return instance.methods
       .sellVault(amount)
       .estimateGas(options)
       .then(gasEstimate => {
-        console.log(gasEstimate)
+
         options.gas = gasEstimate
       })
       .then(() => {
@@ -100,17 +100,17 @@ class DragoWeb3 {
       from: accountAddress
     }
     instance.options.from = accountAddress
-    console.log(price)
+
     const basisPoints = (price * 100).toFixed(0)
-    console.log(basisPoints)
+
     return instance.methods
       .setTransactionFee(basisPoints)
       .estimateGas(options)
       .then(gasEstimate => {
-        console.log(gasEstimate)
+
         // console.log(gasEstimate.toFormat())
         options.gas = gasEstimate
-        console.log(instance)
+
         return instance.methods.setTransactionFee(basisPoints).send(options)
       })
       .catch(error => {

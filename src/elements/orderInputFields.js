@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import TextField from 'material-ui/TextField';
-import Button from 'material-ui/Button';
+import FormControl from '@material-ui/core/FormControl'
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import { BigNumber } from '@0xproject/utils';
-import Icon from 'material-ui/Icon';
+import Icon from '@material-ui/core/Icon';
 import {
   ETHERSCAN_KOVAN
 } from '../_utils/const'
+import FormHelperText from '@material-ui/core/FormHelperText'
 
 class OrderInputFields extends Component {
 

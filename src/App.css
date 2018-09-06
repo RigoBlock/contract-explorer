@@ -26,3 +26,42 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.powered-link {
+  font-size: 14px;
+  font-weight: 700;
+  color:#424242;
+  text-align: right;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  background-image: url("/img/rb-logo.png");
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-size: 16px 16px;
+  padding-right: 18px;
+}
+
+.powered-link a {
+  color:inherit;
+}
+
+.subheading{
+  padding-bottom: 15px;
+}
+
+.subheading-text{
+  font-weight: 700;
+}
+
+.text{
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.button {
+  font-weight: 700
+}
+
+.secondary {
+  color: white
+}

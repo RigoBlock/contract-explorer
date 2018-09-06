@@ -34,7 +34,7 @@ class DragoRegistryParity {
   init = () => {
     const contractAbi = this._abi
     const contractName = this._contractName
-    console.log(contractName)
+
     return this._registry.instance(contractAbi, contractName).then(contract => {
       this._instance = contract.instance
       this._contract = contract

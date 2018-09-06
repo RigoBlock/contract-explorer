@@ -1,34 +1,36 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Input, { InputLabel } from 'material-ui/Input';
-import { MenuItem } from 'material-ui/Menu';
-import { FormControl } from 'material-ui/Form';
-import Select from 'material-ui/Select';
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import Select from '@material-ui/core/Select'
 
 class MethodSelect extends Component {
-
   state = {
-    methodSelected: '',
-  };
+    methodSelected: ''
+  }
 
   static propTypes = {
     methodList: PropTypes.object.isRequired,
     onMethodSelect: PropTypes.func.isRequired,
-    disabled: PropTypes.bool.isRequired,
-  };
+    disabled: PropTypes.bool.isRequired
+  }
 
   onMethodSelect = event => {
     this.props.onMethodSelect(event)
-    this.setState({ methodSelected: event.target.value });
-  };
-  
+    this.setState({ methodSelected: event.target.value })
+  }
 
   renderMenuItems = () => {
     const { methodList } = this.props
     return methodList.map((element, index) => {
-        return <MenuItem key={element.name + index} value={element.name}>{element.name}</MenuItem>
-    }
-    )
+      return (
+        <MenuItem key={element.name + index} value={element.name}>
+          {element.name}
+        </MenuItem>
+      )
+    })
   }
 
   render() {
@@ -43,8 +45,8 @@ class MethodSelect extends Component {
           {this.renderMenuItems()}
         </Select>
       </FormControl>
-    );
+    )
   }
 }
 
-export default MethodSelect;
+export default MethodSelect

@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import TextField from 'material-ui/TextField';
-import Button from 'material-ui/Button';
-import Paper from 'material-ui/Paper';
-import Grid from 'material-ui/Grid';
-import Typography from 'material-ui/Typography';
-
+import React, { Component } from 'react';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 
 class ContractInputFields extends Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -17,28 +16,33 @@ class ContractInputFields extends Component {
       prevProps: this.props,
       error: false,
       errorMsg: ''
-    };
+    }
   }
 
-  static contextTypes = { web3: PropTypes.object.isRequired };
+  static contextTypes = { web3: PropTypes.object.isRequired }
 
   static propTypes = {
     methodSelected: PropTypes.object.isRequired,
     onSend: PropTypes.func.isRequired,
-    enableSubmit: PropTypes.bool.isRequired,
-  };
+    enableSubmit: PropTypes.bool.isRequired
+  }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { prevProps } = prevState
     if (nextProps.methodSelected.name !== prevProps.methodSelected.name) {
       return {
-        inputs: Array.apply(null, Array(nextProps.methodSelected.inputs.length)).map(function () { return "" }),
+        inputs: Array.apply(
+          null,
+          Array(nextProps.methodSelected.inputs.length)
+        ).map(function() {
+          return ''
+        }),
         value: 0,
-        prevProps: nextProps,
-      };
+        prevProps: nextProps
+      }
     }
     // Return null to indicate no change to state.
-    return null;
+    return null
   }
 
   onSend = () => {
@@ -49,7 +53,7 @@ class ContractInputFields extends Component {
   onTextFieldChange = event => {
     const { methodSelected } = this.props
     const { inputs } = this.state
-    var newInputs = [...inputs]
+    let newInputs = [...inputs]
     if (event.target.id === 'value') {
       this.setState({
         value: event.target.value
@@ -61,17 +65,16 @@ class ContractInputFields extends Component {
         if (event.target.value !== '') {
           newInputs[index] = event.target.value
         } else {
-          newInputs.splice(index, 1);
+          newInputs.splice(index, 1)
         }
         this.setState({
           inputs: newInputs
         })
       }
       return true
-    }
-    )
+    })
     return true
-  };
+  }
 
   renderInputFields = () => {
     const { methodSelected } = this.props
@@ -82,7 +85,7 @@ class ContractInputFields extends Component {
           key={element.name}
           label={element.name}
           InputLabelProps={{
-            shrink: true,
+            shrink: true
           }}
           placeholder={element.type}
           onChange={this.onTextFieldChange}
@@ -91,8 +94,7 @@ class ContractInputFields extends Component {
           value={this.state.inputs[index]}
         />
       )
-    }
-    )
+    })
   }
 
   renderInputFieldValue = () => {
@@ -101,17 +103,17 @@ class ContractInputFields extends Component {
     if (methodSelected.payable) {
       return (
         <TextField
-          id='value'
+          id="value"
           key={methodSelected.name}
-          label='value'
+          label="value"
           InputLabelProps={{
-            shrink: true,
+            shrink: true
           }}
           placeholder="uint256"
           fullWidth
           onChange={this.onTextFieldChange}
           margin="normal"
-        // value={this.state.value}
+          // value={this.state.value}
         />
       )
     }
@@ -119,14 +121,14 @@ class ContractInputFields extends Component {
 
   render() {
     const paperStyle = {
-      padding: 10,
+      padding: 10
     }
     if (typeof this.props.methodSelected.inputs === 'undefined') {
       return null
     }
     return (
-      <Paper style={paperStyle} elevation={2} >
-        <Grid container spacing={8} >
+      <Paper style={paperStyle} elevation={2}>
+        <Grid container spacing={8}>
           <Grid item xs={12}>
             <Typography variant="subheading" gutterBottom>
               INPUTE VARIABLES
@@ -138,8 +140,11 @@ class ContractInputFields extends Component {
               {this.renderInputFields()}
               <FormHelperText>{this.state.errorMsg}</FormHelperText>
               <br />
-              <Button variant="raised" color="primary" onClick={this.onSend}
-              disabled={!this.props.enableSubmit}
+              <Button
+                variant="raised"
+                color="primary"
+                onClick={this.onSend}
+                disabled={!this.props.enableSubmit}
               >
                 Send
               </Button>
@@ -147,8 +152,8 @@ class ContractInputFields extends Component {
           </Grid>
         </Grid>
       </Paper>
-    );
+    )
   }
 }
 
-export default ContractInputFields;
+export default ContractInputFields
