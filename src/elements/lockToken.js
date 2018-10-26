@@ -5,7 +5,7 @@ import EtherscanLink from '../elements/etherscanLink'
 import FormControl from '@material-ui/core/FormControl'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import Grid from '@material-ui/core/Grid'
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@material-ui/core/LinearProgress'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import TextField from '@material-ui/core/TextField'
@@ -82,7 +82,7 @@ class LockToken extends Component {
             <TextField
               id={'amountToLock'}
               disabled={disabled}
-              label="Amount to lock (1h)"
+              label="Amount to lock (24h)"
               InputLabelProps={{
                 shrink: true
               }}

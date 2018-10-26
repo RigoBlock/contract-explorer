@@ -2,6 +2,7 @@ import './App.css'
 import { Route, Switch } from 'react-router-dom'
 import { networkInfo } from './_utils/const'
 import { withStyles } from '@material-ui/core/styles'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import ContractPage from './pages/contract'
 import EventsPage from './pages/events'
 import Exchange from './pages/exchange'
@@ -37,6 +38,7 @@ class App extends Component {
       console.log('No web3? You should consider trying MetaMask!')
     }
     this.state = {
+      loading: true,
       web3,
       accounts: [],
       accountsError: true,
@@ -65,19 +67,30 @@ class App extends Component {
     if (typeof accounts[0] === 'undefined') {
       this.setState({
         accountsError: true,
-        networkInfo: networkInfo[networId]
+        networkInfo: networkInfo[networId],
+        loading: false
       })
     } else {
       this.setState({
         accounts,
         accountsError: false,
-        networkInfo: networkInfo[networId]
+        networkInfo: networkInfo[networId],
+        loading: false
       })
     }
   }
 
   render() {
-    return (
+    return this.state.loading ? (
+      <Grid container spacing={0}>
+        <Grid item xs={12}>
+          <TopBar accountsError={this.state.accountsError} />
+        </Grid>
+        <div className="progress">
+          <CircularProgress size={50} />
+        </div>
+      </Grid>
+    ) : (
       <Grid container spacing={0}>
         <Grid item xs={12}>
           <TopBar accountsError={this.state.accountsError} />
@@ -89,6 +102,7 @@ class App extends Component {
               <Route exact path="/contract" component={ContractPage} />
               <Route exact path="/events" component={EventsPage} />
               <Route path="/zeroex" component={Exchange} />
+              <Route path="/zeroex/orders-tools" component={Exchange} />
             </Switch>
           ) : (
             <Switch>
