@@ -21,7 +21,7 @@ class InOutMethodValues extends Component {
         <Paper style={paperStyle} elevation={2}>
           <Grid container spacing={8} >
             <Grid item xs={12}>
-              <Typography variant="subheading" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 METHOD SIGNATURE
             </Typography>
             </Grid>
@@ -31,7 +31,7 @@ class InOutMethodValues extends Component {
               />
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="subheading" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 INPUTS
             </Typography>
             </Grid>
@@ -41,7 +41,7 @@ class InOutMethodValues extends Component {
               />
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="subheading" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 OUTPUTS
             </Typography>
             </Grid>

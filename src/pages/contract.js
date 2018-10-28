@@ -215,8 +215,7 @@ class ContractPage extends Component {
     })
   }
 
-  onNewBlockNumber = (_error, blockNumber) => {
-  }
+  onNewBlockNumber = (_error, blockNumber) => {}
 
   render() {
     const containerWrapperStyle = {
@@ -238,7 +237,7 @@ class ContractPage extends Component {
         <Grid item xs={4}>
           <Grid container spacing={8} style={containerGroupWrapperStyle}>
             <Grid item xs={12}>
-              <Typography variant="headline">CONTRACT</Typography>
+              <Typography variant="h5">CONTRACT</Typography>
             </Grid>
             <Grid item xs={12}>
               <Paper style={paperStyle} elevation={2}>
@@ -266,7 +265,7 @@ class ContractPage extends Component {
           </Grid>
           <Grid container spacing={8} style={containerGroupWrapperStyle}>
             <Grid item xs={12}>
-              <Typography variant="headline">VARIABLES</Typography>
+              <Typography variant="h5">VARIABLES</Typography>
             </Grid>
             <Grid item xs={12}>
               <InOutMethodValues methodSelected={this.state.methodSelected} />
@@ -274,7 +273,7 @@ class ContractPage extends Component {
           </Grid>
           <Grid container spacing={8} style={containerGroupWrapperStyle}>
             <Grid item xs={12}>
-              <Typography variant="headline">CALL</Typography>
+              <Typography variant="h5">CALL</Typography>
             </Grid>
             <Grid item xs={12}>
               <ContractInputFields
@@ -289,23 +288,23 @@ class ContractPage extends Component {
           <Sticky>
             <Grid container spacing={8} style={containerGroupWrapperStyle}>
               <Grid item xs={12}>
-                <Typography variant="headline">LOG</Typography>
+                <Typography variant="h5">LOG</Typography>
               </Grid>
               <Grid item xs={12}>
                 <Paper style={paperStyle} elevation={2}>
-                  <Typography variant="subheading">
+                  <Typography variant="subtitle1">
                     Encoded ABI: {this.state.encodedABI}
                   </Typography>
-                  <Typography variant="subheading">
+                  <Typography variant="subtitle1">
                     Function Signature: {this.state.encodedABI.substring(0, 10)}
                   </Typography>
-                  <Typography variant="subheading">
+                  <Typography variant="subtitle1">
                     Encoded Parameters: {this.state.encodedABI.substring(10)}
                   </Typography>
-                  <Typography variant="subheading">
+                  <Typography variant="subtitle1">
                     Gas used: {this.state.gas}
                   </Typography>
-                  <Typography variant="subheading">
+                  <Typography variant="subtitle1">
                     Transaction receipt:
                   </Typography>
                   {this.state.loading ? (

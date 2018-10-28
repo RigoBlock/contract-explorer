@@ -16,10 +16,12 @@ class LockToken extends Component {
     amountToLock: PropTypes.string.isRequired,
     amountToUnlock: PropTypes.string.isRequired,
     onChangeAmount: PropTypes.func.isRequired,
+    onChangeTime: PropTypes.func.isRequired,
     disabled: PropTypes.bool.isRequired,
     errorMsg: PropTypes.object.isRequired,
     tokenLock: PropTypes.func.isRequired,
     tokenUnLock: PropTypes.func.isRequired,
+    timeToLock: PropTypes.string.isRequired,
     loading: PropTypes.bool
   }
 
@@ -39,12 +41,17 @@ class LockToken extends Component {
     this.props.onChangeAmount(event.target.value, event.target.id)
   }
 
+  onChangeTime = event => {
+    this.props.onChangeTime(event.target.value)
+  }
+
   render() {
     const {
       disabled,
       token,
       errorMsg,
       amountToLock,
+      timeToLock,
       amountToUnlock,
       loading
     } = this.props
@@ -79,20 +86,40 @@ class LockToken extends Component {
             {token.symbol}
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              id={'amountToLock'}
-              disabled={disabled}
-              label="Amount to lock (24h)"
-              InputLabelProps={{
-                shrink: true
-              }}
-              placeholder="Amount"
-              onChange={this.onChangeAmount}
-              fullWidth
-              margin="normal"
-              value={amountToLock}
-            />
-            <FormHelperText>{errorMsg.amountToLock}</FormHelperText>
+            <Grid container spacing={24}>
+              <Grid item xs={6}>
+                <TextField
+                  id={'amountToLock'}
+                  disabled={disabled}
+                  label="Amount to lock"
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  placeholder="Amount"
+                  onChange={this.onChangeAmount}
+                  fullWidth
+                  margin="normal"
+                  value={amountToLock}
+                />
+                <FormHelperText>{errorMsg.amountToLock}</FormHelperText>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id={'amountToLock'}
+                  disabled={disabled}
+                  label="Time to lock (1h)"
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  placeholder="Time"
+                  onChange={this.onChangeTime}
+                  fullWidth
+                  margin="normal"
+                  value={timeToLock}
+                />
+                <FormHelperText>{errorMsg.timeToLock}</FormHelperText>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item xs={6}>
             <TextField
@@ -110,13 +137,19 @@ class LockToken extends Component {
             />
             <FormHelperText>{errorMsg.amountToUnlock}</FormHelperText>
           </Grid>
+
+          <Grid item xs={6} />
+
           <Grid item xs={12}>
             {loading && <LinearProgress />}
           </Grid>
           <Grid item xs={6}>
             <Button
               disabled={
-                disabled || errorMsg.amountToLock !== '' || amountToLock === '0'
+                disabled ||
+                errorMsg.amountToLock !== '' ||
+                amountToLock === '0' ||
+                errorMsg.timeToLock !== ''
               }
               variant="contained"
               color="primary"

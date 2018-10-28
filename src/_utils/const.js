@@ -37,10 +37,10 @@ export const EP_RIGOBLOCK_RP_PROD = 'https://ropsten.dev.endpoint.network/rpc'
 export const EP_RIGOBLOCK_RP_PROD_WS = 'wss://ropsten.dev.endpoint.network/ws'
 
 // Parity on ports 87xx
-export const EP_RIGOBLOCK_MN_DEV = 'https://srv03.endpoint.network:8745'
-export const EP_RIGOBLOCK_MN_DEV_WS = 'wss://srv03.endpoint.network:8746'
-export const EP_RIGOBLOCK_MN_PROD = 'https://mainnet.endpoint.network:8745'
-export const EP_RIGOBLOCK_MN_PROD_WS = 'wss://mainnet.endpoint.network:8746'
+export const EP_RIGOBLOCK_MN_DEV = 'https://mainnet.dev.endpoint.network/rpc'
+export const EP_RIGOBLOCK_MN_DEV_WS = 'wss://mainnet.dev.endpoint.network/ws'
+export const EP_RIGOBLOCK_MN_PROD = 'https://mainnet.dev.endpoint.network/rpc'
+export const EP_RIGOBLOCK_MN_PROD_WS = 'wss://mainnet.dev.endpoint.network/ws'
 
 // Allowed endpoints in config section
 export const INFURA = 'infura'
@@ -77,6 +77,10 @@ export const networkInfo = {
   42: {
     id: 42,
     name: 'kovan'
+  },
+  1: {
+    id: 1,
+    name: 'mainnet'
   }
 }
 
@@ -95,7 +99,7 @@ export const tokensEthfinex = {
         Ethfinex: {
           symbol: 'ZRXW',
           decimals: 18,
-          address: '0xFF32E76EAdc11Fc816A727980E92805D237CDB28',
+          address: '0x7d90dc5df18e06e916e91d3405d5d35087a303fc',
           name: 'ZRX Wrapper'
         }
       }
@@ -113,7 +117,7 @@ export const tokensEthfinex = {
         Ethfinex: {
           symbol: 'ETHW',
           decimals: 18,
-          address: '0x965808e7F815CfffD4c018ef2Ba4C5A65EBa087e',
+          address: '0x06da2eb72279c1cec53c251bbff4a06fbfb93a5b',
           name: 'ETH Wrapper'
         }
       }
@@ -131,7 +135,7 @@ export const tokensEthfinex = {
         Ethfinex: {
           symbol: 'USDTW',
           decimals: 6,
-          address: '0x83E42e6d1ac009285376340ef64BaC1C7d106C89',
+          address: '0x84442a4518126ed25a548fe3392f6021e3ccd5bb',
           name: 'USDT Wrapper'
         }
       }
@@ -144,18 +148,103 @@ export const tokensEthfinex = {
       },
       address: '0x6FA8590920c5966713b1a86916f7b0419411e474',
       decimals: 18,
+      faucetAddress: '0x756519e3A48d5E4A02e0a6197A0cBb783ff06738',
       name: 'GRG Token',
       wrappers: {
         Ethfinex: {
           symbol: 'GRGW',
           decimals: 18,
-          address: '0x5959f2036608d693B4d085020ACAdBBf664C793E',
+          address: '0xacfb4c79259e3c2c1bf054f136e6d75f7cc2b07e',
           name: 'GRG Wrapper'
         }
       }
     }
   }
 }
+// 3: {
+//   WETH: {
+//     symbol: 'WETH',
+//     symbolTicker: {
+//       Ethfinex: 'ETH'
+//     },
+//     address: '0xc778417e063141139fce010982780140aa0cd5ab',
+//     decimals: 18,
+//     name: 'Wrapped Ether 0x'
+//   },
+//   ZRX: {
+//     symbol: 'ZRX',
+//     isOldERC20: false,
+//     symbolTicker: {
+//       Ethfinex: 'ZRX'
+//     },
+//     address: '0xA8E9Fa8f91e5Ae138C74648c9C304F1C75003A8D',
+//     decimals: 18,
+//     name: '0x Protocol Token',
+//     wrappers: {
+//       Ethfinex: {
+//         symbol: 'ZRXW',
+//         decimals: 18,
+//         address: '0xFF32E76EAdc11Fc816A727980E92805D237CDB28',
+//         name: 'ZRX Wrapper'
+//       }
+//     }
+//   },
+//   ETH: {
+//     symbol: 'ETH',
+//     isOldERC20: false,
+//     symbolTicker: {
+//       Ethfinex: 'ETH'
+//     },
+//     address: '0x0',
+//     decimals: 18,
+//     name: 'Ether',
+//     wrappers: {
+//       Ethfinex: {
+//         symbol: 'ETHW',
+//         decimals: 18,
+//         address: '0x965808e7F815CfffD4c018ef2Ba4C5A65EBa087e',
+//         name: 'ETH Wrapper'
+//       }
+//     }
+//   },
+//   USDT: {
+//     symbol: 'USDT',
+//     isOldERC20: true,
+//     symbolTicker: {
+//       Ethfinex: 'USD'
+//     },
+//     address: '0x0736d0c130b2eAD47476cC262dbed90D7C4eeABD',
+//     decimals: 6,
+//     name: 'Tether USD',
+//     wrappers: {
+//       Ethfinex: {
+//         symbol: 'USDTW',
+//         decimals: 6,
+//         address: '0x83E42e6d1ac009285376340ef64BaC1C7d106C89',
+//         name: 'USDT Wrapper'
+//       }
+//     }
+//   },
+//   GRG: {
+//     symbol: 'GRG',
+//     isOldERC20: false,
+//     symbolTicker: {
+//       Ethfinex: 'GRG'
+//     },
+//     address: '0x6FA8590920c5966713b1a86916f7b0419411e474',
+//     decimals: 18,
+//     faucetAddress: '0x756519e3A48d5E4A02e0a6197A0cBb783ff06738',
+//     name: 'GRG Token',
+//     wrappers: {
+//       Ethfinex: {
+//         symbol: 'GRGW',
+//         decimals: 18,
+//         address: '0xacfb4c79259e3c2c1bf054f136e6d75f7cc2b07e',
+//         name: 'GRG Wrapper'
+//       }
+//     }
+//   }
+// }
 
 // FIRST DEPLOYMENT
 //
@@ -252,9 +341,8 @@ export const exchanges = {
       needLocking: false,
       needAllowance: true,
       name: 'ZeroEx',
-      exchangeContractAddress: '0x479cc461fecd078f766ecc58533d6f69580cf3ac',
-      tokenTransferProxyContractAddress:
-        '0xa8e9fa8f91e5ae138c74648c9c304f1c75003a8d',
+      exchangeContractAddress: '0x479cc461fecd078f766ecc58533d6f69580cf3ac'.toLowerCase(),
+      tokenTransferProxyContractAddress: '0xa8e9fa8f91e5ae138c74648c9c304f1c75003a8d'.toLowerCase(),
       tradedTokens: {}
     },
     // RigoBlockEthfinex: {
@@ -270,21 +358,19 @@ export const exchanges = {
     RigoBlockEthfinex: {
       needLocking: true,
       needAllowance: false,
-      exchangeContractAddress: '0x1d8643aae25841322ecde826862a9fa922770981',
+      exchangeContractAddress: '0x1d8643aae25841322ecde826862a9fa922770981'.toLowerCase(),
       networkId: 3,
       name: 'RigoBlockEthfinex',
-      tokenTransferProxyContractAddress:
-        '0xEEA64EeBd1F2Dc273cfC79CbDda23b69C6b5588D',
+      tokenTransferProxyContractAddress: '0xEEA64EeBd1F2Dc273cfC79CbDda23b69C6b5588D'.toLowerCase(),
       tradedTokens: tokensRigoblockEthfinex
     },
     Ethfinex: {
       needLocking: true,
       needAllowance: false,
-      exchangeContractAddress: '0x67799a5e640bc64ca24d3e6813842754e546d7b1',
+      exchangeContractAddress: '0x1D8643aaE25841322ecdE826862A9FA922770981'.toLowerCase(),
       networkId: 3,
       name: 'Ethfinex',
-      tokenTransferProxyContractAddress:
-        '0x67799a5e640bc64ca24d3e6813842754e546d7b1',
+      tokenTransferProxyContractAddress: '0xEEA64EeBd1F2Dc273cfC79CbDda23b69C6b5588D'.toLowerCase(),
       tradedTokens: tokensEthfinex
     }
   },
@@ -292,11 +378,10 @@ export const exchanges = {
     ZeroEx: {
       needLocking: false,
       needAllowance: true,
-      exchangeContractAddress: '0x90Fe2Af704B34E0224bF2299C838E04d4Dcf1364',
+      exchangeContractAddress: '0x90Fe2Af704B34E0224bF2299C838E04d4Dcf1364'.toLowerCase(),
       networkId: 42,
       name: 'ZeroEx',
-      tokenTransferProxyContractAddress:
-        '0x087Eed4Bc1ee3DE49BeFbd66C662B434B15d49d4',
+      tokenTransferProxyContractAddress: '0x087Eed4Bc1ee3DE49BeFbd66C662B434B15d49d4'.toLowerCase(),
       tradedTokens: {}
     },
     RigoBlockZeroX: {

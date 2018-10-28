@@ -130,7 +130,7 @@ class ContractInputFields extends Component {
       <Paper style={paperStyle} elevation={2}>
         <Grid container spacing={8}>
           <Grid item xs={12}>
-            <Typography variant="subheading" gutterBottom>
+            <Typography variant="subtitle1" gutterBottom>
               INPUTE VARIABLES
             </Typography>
           </Grid>
@@ -141,7 +141,7 @@ class ContractInputFields extends Component {
               <FormHelperText>{this.state.errorMsg}</FormHelperText>
               <br />
               <Button
-                variant="raised"
+                variant="contained"
                 color="primary"
                 onClick={this.onSend}
                 disabled={!this.props.enableSubmit}

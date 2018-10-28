@@ -1,7 +1,7 @@
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import React from 'react';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
+import React from 'react'
+import Typography from '@material-ui/core/Typography'
 
 class HomePage extends React.Component {
   render() {
@@ -12,14 +12,15 @@ class HomePage extends React.Component {
     return (
       <Grid container spacing={8}>
         <Grid item xs={12}>
-          <Typography variant="display1" gutterBottom align="center">
+          <Typography variant="h4" gutterBottom align="center">
             ABI EXPLORER
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <Paper style={paperStyle} elevation={2}>
             <Typography gutterBottom>
-              A simple dev tool to interact with Smart Contracts and events.
+              A simple dev tool to interact with Smart Contracts and
+              events.&nbsp;
               <strong>Kovan</strong> and <strong>Ropsten</strong> supported.
               network.
             </Typography>

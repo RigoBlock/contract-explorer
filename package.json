@@ -4,10 +4,10 @@
   "private": true,
   "dependencies": {
     "0x.js": "^0.36.3",
-    "@material-ui/core": "^3.0.2",
+    "@material-ui/core": "^3.3.1",
     "@material-ui/icons": "^3.0.1",
     "immutable": "^3.8.2",
-    "material-ui": "^1.0.0-beta.45",
+    "material-ui": "^0.20.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-ga": "^2.5.3",

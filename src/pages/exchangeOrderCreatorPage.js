@@ -282,7 +282,7 @@ class ExchangeOrderCreatorPage extends React.Component {
       <Grid container spacing={8}>
         <Grid item xs={12}>
           <br />
-          <Typography variant="headline">ORDER</Typography>
+          <Typography variant="h5">ORDER</Typography>
           <Paper style={paperStyle} elevation={2}>
             <OrderInputFields
               order={this.state.order}
@@ -294,7 +294,7 @@ class ExchangeOrderCreatorPage extends React.Component {
           </Paper>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="headline">ORDER HASH</Typography>
+          <Typography variant="h5">ORDER HASH</Typography>
           {this.state.hashError ? (
             <ReactJson
               src={this.state.hashError}
@@ -308,7 +308,7 @@ class ExchangeOrderCreatorPage extends React.Component {
           )}
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="headline">ORDER OBJECT</Typography>
+          <Typography variant="h5">ORDER OBJECT</Typography>
           <ReactJson
             src={this.state.signedOrder}
             style={{ padding: '5px' }}

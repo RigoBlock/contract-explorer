@@ -32,7 +32,7 @@ class ExchangeToolsPage extends Component {
     }
     let zeroEx = new ZeroEx(context.web3.currentProvider, ZeroExConfig)
     const exchangeSelected =
-      context.networkInfo.id === 3 ? 'RigoBlockEthfinex' : 'RigoBlockZeroX'
+      context.networkInfo.id === 3 ? 'Ethfinex' : 'RigoBlockZeroX'
     const tokensList =
       CONST.exchanges[context.networkInfo.id][exchangeSelected].tradedTokens[
         context.networkInfo.id
@@ -465,7 +465,7 @@ class ExchangeToolsPage extends Component {
       <Grid container spacing={8}>
         <Grid item xs={12}>
           <br />
-          <Typography variant="headline">ALLOWANCE AND LOCK</Typography>
+          <Typography variant="h5">ALLOWANCE AND LOCK</Typography>
           <Paper style={paperStyle} elevation={2}>
             <Grid container spacing={8}>
               <Grid item xs={12}>
@@ -505,7 +505,7 @@ class ExchangeToolsPage extends Component {
 
             <Grid container spacing={8}>
               <Grid item xs={12} className="subheading">
-                <Typography variant="subheading">
+                <Typography variant="subtitle1">
                   <span className="subheading-text">SET ALLOWANCE</span>
                 </Typography>
                 <Divider />
@@ -566,7 +566,7 @@ class ExchangeToolsPage extends Component {
             <br />
             <Grid item xs={12}>
               <Grid item xs={12} className="subheading">
-                <Typography variant="subheading">
+                <Typography variant="subtitle1">
                   <span className="subheading-text">LOCK TOKENS</span>
                 </Typography>
                 <Divider />

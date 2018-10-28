@@ -35,7 +35,7 @@ class TopBar extends React.Component {
     })
   }
 
-  UNSAFE_componentWillMount = async () => {
+  componentDidMount = async () => {
     // Subscribing to newBlockHeaders event. It will be fired at every new mined block.
     // console.log(this.context.web3)
     const web3 =
@@ -101,7 +101,7 @@ class TopBar extends React.Component {
           </Grid>
           <Grid item xs={4} style={{ margin: 'auto' }}>
             <div style={styles.counter}>
-              <Typography variant="body2" style={styles.counter}>
+              <Typography variant="body1" style={styles.counter}>
                 Account: {this.state.accountText}
                 ... Network: {this.context.networkInfo.name} #
                 {this.state.newBlock.number.toLocaleString('en')}

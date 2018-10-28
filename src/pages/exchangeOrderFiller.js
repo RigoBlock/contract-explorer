@@ -21,7 +21,7 @@ class ExchangeOrderFiller extends React.Component {
   constructor(props, context) {
     super(props)
     const exchangeSelected =
-      context.networkInfo.id === 3 ? 'RigoBlockEthfinex' : 'RigoBlockZeroX'
+      context.networkInfo.id === 3 ? 'Ethfinex' : 'RigoBlockZeroX'
     const exchangeList = CONST.exchanges[context.networkInfo.id]
     this.state = {
       encodedABI: '',
@@ -648,7 +648,7 @@ class ExchangeOrderFiller extends React.Component {
       <Grid container spacing={8}>
         <Grid item xs={12}>
           <br />
-          <Typography variant="headline">FILLER</Typography>
+          <Typography variant="h5">FILLER</Typography>
           <Paper style={paperStyle} elevation={2}>
             <div>
               A single order or an array of orders. Input is parsed with&nbsp;
@@ -704,7 +704,7 @@ class ExchangeOrderFiller extends React.Component {
             <br />
             <FormControl fullWidth={true}>
               <Button
-                variant="raised"
+                variant="contained"
                 color="primary"
                 onClick={this.onFillOrder}
                 disabled={this.state.submitDisabled}
@@ -713,7 +713,7 @@ class ExchangeOrderFiller extends React.Component {
               </Button>
               <br />
               <Button
-                variant="raised"
+                variant="contained"
                 color="primary"
                 onClick={this.onBatchFillOrder}
                 disabled={this.state.submitDisabled}
@@ -728,7 +728,7 @@ class ExchangeOrderFiller extends React.Component {
         <Grid item xs={12}>
           <Grid container spacing={8}>
             <Grid item xs={12}>
-              <Typography variant="headline">ENCODED ABI</Typography>
+              <Typography variant="h5">ENCODED ABI</Typography>
             </Grid>
             <Grid item xs={12}>
               <div style={{ wordWrap: 'break-word' }}>
@@ -740,7 +740,7 @@ class ExchangeOrderFiller extends React.Component {
         <Grid item xs={12}>
           <Grid container spacing={8}>
             <Grid item xs={12}>
-              <Typography variant="headline">RECEIPT</Typography>
+              <Typography variant="h5">RECEIPT</Typography>
             </Grid>
             <Grid item xs={12}>
               <ReactJson

@@ -37,6 +37,7 @@ class App extends Component {
     } else {
       console.log('No web3? You should consider trying MetaMask!')
     }
+
     this.state = {
       loading: true,
       web3,
@@ -60,11 +61,40 @@ class App extends Component {
     }
   }
 
-  UNSAFE_componentWillMount = async () => {
-    const { web3 } = this.state
+  componentDidMount = async () => {
+    // const { web3 } = this.state
+    let web3
+    // Modern dapp browsers...
+    if (typeof window.ethereum !== 'undefined') {
+      web3 = new Web3(window.ethereum)
+      this.setState({
+        web3
+      })
+      try {
+        // Request account access if needed
+        await window.ethereum.enable()
+        console.warn('User allowed account access')
+      } catch (error) {
+        console.warn('User denied account access')
+      }
+    }
+    // Legacy dapp browsers...
+    else if (typeof window.web3 !== 'undefined') {
+      web3 = new Web3(window.web3.currentProvider)
+      // Acccounts always exposed
+      this.setState({
+        web3
+      })
+    }
+    // Non-dapp browsers...
+    else {
+      console.log(
+        'Non-Ethereum browser detected. You should consider trying MetaMask!'
+      )
+    }
     const accounts = await web3.eth.getAccounts()
     const networId = await web3.eth.net.getId()
-    if (typeof accounts[0] === 'undefined') {
+    if (accounts.length === 0 && networId === 1) {
       this.setState({
         accountsError: true,
         networkInfo: networkInfo[networId],

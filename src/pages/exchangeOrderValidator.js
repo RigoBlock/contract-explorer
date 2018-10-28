@@ -256,7 +256,7 @@ class ExchangeOrderValidator extends React.Component {
       <Grid container spacing={8}>
         <Grid item xs={12}>
           <br />
-          <Typography variant="headline">VALIDATOR</Typography>
+          <Typography variant="h5">VALIDATOR</Typography>
           <Paper style={paperStyle} elevation={2}>
             <div style={{ color: '#F44336' }}>
               <b>{this.state.orderErrorMsg}</b>
@@ -293,7 +293,7 @@ class ExchangeOrderValidator extends React.Component {
               <FormHelperText>{this.state.errorMsg}</FormHelperText>
               <br />
               <Button
-                variant="raised"
+                variant="contained"
                 color="primary"
                 onClick={this.onValidateOrder}
                 // disabled={
@@ -309,10 +309,10 @@ class ExchangeOrderValidator extends React.Component {
         <Grid item xs={12}>
           <Grid container spacing={8}>
             <Grid item xs={6}>
-              <Typography variant="headline">SCHEMA VALIDATION</Typography>
+              <Typography variant="h5">SCHEMA VALIDATION</Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="headline">
+              <Typography variant="h5">
                 {this.state.validation.schema.valid ? (
                   <span style={validation.success}>PASS</span>
                 ) : (
@@ -332,10 +332,10 @@ class ExchangeOrderValidator extends React.Component {
           </Grid>
           <Grid container spacing={8}>
             <Grid item xs={6}>
-              <Typography variant="headline">HASH VALIDATION</Typography>
+              <Typography variant="h5">HASH VALIDATION</Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="headline">
+              <Typography variant="h5">
                 {this.state.validation.hash ? (
                   <span style={validation.success}>PASS</span>
                 ) : (
@@ -355,10 +355,10 @@ class ExchangeOrderValidator extends React.Component {
           </Grid>
           <Grid container spacing={8}>
             <Grid item xs={6}>
-              <Typography variant="headline">SIGNATURE VALIDATION</Typography>
+              <Typography variant="h5">SIGNATURE VALIDATION</Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="headline">
+              <Typography variant="h5">
                 {this.state.validation.signature ? (
                   <span style={validation.success}>PASS</span>
                 ) : (

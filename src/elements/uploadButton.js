@@ -86,7 +86,7 @@ class UploadButton extends Component {
         <Grid item xs={12}>
           <FormControl fullWidth={true} error={this.state.error}>
             <Button
-              variant="raised" component="span" color="primary"
+              variant="contained" component="span" color="primary"
               onClick={this.openFileDialog.bind(this)}>
               {this.props.label}
             </Button>

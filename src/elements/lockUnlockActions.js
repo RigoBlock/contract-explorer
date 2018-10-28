@@ -11,9 +11,11 @@ class LockUnlockActions extends Component {
     amountToUnlock: '0',
     errorMsg: {
       amountToLock: '',
-      amountToUnlock: ''
+      amountToUnlock: '',
+      timeToLock: ''
     },
-    loading: false
+    loading: false,
+    timeToLock: '1'
   }
 
   static propTypes = {
@@ -202,14 +204,20 @@ class LockUnlockActions extends Component {
         ? this.setState({
             [amountType]: newAmount,
             errorMsg: {
-              [amountType]: ''
+              ...this.state.errorMsg,
+              ...{
+                [amountType]: ''
+              }
             }
           })
         : this.setState({
             [amountType]: newAmount,
             errorMsg: {
-              [amountType]:
-                'Please enter an amount <= than the available balance.'
+              ...this.state.errorMsg,
+              ...{
+                [amountType]:
+                  'Please enter an amount <= than the available balance.'
+              }
             }
           })
     } catch (err) {
@@ -217,7 +225,46 @@ class LockUnlockActions extends Component {
       this.setState({
         [amountType]: newAmount,
         errorMsg: {
-          [amountType]: 'Please enter a valid number.'
+          ...this.state.errorMsg,
+          ...{
+            [amountType]: 'Please enter a valid number.'
+          }
+        }
+      })
+    }
+  }
+
+  onChangeTime = async newTime => {
+    try {
+      let time = new BigNumber(newTime)
+      return time.gt(0)
+        ? this.setState({
+            timeToLock: time.toString(),
+            errorMsg: {
+              ...this.state.errorMsg,
+              ...{
+                timeToLock: ''
+              }
+            }
+          })
+        : this.setState({
+            timeToLock: time.toString(),
+            errorMsg: {
+              ...this.state.errorMsg,
+              ...{
+                timeToLock: 'Please enter a valid lock time.'
+              }
+            }
+          })
+    } catch (err) {
+      console.warn(err)
+      this.setState({
+        timeToLock: newTime,
+        errorMsg: {
+          ...this.state.errorMsg,
+          ...{
+            timeToLock: 'Please enter a valid lock time.'
+          }
         }
       })
     }
@@ -225,14 +272,22 @@ class LockUnlockActions extends Component {
 
   render() {
     const { token, exchange } = this.props
-    const { errorMsg, amountToLock, amountToUnlock, loading } = this.state
+    const {
+      errorMsg,
+      amountToLock,
+      amountToUnlock,
+      loading,
+      timeToLock
+    } = this.state
     return (
       <LockToken
         token={token}
         amountToLock={amountToLock}
         amountToUnlock={amountToUnlock}
+        timeToLock={timeToLock}
         disabled={exchange.needAllowance}
         onChangeAmount={this.onChangeAmount}
+        onChangeTime={this.onChangeTime}
         errorMsg={errorMsg}
         tokenLock={this.tokenLock}
         tokenUnLock={this.tokenUnLock}

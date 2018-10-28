@@ -215,7 +215,7 @@ class EventsPage extends Component {
             <Grid item xs={4}>
               <Grid container spacing={8} style={containerGroupWrapperStyle}>
                 <Grid item xs={12}>
-                  <Typography variant="headline">CONTRACT</Typography>
+                  <Typography variant="h5">CONTRACT</Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Paper style={paperStyle} elevation={2}>
@@ -234,7 +234,7 @@ class EventsPage extends Component {
                     {/* <Grid item xs={12}>
                       <FormControl fullWidth={true} error={this.state.errorSubscribe} >
                         <Button
-                          variant="raised" component="span" color="primary"
+                          variant="contained" component="span" color="primary"
                           onClick={this.onSubscribeEvents}
                           disabled={Object.keys(this.state.abi).length === 0 && this.state.abi.constructor === Object}
                           >
@@ -248,7 +248,7 @@ class EventsPage extends Component {
               </Grid>
               <Grid container spacing={8} style={containerGroupWrapperStyle}>
                 <Grid item xs={12}>
-                  <Typography variant="headline">VARIABLES</Typography>
+                  <Typography variant="h5">VARIABLES</Typography>
                 </Grid>
                 <Grid item xs={12}>
                   {Object.keys(this.state.abi).length === 0 &&
@@ -262,7 +262,7 @@ class EventsPage extends Component {
               <Sticky>
                 <Grid container spacing={8} style={containerGroupWrapperStyle}>
                   <Grid item xs={12}>
-                    <Typography variant="headline">FILTERS</Typography>
+                    <Typography variant="h5">FILTERS</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Paper style={paperStyle} elevation={2}>
@@ -283,7 +283,7 @@ class EventsPage extends Component {
                 </Grid>
                 <Grid container spacing={8} style={containerGroupWrapperStyle}>
                   <Grid item xs={12}>
-                    <Typography variant="headline">EVENTS</Typography>
+                    <Typography variant="h5">EVENTS</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Paper style={paperStyle} elevation={2}>

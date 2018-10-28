@@ -34,7 +34,7 @@ class SetAllowanceButtons extends Component {
             <Button
               id={'setAllowance'}
               disabled={this.props.disabled}
-              variant="raised"
+              variant="contained"
               color="primary"
               onClick={this.props.onSetAllowance}
               fullWidth={true}
@@ -46,7 +46,7 @@ class SetAllowanceButtons extends Component {
             <Button
               id={'removeAllowance'}
               disabled={this.props.disabled}
-              variant="raised"
+              variant="contained"
               color="primary"
               onClick={this.props.onSetAllowance}
               fullWidth={true}

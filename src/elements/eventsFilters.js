@@ -112,7 +112,7 @@ class EventsFilters extends Component {
       <div>
         <FormControl fullWidth={true} style={formStyles.formControl}>
           <Button
-            variant="raised"
+            variant="contained"
             color="primary"
             onClick={this.onSubscribeEvents}
             disabled={!this.props.enableEventTopicField}
