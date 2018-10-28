@@ -125,6 +125,11 @@ class ExchangeToolsPage extends Component {
         address,
         web3
       )
+      token.lockTime = await Drago.getWrapperLockTime(
+        token.wrappers.Ethfinex.address,
+        address,
+        web3
+      )
       // console.log(token.address, token.availableBalance)
       // console.log(token.wrappers.Ethfinex.address, token.wrappedBalance)
       return token

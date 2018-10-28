@@ -84,7 +84,7 @@ export const operateOnExchangeEFXUnlock = async (
   }
 
   if (tokenAddress === '0x0') {
-    tokenAddress = null
+    tokenAddress = '0x0000000000000000000000000000000000000000'
   }
   const contractMethod = {
     name: 'unwrap',
@@ -127,7 +127,7 @@ export const operateOnExchangeEFXUnlock = async (
   const encodedABI = await web3.eth.abi.encodeFunctionCall(contractMethod, [
     tokenAddress,
     tokenWrapper,
-    toBeUnwrapped,
+    toBeUnwrapped.toString(),
     v,
     r,
     s,
@@ -195,7 +195,7 @@ export const operateOnExchangeEFXLock = async (
     throw new Error('isOldERC20 need to be provided')
   }
   if (tokenAddress === '0x0') {
-    tokenAddress = null
+    tokenAddress = '0x0000000000000000000000000000000000000000'
   }
   console.log(`managerAccountAddress ${managerAccountAddress}`)
   console.log(`dragoAddress ${dragoAddress}`)
@@ -240,7 +240,7 @@ export const operateOnExchangeEFXLock = async (
   const encodedABI = await web3.eth.abi.encodeFunctionCall(contractMethod, [
     tokenAddress,
     tokenWrapper,
-    toBeWrapped,
+    toBeWrapped.toString(),
     time,
     isOldERC20
   ])
@@ -262,6 +262,15 @@ export const operateOnExchangeEFXLock = async (
 export const getWrapperBalance = async (wrapperAddress, dragoAddress, web3) => {
   const wrapperContract = new web3.eth.Contract(abis.wrapper, wrapperAddress)
   return await wrapperContract.methods.balanceOf(dragoAddress).call()
+}
+
+export const getWrapperLockTime = async (
+  wrapperAddress,
+  dragoAddress,
+  web3
+) => {
+  const wrapperContract = new web3.eth.Contract(abis.wrapper, wrapperAddress)
+  return await wrapperContract.methods.depositLock(dragoAddress).call()
 }
 
 export const getTokenBalance = async (tokenAddress, dragoAddress, web3) => {

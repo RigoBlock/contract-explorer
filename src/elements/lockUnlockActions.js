@@ -221,7 +221,7 @@ class LockUnlockActions extends Component {
             }
           })
     } catch (err) {
-      console.warn(err)
+      // console.warn(err)
       this.setState({
         [amountType]: newAmount,
         errorMsg: {
@@ -257,7 +257,7 @@ class LockUnlockActions extends Component {
             }
           })
     } catch (err) {
-      console.warn(err)
+      // console.warn(err)
       this.setState({
         timeToLock: newTime,
         errorMsg: {

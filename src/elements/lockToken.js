@@ -9,6 +9,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import TextField from '@material-ui/core/TextField'
+import moment from 'moment'
 
 class LockToken extends Component {
   static propTypes = {
@@ -62,7 +63,7 @@ class LockToken extends Component {
             <p>
               {token.symbol}: {<EtherscanLink address={token.address} />}
             </p>
-            Available to lock <br />
+            Available to lock:&nbsp;
             {typeof token.availableBalance !== 'undefined'
               ? Drago.toUnitAmount(
                   token.availableBalance,
@@ -76,7 +77,7 @@ class LockToken extends Component {
               {token.wrappers.Ethfinex.symbol}:{' '}
               {<EtherscanLink address={token.wrappers.Ethfinex.address} />}
             </p>
-            Locked <br />
+            Locked:&nbsp;
             {typeof token.wrappedBalance !== 'undefined'
               ? Drago.toUnitAmount(
                   token.wrappedBalance,
@@ -84,6 +85,13 @@ class LockToken extends Component {
                 ).toFixed(4)
               : Drago.toUnitAmount('0', token.decimals).toFixed(4)}{' '}
             {token.symbol}
+            <br />
+            Expiry time:&nbsp;
+            {typeof token.lockTime !== 'undefined' && token.lockTime !== '0'
+              ? moment
+                  .unix(token.lockTime)
+                  .format('dddd, MMMM Do YYYY, h:mm:ss a')
+              : 'N/A'}{' '}
           </Grid>
           <Grid item xs={6}>
             <Grid container spacing={24}>
