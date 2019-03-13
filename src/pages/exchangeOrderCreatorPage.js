@@ -1,12 +1,27 @@
 import * as abis from '../abi'
-import { BigNumber } from '@0xproject/utils'
 import {
   RB_0X_EXCHANGE_ADDRESS_KV,
   RB_EFX_EXCHANGE_ADDRESS_RP,
   RB_EFX_TOKEN_TRANSFER_PROXY_ADDRESS_RP,
   RB_TOKEN_TRANSFER_PROXY_ADDRESS_KV
 } from '../_utils/const'
-import { ZeroEx } from '0x.js'
+
+//import { ZeroEx } from '0x.js'
+import {
+    assetDataUtils,
+    BigNumber,
+    ContractWrappers,
+    generatePseudoRandomSalt,
+    //Order,
+    orderHashUtils,
+    signatureUtils,
+    //SignerType
+} from '0x.js'
+import { Web3Wrapper } from '@0x/web3-wrapper'
+import { MetamaskSubprovider } from '@0x/subproviders'
+//import { ECSignature, SignatureType, SignedOrder, ValidatorSignature } from '@0x/types';
+import { SignatureType } from '@0x/types';
+
 // import ExchangeSelect from '../elements/exchangeSelect'
 import Grid from '@material-ui/core/Grid'
 import OrderInputFields from '../elements/orderInputFields'
@@ -28,43 +43,32 @@ class ExchangeOrderCreatorPage extends React.Component {
       networkId: KOVAN_NETWORK_ID
       // exchangeContractAddress: this.state.fundProxyAddress
     }
-    let zeroEx = new ZeroEx(context.web3.currentProvider, ZeroExConfig)
-    // const WETH_ADDRESS = '0xd0a1e359811322d97991e03f863a0c30c2cf029c'; // The wrapped ETH token contract
-    // const ZRX_ADDRESS = '0x6ff6c0ff1d68b964901f986d4c9fa3ac68346570'; // The ZRX token contract
-    // const EXCHANGE_ADDRESS = zeroEx.exchange.getContractAddress();
-    // const EXCHANGE_ADDRESS = '0xf307de6528fa16473d8f6509b7b1d8851320dba5'
-    // const order = {
-    //   maker: ZeroEx.NULL_ADDRESS,
-    //   // maker: '0x456c3C14aAe3A2d361E6B2879Bfc0Bae15E30c38'.toLowerCase(),
-    //   taker: ZeroEx.NULL_ADDRESS,
-    //   feeRecipient: ZeroEx.NULL_ADDRESS,
-    //   makerTokenAddress: WETH_ADDRESS,
-    //   takerTokenAddress: ZRX_ADDRESS,
-    //   exchangeContractAddress: EXCHANGE_ADDRESS,
-    //   salt: ZeroEx.generatePseudoRandomSalt(),
-    //   makerFee: new BigNumber(0),
-    //   takerFee: new BigNumber(0),
-    //   makerTokenAmount: ZeroEx.toBaseUnitAmount(new BigNumber(0.001), DECIMALS), // Base 18 decimals
-    //   takerTokenAmount: ZeroEx.toBaseUnitAmount(new BigNumber(0.01), DECIMALS), // Base 18 decimals
-    //   expirationUnixTimestampSec: new BigNumber(Date.now() + 3600000), // Valid for up to an hour
-    // };
+
+    const makerAssetAddress= '0x0000000000000000000000000000000000000000' // make dynamic
+    const takerAssetAddress= '0x0000000000000000000000000000000000000000'// make dynamic
+
     const order = {
-      maker: ZeroEx.NULL_ADDRESS,
-      // maker: '0x456c3C14aAe3A2d361E6B2879Bfc0Bae15E30c38'.toLowerCase(),
-      taker: ''.toLowerCase(),
-      feeRecipient: ''.toLowerCase(),
-      makerTokenAddress: ZeroEx.NULL_ADDRESS,
-      takerTokenAddress: ZeroEx.NULL_ADDRESS,
-      exchangeContractAddress: ''.toLowerCase(),
-      salt: ZeroEx.generatePseudoRandomSalt().toFixed(),
-      makerFee: '0',
-      takerFee: '0',
-      makerTokenAmount: '', // Base 18 decimals
-      takerTokenAmount: '', // Base 18 decimals
-      expirationUnixTimestampSec: new BigNumber(
+      makerAddress: '0x0000000000000000000000000000000000000000', // '0x456c3C14aAe3A2d361E6B2879Bfc0Bae15E30c38'.toLowerCase(),
+      takerAddress: '0x0000000000000000000000000000000000000000'.toLowerCase(), // in ethfinex taker is 0x0
+      feeRecipientAddress: ''.toLowerCase(), // in case of ethfinex it is ethfinex
+      senderAddress: '0x0000000000000000000000000000000000000000'.toLowerCase(), // selectedExchange.hotWallet.toLowerCase(),
+
+      makerAssetAmount: Web3Wrapper.toBaseUnitAmount(new BigNumber(5), 18), // Base 18 decimals // prev web3.utils.toBN('0'),
+      takerAssetAmount: Web3Wrapper.toBaseUnitAmount(new BigNumber(5), 18), // Base 18 decimals
+      makerFee: Web3Wrapper.toBaseUnitAmount(new BigNumber(5), 18),
+      takerFee: Web3Wrapper.toBaseUnitAmount(new BigNumber(5), 18),
+
+      expirationTimeSeconds: new BigNumber(
         Date.now() + 86400000 * 365
-      ).toFixed() // Valid for up to an hour
+      ).toFixed(), // Valid for up to an hour if 3600000,
+      salt: generatePseudoRandomSalt(), // .toFixed(),
+
+      makerAssetData: assetDataUtils.encodeERC20AssetData(makerAssetAddress.toLowerCase()),
+      takerAssetData: assetDataUtils.encodeERC20AssetData(takerAssetAddress.toLowerCase()),
+
+      exchangeAddress: ''.toLowerCase(),
     }
+
     // const order = JSON.parse(
     //   `
     //   {
@@ -85,23 +89,23 @@ class ExchangeOrderCreatorPage extends React.Component {
     // )
     // const order = {}
     this.state = {
-      zeroEx: zeroEx,
+      //zeroEx: zeroEx,
       json_object: {},
       order: order,
       orderHash: '',
       signedOrderStatus: 'succeed',
       exchangeSelected:
-        context.networkInfo.id === 3 ? 'RigoBlockEthfinex' : 'RigoBlockZeroX',
+        context.networkInfo.id === 42 ? 'RigoBlockEthfinex' : 'RigoBlockZeroX',
       walletAddress: '',
       exchangeList: {
         3: {
           zeroEx: {
-            networkId: 3,
             needLocking: false,
             needAllowance: true,
             name: 'ZeroEx',
             exchangeContractAddress:
-              '0x479cc461fecd078f766ecc58533d6f69580cf3ac'
+              '0x479cc461fecd078f766ecc58533d6f69580cf3ac',
+            networkId: 3,
           },
           RigoBlockEthfinex: {
             needLocking: true,
@@ -113,6 +117,7 @@ class ExchangeOrderCreatorPage extends React.Component {
           }
         },
 
+        // TODO: amend according to 0xv2 addresses and ethfinex schema
         42: {
           zeroEx: {
             needLocking: false,
@@ -138,13 +143,16 @@ class ExchangeOrderCreatorPage extends React.Component {
   }
 
   componentDidMount() {
-    const { zeroEx } = this.state
+    //const { zeroEx } = this.state
     const { order } = this.state
-    zeroEx._web3Wrapper._web3.eth.getAccounts((error, result) => {
-      this.setState({
-        order: { ...order, maker: result[0] },
-        walletAddress: result[0]
-      })
+    // Initialize the Web3Wrapper, this provides helper functions around fetching
+    // account information, balances, general contract logs
+    //const web3Wrapper = new Web3Wrapper(window.web3.provider, { networkId: 42 })
+    const makerAddress = '0x0000000000000000000000000000000000000000' // for debugging
+    //const [maker, taker, sender] = web3Wrapper.getAvailableAddressesAsync()
+    this.setState({
+      order: { ...order, maker: makerAddress }, //result[0]
+      walletAddress: makerAddress //result[0]
     })
   }
 
@@ -160,7 +168,7 @@ class ExchangeOrderCreatorPage extends React.Component {
     let hashError = false
     const getHash = () => {
       try {
-        const hash = ZeroEx.getOrderHashHex(order)
+        const hash = orderHashUtils.getOrderHashHex(order)
         return hash
       } catch (error) {
         console.warn(error)
@@ -213,20 +221,32 @@ class ExchangeOrderCreatorPage extends React.Component {
     const ZeroExConfig = {
       ...this.state.exchangeList[this.state.exchangeSelected]
     }
+    /*
+    const ZeroExConfig = {
+      networkId: 42
+      // exchangeContractAddress: this._network.id
+    }
+    */
     console.log(ZeroExConfig)
-    console.log(`Maker: ${order.maker}`)
+    const contractWrappers = new ContractWrappers(window.web3.provider, ZeroExConfig, { networkId: 42 }) // networkId: NETWORK_CONFIGS.networkId
+    // Initialize the Web3Wrapper, this provides helper functions around fetching
+    // account information, balances, general contract logs
+    const web3Wrapper = new Web3Wrapper(window.web3.provider, ZeroExConfig)
+    const [maker, taker, sender] = await web3Wrapper.getAvailableAddressesAsync()
+
+    console.log(`Maker: ${order.makerAddress}`)
     if (order.maker.toLowerCase() === this.state.walletAddress.toLowerCase()) {
       console.log('Setting allowance for MM account')
-      let web3 = new Web3(window.web3.currentProvider)
-      let zeroEx = new ZeroEx(web3.currentProvider, ZeroExConfig)
-      const setMakerAllowTxHash = await zeroEx.token.setUnlimitedProxyAllowanceAsync(
-        order.makerTokenAddress,
-        order.maker
+      //let web3 = new Web3(window.web3.currentProvider)
+      //let zeroEx = new ZeroEx(web3.currentProvider, ZeroExConfig)
+      const setMakerAllowTxHash = await contractWrappers.erc20Token.setUnlimitedProxyAllowanceAsync(
+        order.makerAssetAddress,
+        order.makerAddress
       )
-      let txReceipt = await zeroEx.awaitTransactionMinedAsync(
+      /*let txReceipt = await web3Wrapper.awaitTransactionMinedAsync(
         setMakerAllowTxHash
       )
-      console.log(txReceipt)
+      console.log(txReceipt)*/
     } else {
       console.log('Setting allowance for the fund')
       const options = {
@@ -242,11 +262,11 @@ class ExchangeOrderCreatorPage extends React.Component {
       )
       console.log(`TokenAddress: ${order.makerTokenAddress}`)
       console.log(`Manager: ${this.state.walletAddress}`)
-      console.log(`Fund: ${order.maker}`)
+      console.log(`Fund: ${order.makerAddress}`)
       dragoContract.methods
         .setInfiniteAllowance(
           ZeroExConfig.tokenTransferProxyContractAddress,
-          order.makerTokenAddress
+          order.makerAssetAddress
         )
         .estimateGas(options)
         .then(gasEstimate => {
@@ -257,7 +277,7 @@ class ExchangeOrderCreatorPage extends React.Component {
           dragoContract.methods
             .setInfiniteAllowance(
               ZeroExConfig.tokenTransferProxyContractAddress,
-              order.makerTokenAddress
+              order.makerAssetAddress
             )
             .send(options)
             .then(result => {

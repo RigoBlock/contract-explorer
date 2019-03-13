@@ -1,8 +1,8 @@
 import * as CONST from '../_utils/const'
 import * as Drago from '../_utils/drago_utils'
 import * as abis from '../abi'
-// import { BigNumber } from '@0xproject/utils'
-import { ZeroEx } from '0x.js'
+// import { BigNumber } from '@0x/utils'
+//import { ZeroEx } from '0x.js'
 import Divider from '@material-ui/core/Divider'
 import EtherscanLink from '../elements/etherscanLink'
 import ExchangeSelect from '../elements/exchangeSelect'
@@ -30,7 +30,7 @@ class ExchangeToolsPage extends Component {
       networkId: KOVAN_NETWORK_ID
       // exchangeContractAddress: this.state.fundProxyAddress
     }
-    let zeroEx = new ZeroEx(context.web3.currentProvider, ZeroExConfig)
+    //let zeroEx = new ZeroEx(context.web3.currentProvider, ZeroExConfig)
     const exchangeSelected =
       context.networkInfo.id === 3 ? 'Ethfinex' : 'RigoBlockZeroX'
     const tokensList =
@@ -43,7 +43,7 @@ class ExchangeToolsPage extends Component {
     const exchangeList = CONST.exchanges[context.networkInfo.id]
     this.state = {
       receipt: {},
-      zeroEx: zeroEx,
+      //zeroEx: zeroEx,
       json_object: {},
       order: {},
       orderHash: '',

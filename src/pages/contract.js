@@ -98,8 +98,7 @@ class ContractPage extends Component {
                 }
               }
               encodedABI()
-              contract.methods[methodName]()
-                [constantMethod](options)
+              contract.methods[methodName]()[constantMethod](options)
                 .then(result => {
                   this.setState({
                     json_object:
@@ -155,8 +154,7 @@ class ContractPage extends Component {
                 }
               }
               encodedABI()
-              contract.methods[methodName](...inputs)
-                [constantMethod](options)
+              contract.methods[methodName](...inputs)[constantMethod](options)
                 .then(result => {
                   this.setState({
                     json_object:

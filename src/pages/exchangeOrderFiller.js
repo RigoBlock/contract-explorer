@@ -1,5 +1,4 @@
 import * as CONST from '../_utils/const'
-import { BigNumber } from '@0xproject/utils'
 import Button from '@material-ui/core/Button'
 import FormControl from '@material-ui/core/FormControl'
 import Grid from '@material-ui/core/Grid'
@@ -9,9 +8,18 @@ import React from 'react'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Web3 from 'web3'
-// import BigNumber from 'bignumber.js';
 import * as abis from '../abi/index'
-import { ZeroEx } from '0x.js'
+import {
+    assetDataUtils,
+    BigNumber,
+    ContractWrappers,
+    generatePseudoRandomSalt,
+    //Order,
+    orderHashUtils,
+    signatureUtils,
+    //SignerType
+} from '0x.js'
+import { Web3Wrapper } from '@0x/web3-wrapper';
 import ExchangeSelect from '../elements/exchangeSelect'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import ReactJson from 'react-json-view'
@@ -132,15 +140,25 @@ class ExchangeOrderFiller extends React.Component {
   componentDidMount() {
     const KOVAN_NETWORK_ID = 42
     const ZeroExConfig = {
+      ...this.state.exchangeList[this.state.exchangeSelected]
+    }
+    /*
+    const ZeroExConfig = {
       networkId: KOVAN_NETWORK_ID
     }
-    let web3 = new Web3(window.web3.currentProvider)
-    let zeroEx = new ZeroEx(web3.currentProvider, ZeroExConfig)
-    zeroEx._web3Wrapper._web3.eth.getAccounts((error, result) => {
-      this.setState({
-        walletAddress: result[0]
-      })
+    */
+    const walletAddress = '0x0000000000000000000000000000000000000000' // mock address
+
+    /*const contractWrappers = new ContractWrappers(window.web3.provider, ZeroExConfig, { networkId: KOVAN_NETWORK_ID }); // networkId: NETWORK_CONFIGS.networkId
+    // Initialize the Web3Wrapper, this provides helper functions around fetching
+    // account information, balances, general contract logs
+    const web3Wrapper = new Web3Wrapper(window.web3.provider, ZeroExConfig);
+    //const [maker, taker, sender] = await web3Wrapper.getAvailableAddressesAsync();
+    const [maker, taker, sender] = await web3Wrapper.getAvailableAddressesAsync();
+    this.setState({
+      walletAddress: result[0]
     })
+    */
   }
 
   onFillOrder = async () => {
@@ -252,7 +270,7 @@ class ExchangeOrderFiller extends React.Component {
     console.log(
       orderAddresses,
       orderValues,
-      ZeroEx.toBaseUnitAmount(
+      Web3Wrapper.toBaseUnitAmount(
         new BigNumber(this.state.filledAmount),
         DECIMALS
       ).toString(),
@@ -324,7 +342,7 @@ class ExchangeOrderFiller extends React.Component {
       .fillOrder(
         orderAddresses,
         orderValues,
-        ZeroEx.toBaseUnitAmount(
+        Web3Wrapper.toBaseUnitAmount(
           new BigNumber(this.state.filledAmount),
           DECIMALS
         ),
@@ -343,7 +361,7 @@ class ExchangeOrderFiller extends React.Component {
           .fillOrder(
             orderAddresses,
             orderValues,
-            ZeroEx.toBaseUnitAmount(
+            Web3Wrapper.toBaseUnitAmount(
               new BigNumber(this.state.filledAmount),
               DECIMALS
             ),
@@ -486,7 +504,7 @@ class ExchangeOrderFiller extends React.Component {
       return order.ecSignature.s
     })
 
-    const amount = ZeroEx.toBaseUnitAmount(
+    const amount = Web3Wrapper.toBaseUnitAmount(
       new BigNumber(this.state.filledAmount),
       DECIMALS
     ).toString()

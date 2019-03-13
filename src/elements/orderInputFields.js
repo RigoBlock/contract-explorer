@@ -1,4 +1,4 @@
-import { BigNumber } from '@0xproject/utils'
+import { BigNumber } from '@0x/utils'
 import { ETHERSCAN_KOVAN } from '../_utils/const'
 import Button from '@material-ui/core/Button'
 import FormControl from '@material-ui/core/FormControl'

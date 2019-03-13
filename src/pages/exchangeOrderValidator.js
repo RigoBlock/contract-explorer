@@ -2,7 +2,7 @@ import {
   SchemaValidator,
   // ValidatorResult,
   schemas
-} from '@0xproject/json-schemas'
+} from '@0x/json-schemas'
 import { ZeroEx } from '0x.js'
 import Button from '@material-ui/core/Button'
 import FormControl from '@material-ui/core/FormControl'
